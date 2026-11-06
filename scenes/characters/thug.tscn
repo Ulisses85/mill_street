@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/enemy.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
@@ -7,17 +7,22 @@
 [ext_resource type="Resource" path="res://resources/attacks/thug_punch.tres" id="5"]
 [ext_resource type="Texture2D" path="res://assets/characters/thug/portrait.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/characters/thug/sheet.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/items/can.png" id="8"]
 
 [node name="Thug" type="Node2D"]
 script = ExtResource("1")
-unit_name = "Thug"
-random_name_file = "res://resources/enemy_names.txt"
 portrait = ExtResource("6")
 start_direction = -1
+attack = ExtResource("5")
+unit_name = "Thug"
+random_name_file = "res://resources/enemy_names.txt"
 move_speed = 63.0
 hit_stun_time = 0.27
 knockdown_floor_time = 0.67
-attack = ExtResource("5")
+can_pick_up_weapons = true
+drop_health_chance = 0.25
+drop_health_amount = 15
+drop_health_texture = ExtResource("8")
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")
@@ -25,9 +30,9 @@ script = ExtResource("3")
 [node name="Body" type="Sprite2D" parent="."]
 texture = ExtResource("7")
 centered = false
-offset = Vector2(-64, -100)
+offset = Vector2(-80, -116)
 region_enabled = true
-region_rect = Rect2(0, 0, 128, 112)
+region_rect = Rect2(0, 0, 160, 128)
 script = ExtResource("2")
 sheet_json = "res://assets/characters/thug/sheet.json"
 

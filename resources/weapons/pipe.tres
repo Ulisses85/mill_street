@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/weapon_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/items/pipe.png" id="2"]
+[ext_resource type="Resource" path="res://resources/attacks/pipe_swing.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/attacks/enemy_pipe_swing.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+texture = ExtResource("2")
+weapon_name = "PIPE"
+uses = 8
+enemy_uses = 6
+attack = ExtResource("3")
+enemy_attack = ExtResource("4")

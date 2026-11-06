@@ -33,8 +33,6 @@ func _ready() -> void:
 	Game.enemy_engaged.connect(func(e): target = e; target_left = int(target_show_time * 60.0))
 	Game.hud_message.connect(func(s, d, imp): msg = s; msg_left = int(d * 60.0); msg_important = imp)
 	Game.go_arrow.connect(func(on): go_left = 200 if on else 0)
-	Game.level_finished.connect(func(): ended = "clear"; msg = "LEVEL CLEAR"; msg_left = 999999)
-	Game.player_died.connect(func(): ended = "over"; msg = "GAME OVER"; msg_left = 999999; msg_important = true)
 	if Game.player:
 		_on_player(Game.player)
 
@@ -53,9 +51,6 @@ func _physics_process(_delta: float) -> void:
 		msg_left -= 1
 	if go_left > 0:
 		go_left -= 1
-	if ended != "" and tick % 1 == 0 and Input.is_action_just_pressed(&"punch"):
-		Game.score = 0
-		get_tree().reload_current_scene()
 	queue_redraw()
 
 
@@ -105,12 +100,21 @@ func _draw() -> void:
 			draw_circle(c, 3.5, INK)
 			draw_circle(c, 2.5, PANEL)
 		_text("%06d" % Game.score, Vector2(34, 32), 8, Color("#4a4958"))
-	if target and is_instance_valid(target) and target_left > 0 and target.state != &"dead":
-		var th: HealthSystem = target.health
-		var bw := enemy_bar_width
-		_portrait(Vector2(W - 30, 6), target.portrait)
-		var name_w := FONT_B.get_string_size(target.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
-		_text(target.display_name, Vector2(W - 36 - name_w, 13), 8, INK, true)
+		var w: WeaponData = player.get("held_weapon")
+		if w:
+			_text("%s x%d" % [w.weapon_name, player.weapon_uses], Vector2(80, 32), 8, Color("#4a4958"))
+	var boss: Unit = null
+	for e in get_tree().get_nodes_in_group(&"enemies"):
+		if e.get("is_boss") and e.state != &"wait" and e.state != &"dead" and e.is_alive():
+			boss = e
+	var show: Unit = boss if boss else (target if target and is_instance_valid(target) and target_left > 0 and target.state != &"dead" else null)
+	if show:
+		var th: HealthSystem = show.health
+		var bw := boss_bar_width if show == boss else enemy_bar_width
+		var tg := show
+		_portrait(Vector2(W - 30, 6), tg.portrait)
+		var name_w := FONT_B.get_string_size(tg.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
+		_text(tg.display_name, Vector2(W - 36 - name_w, 13), 8, INK, true)
 		_bar(Vector2(W - 36 - bw, 16), bw, float(th.current_hp) / th.max_hp, RED)
 	if combo >= 2:
 		_outlined("%d HITS" % combo, W / 2, 52, 16, Color("#ffd23a"))
@@ -121,5 +125,3 @@ func _draw() -> void:
 	if msg_left > 0 and msg != "":
 		draw_rect(Rect2(0, 98, W, 30), Color(0.12, 0.11, 0.16, 0.82))
 		_outlined(msg, W / 2, 120, 16, Color("#ff5a3a") if msg_important else Color.WHITE)
-		if ended != "" and (tick / 32) % 2 == 0:
-			_outlined("PRESS PUNCH TO PLAY AGAIN", W / 2, 146, 8, Color("#ffd23a"))

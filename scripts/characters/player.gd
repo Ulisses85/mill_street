@@ -27,6 +27,11 @@ extends Unit
 ## Damage dealt to other enemies the thrown body crashes into.
 @export var thrown_body_hit: AttackData
 
+@export_group("Carry")
+## Attack used when a lifted crate or barrel hits an enemy.
+@export var carry_throw_attack: AttackData
+@export_range(0.1, 1.0, 0.05) var carry_speed_scale := 0.7
+
 @export_group("Lives")
 @export var lives := 2
 @export_range(0.0, 5.0, 0.1, "suffix:s") var respawn_invulnerable_time := 2.5
@@ -97,6 +102,11 @@ func _tick() -> void:
 		&"throw":
 			if t >= 20:
 				set_state(&"idle", &"idle")
+		&"pickup":
+			if t >= 10:
+				set_state(&"idle", &"idle")
+		&"carry":
+			_state_carry()
 		&"dead":
 			_state_dead()
 
@@ -113,9 +123,24 @@ func _state_ground() -> void:
 		return
 	if Input.is_action_just_pressed(&"grab") and _try_grab():
 		return
-	if Input.is_action_just_pressed(&"punch") and punch_combo:
-		_start_chain(punch_combo)
-		return
+	if Input.is_action_just_pressed(&"punch"):
+		if held_weapon == null:
+			var pk := _weapon_underfoot()
+			if pk:
+				equip(pk.weapon, pk.weapon_uses())
+				pk.queue_free()
+				vx = 0.0
+				set_state(&"pickup", &"pickup")
+				return
+		else:
+			vx = 0.0
+			chain = null
+			begin_attack(held_weapon.throw_attack if held_weapon.thrown else held_weapon.attack)
+			Sfx.play(&"swish")
+			return
+		if punch_combo:
+			_start_chain(punch_combo)
+			return
 	if Input.is_action_just_pressed(&"kick") and kick_combo:
 		_start_chain(kick_combo)
 		return
@@ -151,12 +176,28 @@ func _start_chain(c: ComboData) -> void:
 	Sfx.play(&"swish")
 
 
+func _weapon_underfoot() -> Pickup:
+	for n in get_tree().get_nodes_in_group(&"pickups"):
+		var pk := n as Pickup
+		if pk.kind == Pickup.Kind.WEAPON and pk.weapon and pk.in_reach(self) and not pk.is_queued_for_deletion():
+			return pk
+	return null
+
+
 func _chain_action(c: ComboData) -> StringName:
 	return &"punch" if c == punch_combo else &"kick"
 
 
 func _state_attack() -> void:
 	var a := current_attack
+	if held_weapon and held_weapon.thrown and a == held_weapon.throw_attack and t == a.ticks(a.active_from):
+		var w := held_weapon
+		var pr := Projectile.launch(get_parent(), position + Vector2(face * 14, 0), w.texture, -w.grip, team, w.projectile_attack, face * w.projectile_speed, w.projectile_height)
+		pr.source = self
+		Sfx.play(&"throw")
+		weapon_uses -= 1
+		if weapon_uses <= 0:
+			held_weapon = null
 	if chain and t >= 3 and Input.is_action_just_pressed(_chain_action(chain)):
 		queued = true
 	if process_attack_hits(a) > 0:
@@ -216,7 +257,7 @@ func _try_grab() -> bool:
 		if not e.can_be_grabbed_now():
 			continue
 		var dx := (e.position.x - position.x) * face
-		if dx > 4.0 and dx < grab_range and absf(e.position.y - position.y) < 8.0 and e.z == 0.0:
+		if dx > 4.0 and dx < grab_range and absf(e.position.y - position.y) < 8.0 and e.z == 0.0 and e.can_be_grabbed:
 			grabbed = e
 			knees = 0
 			knee_t = 0
@@ -225,7 +266,46 @@ func _try_grab() -> bool:
 			set_state(&"grab", &"grab")
 			Sfx.play(&"thud")
 			return true
+	for n in get_tree().get_nodes_in_group(&"breakables"):
+		var b := n as Breakable
+		var bdx := (b.position.x - position.x) * face
+		if b.can_be_lifted and b.can_be_hit() and bdx > -2.0 and bdx < grab_range + b.half_width and absf(b.position.y - position.y) < 9.0:
+			carrying = b
+			b.remove_from_group(&"breakables")
+			b.visible = false
+			b.process_mode = Node.PROCESS_MODE_DISABLED
+			vx = 0.0
+			set_state(&"carry", &"carry_idle")
+			Sfx.play(&"thud")
+			if not Game.has_meta(&"carry_tip"):
+				Game.set_meta(&"carry_tip", true)
+				Game.message("PUNCH, KICK OR JUMP: THROW", 1.4)
+			return true
 	return false
+
+
+func _state_carry() -> void:
+	if carrying == null:
+		set_state(&"idle", &"idle")
+		return
+	if Input.is_action_just_pressed(&"punch") or Input.is_action_just_pressed(&"kick") or Input.is_action_just_pressed(&"jump") or Input.is_action_just_pressed(&"grab"):
+		var b := carrying
+		carrying = null
+		var tex := b.texture
+		var pr := Projectile.launch(get_parent(), position + Vector2(face * 8, 0), tex, Vector2(-tex.get_width() / 2.0, -tex.get_height() / 2.0), team,
+			carry_throw_attack if carry_throw_attack else thrown_body_attack(), face * 300.0, 44.0 + tex.get_height() / 2.0)
+		pr.vz = 84.0
+		pr.gravity = 576.0
+		pr.spin = 0.18 * face
+		pr.carried = b
+		pr.source = self
+		set_state(&"throw", &"throw")
+		Sfx.play(&"swish")
+		return
+	ground_move(move, carry_speed_scale)
+	if move.x != 0.0:
+		face = int(move.x)
+	play_anim(&"carry" if move != Vector2.ZERO else &"carry_idle", false)
 
 
 func _state_grab() -> void:

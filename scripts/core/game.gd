@@ -10,6 +10,7 @@ signal go_arrow(show: bool)
 signal enemy_engaged(enemy: Node)
 signal level_finished
 signal player_died
+signal pause_requested
 
 const TICK := 1.0 / 60.0
 
@@ -39,6 +40,7 @@ const DEFAULT_ACTIONS := {
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_register_input()
+	_load_progress()
 	# crisp pixel text everywhere
 	for f in [preload("res://assets/fonts/Silkscreen-Regular.ttf"), preload("res://assets/fonts/Silkscreen-Bold.ttf")]:
 		f.antialiasing = TextServer.FONT_ANTIALIASING_NONE
@@ -48,8 +50,7 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"pause") and player != null:
-		get_tree().paused = not get_tree().paused
-		hud_message.emit("PAUSED" if get_tree().paused else "", 9999.0 if get_tree().paused else 0.0, false)
+		pause_requested.emit()
 
 
 func _physics_process(_delta: float) -> void:
@@ -59,6 +60,10 @@ func _physics_process(_delta: float) -> void:
 
 
 func _register_input() -> void:
+	for pair in [[&"ui_accept", KEY_J], [&"ui_accept", KEY_Z], [&"ui_cancel", KEY_K], [&"ui_cancel", KEY_X]]:
+		var ev := InputEventKey.new()
+		ev.physical_keycode = pair[1]
+		InputMap.action_add_event(pair[0], ev)
 	for action in DEFAULT_ACTIONS:
 		if InputMap.has_action(action):
 			continue  # project settings win
@@ -102,6 +107,89 @@ func random_line(path: String, fallback: String) -> String:
 		if s != "":
 			clean.append(s)
 	return fallback if clean.is_empty() else clean[randi() % clean.size()]
+
+
+# ---------- levels, progress, save ----------
+const LEVEL_LIST_PATH := "res://resources/level_list.tres"
+const SAVE_PATH := "user://save.cfg"
+var level_list: LevelList
+var current_level := -1
+var unlocked := 1
+var best_scores := {}
+
+
+func _load_progress() -> void:
+	level_list = load(LEVEL_LIST_PATH) if ResourceLoader.exists(LEVEL_LIST_PATH) else LevelList.new()
+	var cfg := ConfigFile.new()
+	if cfg.load(SAVE_PATH) == OK:
+		unlocked = int(cfg.get_value("progress", "unlocked", 1))
+		best_scores = cfg.get_value("progress", "best", {})
+
+
+func save_progress() -> void:
+	var cfg := ConfigFile.new()
+	cfg.set_value("progress", "unlocked", unlocked)
+	cfg.set_value("progress", "best", best_scores)
+	cfg.save(SAVE_PATH)
+
+
+func level_count() -> int:
+	return level_list.levels.size()
+
+
+func start_level(i: int) -> void:
+	current_level = i
+	score = 0
+	player = null
+	get_tree().paused = false
+	get_tree().change_scene_to_file(level_list.levels[i].scene)
+
+
+func restart_level() -> void:
+	start_level(maxi(current_level, 0))
+
+
+func next_level() -> void:
+	if current_level + 1 < level_count():
+		start_level(current_level + 1)
+	else:
+		go_to_main_menu()
+
+
+func go_to_main_menu() -> void:
+	player = null
+	get_tree().paused = false
+	get_tree().change_scene_to_file(level_list.main_menu_scene)
+
+
+func go_to_level_select() -> void:
+	player = null
+	get_tree().paused = false
+	get_tree().change_scene_to_file(level_list.level_select_scene)
+
+
+## Called when the current level is finished. Unlocks the next one and stores the best score.
+func complete_level() -> void:
+	if current_level < 0:
+		current_level = _index_of_current_scene()
+	if current_level >= 0:
+		best_scores[current_level] = max(int(best_scores.get(current_level, 0)), score)
+		unlocked = clampi(max(unlocked, current_level + 2), 1, level_count())
+		save_progress()
+
+
+func is_last_level() -> bool:
+	return current_level >= level_count() - 1
+
+
+func _index_of_current_scene() -> int:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return -1
+	for i in level_count():
+		if level_list.levels[i].scene == scene.scene_file_path:
+			return i
+	return -1
 
 
 func add_score(n: int) -> void:

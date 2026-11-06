@@ -49,11 +49,20 @@ async def main() -> None:
             if d.get("portrait"):
                 save_png(await page.evaluate("(d) => Pipeline.buildPortrait(d)", d), out / "portrait.png")
             print("character", name, len(res["meta"]["anims"]), "anims")
+        items = ROOT / "assets/items"
+        for w in ("bat", "pipe", "knife"):
+            save_png(await page.evaluate("(k) => Pipeline.buildWeapon(k)", w), items / f"{w}.png")
+        for it in ("chips", "can"):
+            save_png(await page.evaluate("(k) => Pipeline.buildItem(k)", it), items / f"{it}.png")
+        print("items")
         for name, lv in levels.items():
             out = ROOT / "assets/levels" / name
             res = await page.evaluate("(lv) => Pipeline.buildBackground(lv)", lv)
             save_png(res["png"], out / "background.png")
             save_png(await page.evaluate("(m) => Pipeline.buildSignpost(m)", lv["mono"]), out / "signpost.png")
+            for prop in ("crate", "barrel"):
+                for dmg in (False, True):
+                    save_png(await page.evaluate("([k, d, m]) => Pipeline.buildProp(k, d, m)", [prop, dmg, lv["mono"]]), out / f"{prop}{'_damaged' if dmg else ''}.png")
             (out / "layout.json").write_text(json.dumps({"world": lv["world"], "hydrants": res["hydrants"], "signposts": res["signposts"]}, indent=1))
             print("level", name)
         tmp.unlink()

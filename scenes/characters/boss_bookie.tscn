@@ -1,0 +1,50 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/enemy.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
+[ext_resource type="Resource" path="res://resources/attacks/bookie_kick.tres" id="5"]
+[ext_resource type="Texture2D" path="res://assets/characters/boss_bookie/portrait.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/characters/boss_bookie/sheet.png" id="7"]
+
+[node name="Bookie" type="Node2D"]
+script = ExtResource("1")
+portrait = ExtResource("6")
+start_direction = -1
+attack = ExtResource("5")
+unit_name = "The Bookie"
+move_speed = 63.0
+hit_stun_time = 0.22
+knockdown_height = 12.0
+knockdown_distance = 34.0
+knockdown_floor_time = 0.9
+body_half_width = 12.0
+body_height = 76.0
+windup_time = 0.33
+attack_cooldown_min = 0.67
+attack_cooldown_max = 1.08
+defend_chance = 40
+wait_distance = 90.0
+score_value = 4000
+is_boss = true
+super_armor = true
+alert_delay = 0.3
+
+[node name="Shadow" type="Node2D" parent="."]
+script = ExtResource("3")
+radius = Vector2(18, 4.5)
+
+[node name="Body" type="Sprite2D" parent="."]
+texture = ExtResource("7")
+centered = false
+offset = Vector2(-80, -116)
+region_enabled = true
+region_rect = Rect2(0, 0, 160, 128)
+script = ExtResource("2")
+sheet_json = "res://assets/characters/boss_bookie/sheet.json"
+
+[node name="HealthSystem" type="Node" parent="."]
+script = ExtResource("4")
+max_hp = 210
+current_hp = 210

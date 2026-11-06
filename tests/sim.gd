@@ -8,7 +8,10 @@ var log_lines: Array[String] = []
 var script_steps := []
 
 func _ready() -> void:
-	level = load("res://scenes/levels/level_01.tscn").instantiate()
+	var args := OS.get_cmdline_user_args()
+	var lv := args[0] if args.size() > 0 else "level_01"
+	Game.current_level = int(lv.right(1)) - 1
+	level = load("res://scenes/levels/%s.tscn" % lv).instantiate()
 	add_child(level)
 	var wm = level.get_node("World/WaveManager")
 	wm.wave_started.connect(func(i): _log("wave started %d" % i))
@@ -28,8 +31,14 @@ func _press(a: StringName) -> void:
 	await get_tree().physics_frame
 	Input.action_release(a)
 
+var shot_frames := []
+
 func _physics_process(_d: float) -> void:
 	frame += 1
+	var args := OS.get_cmdline_user_args()
+	if args.size() > 1 and frame in shot_frames_for(args):
+		await RenderingServer.frame_post_draw
+		get_viewport().get_texture().get_image().save_png("/tmp/claude-0/sim_%s_%05d.png" % [args[0], frame])
 	var p = Game.player
 	if p == null:
 		return
@@ -59,5 +68,15 @@ func _physics_process(_d: float) -> void:
 		Input.action_press(&"move_right")
 	if frame % 120 == 0:
 		_log("p x=%d y=%d hp=%d state=%s lives=%d | enemies alive=%d | cam bound=%s | wave=%d" % [p.position.x, p.position.y, p.health.current_hp, p.state, p.lives, get_tree().get_nodes_in_group(&"enemies").size(), str(level.get_node("BeatCamera").level_bound), level.get_node("World/WaveManager").current])
-	if frame > 60 * 120:
-		_log("timeout"); get_tree().quit()
+	if frame > 60 * 150:
+		_log("timeout")
+		for e in get_tree().get_nodes_in_group(&"enemies"):
+			_log("  left: %s %s state=%s pos=%s hp=%d alert=%d" % [e.name, e.display_name, e.state, e.position, e.health.current_hp, e.alert_t])
+		get_tree().quit()
+
+
+func shot_frames_for(args: PackedStringArray) -> Array:
+	var out := []
+	for a in args[1].split(","):
+		out.append(int(a))
+	return out
