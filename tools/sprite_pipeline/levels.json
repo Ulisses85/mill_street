@@ -1,0 +1,7 @@
+{
+  "street": {
+    "index": 0, "world": 2600, "seed": 1868,
+    "mono": ["#2b2a36", "#4a4958", "#6c6b7c", "#8f8ea0", "#b2b1c2", "#d2d1de", "#ecebf3"],
+    "ghost": [["COTTON EXCHANGE", 240, 58], ["MILL ST. WORKS", 1120, 50]]
+  }
+}

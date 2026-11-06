@@ -1,0 +1,8 @@
+# Godot
+.godot/
+*.translation
+export_credentials.cfg
+build/
+# tools
+tools/sprite_pipeline/.page.html
+__pycache__/

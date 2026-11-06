@@ -1,0 +1,89 @@
+{
+ "cell": [
+  128,
+  112
+ ],
+ "anchor": [
+  64,
+  100
+ ],
+ "columns": 10,
+ "anims": {
+  "idle": {
+   "row": 0,
+   "frames": 8,
+   "ticks_per_frame": 7,
+   "loop": true
+  },
+  "walk": {
+   "row": 1,
+   "frames": 8,
+   "ticks_per_frame": 3,
+   "loop": true
+  },
+  "run": {
+   "row": 2,
+   "frames": 8,
+   "ticks_per_frame": 2,
+   "loop": true
+  },
+  "windup": {
+   "row": 3,
+   "frames": 1,
+   "ticks_per_frame": 1,
+   "loop": true
+  },
+  "punch": {
+   "row": 4,
+   "frames": 10,
+   "ticks_per_frame": 2,
+   "loop": false,
+   "active_frames": [
+    3,
+    4
+   ]
+  },
+  "hurt": {
+   "row": 5,
+   "frames": 1,
+   "ticks_per_frame": 1,
+   "loop": true
+  },
+  "defend": {
+   "row": 6,
+   "frames": 1,
+   "ticks_per_frame": 1,
+   "loop": true
+  },
+  "grabbed": {
+   "row": 7,
+   "frames": 1,
+   "ticks_per_frame": 1,
+   "loop": true
+  },
+  "knockdown": {
+   "row": 8,
+   "frames": 6,
+   "ticks_per_frame": 2,
+   "loop": false
+  },
+  "down": {
+   "row": 9,
+   "frames": 1,
+   "ticks_per_frame": 1,
+   "loop": true
+  },
+  "getup": {
+   "row": 10,
+   "frames": 10,
+   "ticks_per_frame": 2,
+   "loop": false
+  },
+  "lurk": {
+   "row": 11,
+   "frames": 8,
+   "ticks_per_frame": 13,
+   "loop": true
+  }
+ }
+}

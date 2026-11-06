@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="ComboData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/combat/combo_data.gd" id="2"]
+
+[sub_resource type="Resource" id="lowkick"]
+script = ExtResource("1")
+attack_name = "Low Kick"
+damage = 7
+animation = &"lowkick"
+duration = 0.27
+active_from = 0.07
+active_to = 0.13
+reach_to = 34.0
+knockback = 1.6
+
+[sub_resource type="Resource" id="kick"]
+script = ExtResource("1")
+attack_name = "Roundhouse"
+damage = 12
+knockdown = true
+animation = &"kick"
+duration = 0.4
+active_from = 0.12
+active_to = 0.2
+reach_to = 38.0
+forward_step = 48.0
+hitstop_frames = 3
+screen_shake = 5.0
+
+[resource]
+script = ExtResource("2")
+combo_reset_time = 0.37
+continue_combo_on_hit = true
+attacks = Array[ExtResource("1")]([SubResource("lowkick"), SubResource("kick")])

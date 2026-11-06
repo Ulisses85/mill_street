@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+attack_name = "Thug Punch"
+damage = 7
+animation = &"punch"
+duration = 0.33
+active_from = 0.1
+active_to = 0.15
+reach_to = 28.0
+knockback = 2.0
