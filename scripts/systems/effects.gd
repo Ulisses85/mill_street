@@ -39,7 +39,7 @@ static func _spawn(parent: Node, pos: Vector2, k: Kind, lifetime: int) -> Effect
 static func burst(parent: Node, pos: Vector2, r: float) -> void:
 	var e := _spawn(parent, pos, Kind.BURST, 7)
 	e.radius = r
-	e.rot = randf() * TAU
+	e.rot = Game.fx_rng.randf() * TAU
 
 
 static func shield(parent: Node, pos: Vector2, facing: float) -> void:
@@ -51,13 +51,13 @@ static func shield(parent: Node, pos: Vector2, facing: float) -> void:
 static func puff(parent: Node, pos: Vector2, r: float) -> void:
 	var e := _spawn(parent, pos, Kind.PUFF, 18)
 	e.radius = r
-	e.vel = Vector2(randf_range(-0.3, 0.3), -0.25)
+	e.vel = Vector2(Game.fx_rng.randf_range(-0.3, 0.3), -0.25)
 	e.z_index = 1
 
 
 static func dust(parent: Node, pos: Vector2) -> void:
 	for i in 5:
-		puff(parent, pos + Vector2(randf_range(-10, 10), randf_range(-2, 2)), randf_range(3, 5))
+		puff(parent, pos + Vector2(Game.fx_rng.randf_range(-10, 10), Game.fx_rng.randf_range(-2, 2)), Game.fx_rng.randf_range(3, 5))
 
 
 static func float_text(parent: Node, pos: Vector2, s: String, c: Color) -> void:
@@ -74,8 +74,8 @@ static func chunk(parent: Node, pos: Vector2, c: Color, v: Vector2, floor_at: fl
 	e.gravity = 0.26
 	e.floor_y = floor_at
 	e.size = sz
-	e.rot = randf() * TAU
-	e.spin = randf_range(-0.3, 0.3)
+	e.rot = Game.fx_rng.randf() * TAU
+	e.spin = Game.fx_rng.randf_range(-0.3, 0.3)
 
 
 func _physics_process(_delta: float) -> void:

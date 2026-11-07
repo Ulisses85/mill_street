@@ -43,8 +43,8 @@ static func play(sound: StringName, volume_db_offset := 0.0) -> void:
 	var vol := 0.5
 	var pitch := 0.07
 	if item and not item.clips.is_empty():
-		stream = item.clips.pick_random()
-		vol = clampf(item.volume + randf_range(-item.random_volume, item.random_volume), 0.0, 1.0)
+		stream = item.clips[Game.fx_rng.randi() % item.clips.size()]
+		vol = clampf(item.volume + Game.fx_rng.randf_range(-item.random_volume, item.random_volume), 0.0, 1.0)
 		pitch = item.random_pitch
 	else:
 		var path := FALLBACK_DIR + String(sound) + ".wav"
@@ -56,7 +56,7 @@ static func play(sound: StringName, volume_db_offset := 0.0) -> void:
 		return
 	p.stream = stream
 	p.volume_db = linear_to_db(maxf(vol, 0.001)) + volume_db_offset
-	p.pitch_scale = 1.0 + randf_range(-pitch, pitch)
+	p.pitch_scale = 1.0 + Game.fx_rng.randf_range(-pitch, pitch)
 	p.play()
 
 

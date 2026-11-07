@@ -314,6 +314,8 @@ func overlaps(a: AttackData, target: Unit) -> bool:
 
 # ---------- combat: taking hits ----------
 func can_be_hit() -> bool:
+	if team == Team.PLAYER and Game.god_mode:
+		return false
 	return invulnerable_ticks <= 0 and not health.invulnerable and not (state in [&"down", &"getup", &"dead", &"knockdown"])
 
 

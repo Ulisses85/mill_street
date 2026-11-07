@@ -62,6 +62,8 @@ var cooldown := 0
 var alert_t := 0
 var grabber: Unit = null
 var weapon_goal: Pickup = null
+## Spreads waiting enemies around the player (seeded, so bot runs replay exactly).
+var spacing_slot := 0
 
 
 func _ready() -> void:
@@ -72,6 +74,7 @@ func _ready() -> void:
 	add_to_group(&"enemies")
 	defeated.connect(_drop_loot)
 	cooldown = int(randf_range(0.5, 1.2) * 60.0)
+	spacing_slot = randi() % 6
 	set_state(&"wait", &"lurk" if enable_fov else &"idle")
 
 
@@ -234,10 +237,10 @@ func _state_chase(p: Unit) -> void:
 	var side := -1.0 if position.x < p.position.x else 1.0
 	var cur := _current_attack()
 	var reach := cur.reach_to if cur else 28.0
-	var tx := p.position.x + side * ((wait_distance + float(get_instance_id() % 3) * 14.0) if hang else reach - 10.0)
+	var tx := p.position.x + side * ((wait_distance + float(spacing_slot % 3) * 14.0) if hang else reach - 10.0)
 	var ty := p.position.y
 	if hang and Level.current:
-		ty = clampf(p.position.y + (-20.0 if get_instance_id() % 2 == 1 else 20.0), Level.current.walk_area.position.y, Level.current.walk_area.end.y)
+		ty = clampf(p.position.y + (-20.0 if spacing_slot % 2 == 1 else 20.0), Level.current.walk_area.position.y, Level.current.walk_area.end.y)
 	var to := Vector2(tx - position.x, ty - position.y)
 	var step := Vector2(signf(to.x) * minf(move_speed * Game.TICK, absf(to.x)) if absf(to.x) > 2.0 else 0.0,
 		signf(to.y) * minf(move_speed * vertical_speed_factor * Game.TICK, absf(to.y)) if absf(to.y) > 2.0 else 0.0)

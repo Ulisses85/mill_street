@@ -21,6 +21,10 @@ var shake := 0.0
 
 var player: Node = null
 var score := 0
+## Debug: the player cannot be hit (DebugTools F2, or the test bot's `god` option).
+var god_mode := false
+## Random numbers for looks and sound only, so gameplay randomness stays reproducible with seed().
+var fx_rng := RandomNumberGenerator.new()
 signal score_changed(score: int)
 
 const DEFAULT_ACTIONS := {

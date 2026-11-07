@@ -76,12 +76,42 @@ Each animation in `sheet.json` also stores per-frame `hand` positions and a `wea
 
 To use other art, put a sheet with the same cell size, anchor and `sheet.json` animation names in place of these files. The game picks it up with no code changes. This is where the AI art workflow plugs in (milestone 3).
 
-## Tests
+## Testing
 
+### Play it
+- **Editor:** press **F5** to run from the main menu, or **F6** on a level scene to start straight in that level.
+- **Builds:** export with the presets in **Project → Export** (Web, Windows, Linux).
+- **Phone:** upload the web export to itch.io as a draft HTML5 project and open the page on your phone.
+
+### Debug tools
+These work in the editor and in debug exports. Release exports turn them off automatically.
+
+| Key | Action |
+|---|---|
+| F1 | Show / hide the debug panel (FPS, wave, enemies left, player state) |
+| F2 | God mode |
+| F3 | Defeat the current wave |
+| F4 | Unlock all levels |
+| F6 | Slow motion (25%) |
+| F7 | Show hurtboxes (blue), active attack hitboxes (red), enemy view cones, walk area and camera bound |
+| F8 | Full health and a bat |
+| F9 | Skip to the next level |
+
+### Bot playthrough
 ```
-godot --headless --path . res://tests/sim.tscn -- level_02     # a bot plays a level and logs waves / damage
-xvfb-run godot --path . --rendering-driver opengl3 res://tests/shots.tscn   # renders screenshots
+godot --headless --path . --fixed-fps 60 --disable-vsync res://tests/sim.tscn -- level_02 [god] [seed=7] [timeout=300] [boxes] [shots=900,1500] [quiet]
+tests/run_bot.sh god     # every level must be finishable
+tests/run_bot.sh         # balance report: 3 seeds per level, normal damage
 ```
+A bot plays the level with real inputs and walks around anything that blocks it. It prints a `RESULT` line and exits with `0` if the level was finished, `1` on timeout, `2` if the player died, or `3` on a setup error. A run takes about 3 seconds per level. Runs are deterministic for a given seed: cosmetic randomness (sound pitch, debris, camera shake) uses its own generator, `Game.fx_rng`. That means a failing seed replays exactly.
+
+### CI
+`.github/workflows/bot-playthrough.yml` runs on every push and pull request:
+1. Imports the project and fails on any script or parse error.
+2. Runs the god-mode bot on every level. The build fails if any level can't be finished or a script error is printed.
+3. Runs the normal-mode balance report. This step is informational: deaths don't fail the build, but timeouts do. Its table shows in the run summary.
+
+Logs are uploaded as the `bot-logs` artifact.
 
 ## Roadmap
 - ~~Milestone 2: full Osarion parity~~ ✔

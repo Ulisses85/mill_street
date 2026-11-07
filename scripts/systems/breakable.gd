@@ -81,11 +81,11 @@ func destroy(from_x: float, at := Vector2.INF, height := 12.0) -> void:
 	Effects.burst(parent, pos + Vector2(0, -height), 12.0)
 	for i in 9:
 		var c: Color = debris_colors[i % debris_colors.size()]
-		Effects.chunk(parent, pos + Vector2(randf_range(-8, 8), -height + randf_range(-6, 6)), c,
-			Vector2(randf_range(-2.4, 2.4) + signf(pos.x - from_x) * 1.2, randf_range(-4.2, -1.6)),
-			pos.y + randf_range(-4, 4), Vector2(randf_range(5, 13), randf_range(2, 5)))
+		Effects.chunk(parent, pos + Vector2(Game.fx_rng.randf_range(-8, 8), -height + Game.fx_rng.randf_range(-6, 6)), c,
+			Vector2(Game.fx_rng.randf_range(-2.4, 2.4) + signf(pos.x - from_x) * 1.2, Game.fx_rng.randf_range(-4.2, -1.6)),
+			pos.y + Game.fx_rng.randf_range(-4, 4), Vector2(Game.fx_rng.randf_range(5, 13), Game.fx_rng.randf_range(2, 5)))
 	for i in 5:
-		Effects.puff(parent, pos + Vector2(randf_range(-10, 10), -randf_range(0, 10)), randf_range(3, 6))
+		Effects.puff(parent, pos + Vector2(Game.fx_rng.randf_range(-10, 10), -Game.fx_rng.randf_range(0, 10)), Game.fx_rng.randf_range(3, 6))
 	if spawn_weapon:
 		Pickup.spawn_weapon(parent, pos, spawn_weapon)
 	elif spawn_health_texture and spawn_health_amount > 0:

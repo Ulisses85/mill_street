@@ -6,3 +6,4 @@ build/
 # tools
 tools/sprite_pipeline/.page.html
 __pycache__/
+test-logs/
