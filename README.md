@@ -59,7 +59,10 @@ Instance `scenes/characters/thug.tscn` under a `Wave` node:
 - Leave **Field of View** on, and it waits until it sees you.
 - Turn it off and place it past the `LevelBound`, and it runs in when the wave starts.
 
-## Art pipeline (v0)
+## AI art pipeline
+To turn AI-generated (or hand-drawn) art into playable characters, see **[tools/art/README.md](tools/art/README.md)**. In Claude Code, run `/new-enemy`. Put your keys in the environment (`PIXELLAB_API_KEY`, `RD_API_KEY`) and copy `.mcp.json.example` to `.mcp.json` to enable the PixelLab MCP server.
+
+## Procedural art pipeline (v0)
 
 ```
 python3 tools/sprite_pipeline/render.py   # needs: pip install playwright (+ Chromium)
@@ -115,7 +118,10 @@ Logs are uploaded as the `bot-logs` artifact.
 
 ## Roadmap
 - ~~Milestone 2: full Osarion parity~~ ✔
-- **Milestone 3: AI art pipeline.** Generate character and level art from your own ideas, then slice it into the sheet format above.
+- **Milestone 3: AI art pipeline.**
+  - Part 1 ✔ New enemies from AI art: `tools/art/` (importer, enemy builder, Retro Diffusion client) and Claude Code skills `/ideate`, `/new-enemy` and `/character-art` with PixelLab MCP. Example: the Bouncer (Mill Street wave 3, Canal Wharf wave 4).
+  - Part 2: AI-made hero.
+  - Part 3: AI-made level backgrounds.
 - **Exports:** Windows/Mac/Linux (Steam), Android/iOS, Web (itch.io).
 
 Fonts: Silkscreen (SIL Open Font License, `assets/fonts/OFL.txt`).

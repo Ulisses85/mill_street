@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/level.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/levels/wharf/signpost.png" id="2"]
@@ -21,11 +21,12 @@
 [ext_resource type="PackedScene" path="res://scenes/characters/thug.tscn" id="19"]
 [ext_resource type="Script" path="res://scripts/systems/level_bound.gd" id="20"]
 [ext_resource type="PackedScene" path="res://scenes/characters/brute.tscn" id="21"]
-[ext_resource type="PackedScene" path="res://scenes/characters/boss_bookie.tscn" id="22"]
-[ext_resource type="Script" path="res://scripts/systems/beat_camera.gd" id="23"]
-[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="24"]
-[ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="25"]
-[ext_resource type="PackedScene" path="res://scenes/ui/level_menus.tscn" id="26"]
+[ext_resource type="PackedScene" path="res://scenes/characters/bouncer.tscn" id="22"]
+[ext_resource type="PackedScene" path="res://scenes/characters/boss_bookie.tscn" id="23"]
+[ext_resource type="Script" path="res://scripts/systems/beat_camera.gd" id="24"]
+[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="25"]
+[ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="26"]
+[ext_resource type="PackedScene" path="res://scenes/ui/level_menus.tscn" id="27"]
 
 [node name="Level02" type="Node2D"]
 script = ExtResource("1")
@@ -169,7 +170,7 @@ start_direction = 1
 position = Vector2(2080, 230)
 start_direction = -1
 
-[node name="Brute13" parent="World/WaveManager/Wave4" instance=ExtResource("21")]
+[node name="Bouncer13" parent="World/WaveManager/Wave4" instance=ExtResource("22")]
 position = Vector2(2290, 210)
 enable_fov = false
 
@@ -181,7 +182,7 @@ script = ExtResource("20")
 y_sort_enabled = true
 script = ExtResource("18")
 
-[node name="Bookie14" parent="World/WaveManager/Wave5" instance=ExtResource("22")]
+[node name="Bookie14" parent="World/WaveManager/Wave5" instance=ExtResource("23")]
 position = Vector2(2700, 206)
 start_direction = -1
 
@@ -205,7 +206,7 @@ script = ExtResource("20")
 z_index = 50
 
 [node name="BeatCamera" type="Camera2D" parent="."]
-script = ExtResource("23")
+script = ExtResource("24")
 view_area = Rect2(0, 0, 2900, 270)
 
 [node name="HUD" type="CanvasLayer" parent="."]
@@ -218,9 +219,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("24")
-
-[node name="TouchControls" type="CanvasLayer" parent="."]
 script = ExtResource("25")
 
-[node name="LevelMenus" parent="." instance=ExtResource("26")]
+[node name="TouchControls" type="CanvasLayer" parent="."]
+script = ExtResource("26")
+
+[node name="LevelMenus" parent="." instance=ExtResource("27")]

@@ -30,6 +30,13 @@ jobs:
           unzip -q godot.zip && rm godot.zip
           mv "Godot_v${GODOT_VERSION}_linux.x86_64" godot && chmod +x godot
 
+      - name: Art pipeline still imports the example character
+        run: |
+          pip install --quiet pillow
+          python3 tools/art/import_character.py art/characters/bouncer/character.json
+          python3 tools/art/make_enemy.py art/characters/bouncer/character.json
+          git diff --stat -- scenes/characters/bouncer.tscn resources/attacks/bouncer_attack.tres
+
       - name: Import project
         run: |
           # The first import on a fresh clone builds the .godot cache; scripts that preload

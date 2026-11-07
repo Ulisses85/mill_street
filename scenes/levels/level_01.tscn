@@ -20,7 +20,7 @@
 [ext_resource type="Script" path="res://scripts/systems/wave.gd" id="18"]
 [ext_resource type="PackedScene" path="res://scenes/characters/thug.tscn" id="19"]
 [ext_resource type="Script" path="res://scripts/systems/level_bound.gd" id="20"]
-[ext_resource type="PackedScene" path="res://scenes/characters/brute.tscn" id="21"]
+[ext_resource type="PackedScene" path="res://scenes/characters/bouncer.tscn" id="21"]
 [ext_resource type="PackedScene" path="res://scenes/characters/boss_foreman.tscn" id="22"]
 [ext_resource type="Script" path="res://scripts/systems/beat_camera.gd" id="23"]
 [ext_resource type="Script" path="res://scripts/ui/hud.gd" id="24"]
@@ -128,7 +128,7 @@ script = ExtResource("20")
 y_sort_enabled = true
 script = ExtResource("18")
 
-[node name="Brute8" parent="World/WaveManager/Wave3" instance=ExtResource("21")]
+[node name="Bouncer8" parent="World/WaveManager/Wave3" instance=ExtResource("21")]
 position = Vector2(1640, 200)
 start_direction = -1
 

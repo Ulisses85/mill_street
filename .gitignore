@@ -7,3 +7,5 @@ build/
 tools/sprite_pipeline/.page.html
 __pycache__/
 test-logs/
+.mcp.json
+.env

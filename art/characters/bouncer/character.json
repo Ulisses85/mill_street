@@ -1,0 +1,24 @@
+{
+  "id": "bouncer",
+  "display_name": "Bouncer",
+  "role": "enemy",
+  "preset": "brute",
+  "concept": "Nightclub doorman in a purple bomber and shades. Slow, blocks a lot, hits hard with a two-handed smash. Guards the doors on Mill Street.",
+  "target_height": 70,
+  "source_facing": "right",
+  "attack_animation": "smash",
+  "background": "auto",
+  "palette": { "max_colors": 20 },
+  "stats": { "max_hp": 90, "move_speed": 42, "defend_chance": 45, "attack_damage": 15, "windup_time": 0.4, "score_value": 700 },
+  "generator": {
+    "provider": "pixellab",
+    "prompt": "beat em up enemy, heavy-set nightclub bouncer, purple bomber jacket, dark shades, bald, side view facing right, pixel art, clean outline",
+    "animations_requested": ["idle", "walk", "attack (two-handed overhead smash)", "hurt"]
+  },
+  "animations": {
+    "idle":  { "source": "raw/idle", "fps": 8.5, "loop": true },
+    "walk":  { "source": "raw/walk_strip.png", "frames": 8, "fps": 20, "loop": true },
+    "smash": { "source": "raw/attack.gif", "fps": 30, "active": [4, 6] },
+    "hurt":  { "source": "raw/hurt.png", "fps": 8 }
+  }
+}
