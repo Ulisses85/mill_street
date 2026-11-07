@@ -22,7 +22,7 @@ On phones and tablets an on-screen stick and buttons (P K J D G) appear on the f
 
 ## Run it
 
-Open the folder in Godot 4.3 or newer and press **F5**. The game starts on the main menu (`scenes/ui/main_menu.tscn`). To play one level straight away, open it in `scenes/levels/` and press **F6**.
+Open the folder in Godot 4.3 or newer and press **F5**. On the very first open, Godot imports all the assets. While it does, it may print a burst of `Could not preload resource` errors. They go away once the import finishes; if any remain, use **Project → Reload Current Project**. The game starts on the main menu (`scenes/ui/main_menu.tscn`). To play one level straight away, open it in `scenes/levels/` and press **F6**.
 
 ## What's in it
 
