@@ -1,0 +1,184 @@
+[gd_resource type="Resource" script_class="AudioLibrary" load_steps=35 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/audio_item.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/systems/audio_library.gd" id="2"]
+[ext_resource type="AudioStream" path="res://assets/sfx/swish.wav" id="3"]
+[ext_resource type="AudioStream" path="res://assets/sfx/hit.wav" id="4"]
+[ext_resource type="AudioStream" path="res://assets/sfx/heavy.wav" id="5"]
+[ext_resource type="AudioStream" path="res://assets/sfx/hurt.wav" id="6"]
+[ext_resource type="AudioStream" path="res://assets/sfx/thud.wav" id="7"]
+[ext_resource type="AudioStream" path="res://assets/sfx/jump.wav" id="8"]
+[ext_resource type="AudioStream" path="res://assets/sfx/block.wav" id="9"]
+[ext_resource type="AudioStream" path="res://assets/sfx/alert.wav" id="10"]
+[ext_resource type="AudioStream" path="res://assets/sfx/ko.wav" id="11"]
+[ext_resource type="AudioStream" path="res://assets/sfx/go.wav" id="12"]
+[ext_resource type="AudioStream" path="res://assets/sfx/pickup.wav" id="13"]
+[ext_resource type="AudioStream" path="res://assets/sfx/break.wav" id="14"]
+[ext_resource type="AudioStream" path="res://assets/sfx/throw.wav" id="15"]
+[ext_resource type="AudioStream" path="res://assets/sfx/music_street.wav" id="16"]
+[ext_resource type="AudioStream" path="res://assets/sfx/music_wharf.wav" id="17"]
+[ext_resource type="AudioStream" path="res://assets/sfx/music_market.wav" id="18"]
+
+[sub_resource type="Resource" id="swish"]
+script = ExtResource("1")
+item_name = &"swish"
+clips = Array[AudioStream]([ExtResource("3")])
+volume = 0.4
+random_volume = 0.05
+min_time_between_calls = 0.03
+random_pitch = 0.1
+loop = false
+
+[sub_resource type="Resource" id="hit"]
+script = ExtResource("1")
+item_name = &"hit"
+clips = Array[AudioStream]([ExtResource("4")])
+volume = 0.55
+random_volume = 0.05
+min_time_between_calls = 0.03
+random_pitch = 0.08
+loop = false
+
+[sub_resource type="Resource" id="heavy"]
+script = ExtResource("1")
+item_name = &"heavy"
+clips = Array[AudioStream]([ExtResource("5")])
+volume = 0.6
+random_volume = 0.05
+min_time_between_calls = 0.03
+random_pitch = 0.06
+loop = false
+
+[sub_resource type="Resource" id="hurt"]
+script = ExtResource("1")
+item_name = &"hurt"
+clips = Array[AudioStream]([ExtResource("6")])
+volume = 0.5
+random_volume = 0.05
+min_time_between_calls = 0.05
+random_pitch = 0.06
+loop = false
+
+[sub_resource type="Resource" id="thud"]
+script = ExtResource("1")
+item_name = &"thud"
+clips = Array[AudioStream]([ExtResource("7")])
+volume = 0.55
+random_volume = 0.05
+min_time_between_calls = 0.05
+random_pitch = 0.08
+loop = false
+
+[sub_resource type="Resource" id="jump"]
+script = ExtResource("1")
+item_name = &"jump"
+clips = Array[AudioStream]([ExtResource("8")])
+volume = 0.4
+random_volume = 0.03
+min_time_between_calls = 0.05
+random_pitch = 0.05
+loop = false
+
+[sub_resource type="Resource" id="block"]
+script = ExtResource("1")
+item_name = &"block"
+clips = Array[AudioStream]([ExtResource("9")])
+volume = 0.45
+random_volume = 0.03
+min_time_between_calls = 0.04
+random_pitch = 0.06
+loop = false
+
+[sub_resource type="Resource" id="alert"]
+script = ExtResource("1")
+item_name = &"alert"
+clips = Array[AudioStream]([ExtResource("10")])
+volume = 0.4
+random_volume = 0.03
+min_time_between_calls = 0.2
+random_pitch = 0.04
+loop = false
+
+[sub_resource type="Resource" id="ko"]
+script = ExtResource("1")
+item_name = &"ko"
+clips = Array[AudioStream]([ExtResource("11")])
+volume = 0.45
+random_volume = 0.0
+min_time_between_calls = 0.2
+random_pitch = 0.03
+loop = false
+
+[sub_resource type="Resource" id="go"]
+script = ExtResource("1")
+item_name = &"go"
+clips = Array[AudioStream]([ExtResource("12")])
+volume = 0.4
+random_volume = 0.0
+min_time_between_calls = 0.5
+random_pitch = 0.0
+loop = false
+
+[sub_resource type="Resource" id="pickup"]
+script = ExtResource("1")
+item_name = &"pickup"
+clips = Array[AudioStream]([ExtResource("13")])
+volume = 0.45
+random_volume = 0.0
+min_time_between_calls = 0.05
+random_pitch = 0.03
+loop = false
+
+[sub_resource type="Resource" id="break"]
+script = ExtResource("1")
+item_name = &"break"
+clips = Array[AudioStream]([ExtResource("14")])
+volume = 0.6
+random_volume = 0.05
+min_time_between_calls = 0.05
+random_pitch = 0.08
+loop = false
+
+[sub_resource type="Resource" id="throw"]
+script = ExtResource("1")
+item_name = &"throw"
+clips = Array[AudioStream]([ExtResource("15")])
+volume = 0.4
+random_volume = 0.05
+min_time_between_calls = 0.03
+random_pitch = 0.08
+loop = false
+
+[sub_resource type="Resource" id="music_street"]
+script = ExtResource("1")
+item_name = &"music_street"
+clips = Array[AudioStream]([ExtResource("16")])
+volume = 0.35
+random_volume = 0.0
+min_time_between_calls = 0.0
+random_pitch = 0.0
+loop = true
+
+[sub_resource type="Resource" id="music_wharf"]
+script = ExtResource("1")
+item_name = &"music_wharf"
+clips = Array[AudioStream]([ExtResource("17")])
+volume = 0.35
+random_volume = 0.0
+min_time_between_calls = 0.0
+random_pitch = 0.0
+loop = true
+
+[sub_resource type="Resource" id="music_market"]
+script = ExtResource("1")
+item_name = &"music_market"
+clips = Array[AudioStream]([ExtResource("18")])
+volume = 0.35
+random_volume = 0.0
+min_time_between_calls = 0.0
+random_pitch = 0.0
+loop = true
+
+[resource]
+script = ExtResource("2")
+items = Array[ExtResource("1")]([SubResource("swish"), SubResource("hit"), SubResource("heavy"), SubResource("hurt"), SubResource("thud"), SubResource("jump"), SubResource("block"), SubResource("alert"), SubResource("ko"), SubResource("go"), SubResource("pickup"), SubResource("break"), SubResource("throw"), SubResource("music_street"), SubResource("music_wharf"), SubResource("music_market")])

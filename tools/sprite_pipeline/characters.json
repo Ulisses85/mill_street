@@ -1,23 +1,209 @@
 {
-  "cell": [128, 112],
-  "anchor": [64, 100],
-  "characters": {
-    "player": {
-      "kind": "player",
-      "scale": 1.0,
-      "palette": { "main": "#ececf3", "shade": "#a6a6b8", "hi": "#ffffff", "outline": [38, 36, 52], "visor": "#565669" },
-      "portrait": true,
-      "anims": ["idle", "run", "jab", "cross", "hook", "lowkick", "kick", "jump", "jpunch", "jkick",
-                "defend", "hurt", "knockdown", "down", "getup", "grab", "grab_knee", "throw"]
-    },
-    "thug": {
-      "kind": "enemy",
-      "type": "thug",
-      "scale": 1.0,
-      "palette": { "main": "#e8352f", "shade": "#a01a18", "hi": "#ff9a8a", "outline": [72, 10, 12] },
-      "portrait": true,
-      "anims": ["idle", "walk", "run", "windup", "punch", "hurt", "defend", "grabbed",
-                "knockdown", "down", "getup", "lurk"]
-    }
+ "cell": [
+  160,
+  128
+ ],
+ "anchor": [
+  80,
+  116
+ ],
+ "characters": {
+  "player": {
+   "kind": "player",
+   "scale": 1.0,
+   "palette": {
+    "main": "#ececf3",
+    "shade": "#a6a6b8",
+    "hi": "#ffffff",
+    "outline": [
+     38,
+     36,
+     52
+    ],
+    "visor": "#565669"
+   },
+   "portrait": true,
+   "anims": [
+    "idle",
+    "run",
+    "jab",
+    "cross",
+    "hook",
+    "lowkick",
+    "kick",
+    "jump",
+    "jpunch",
+    "jkick",
+    "defend",
+    "hurt",
+    "knockdown",
+    "down",
+    "getup",
+    "grab",
+    "grab_knee",
+    "throw",
+    "swing",
+    "toss",
+    "carry",
+    "carry_idle",
+    "pickup"
+   ]
+  },
+  "thug": {
+   "kind": "enemy",
+   "type": "thug",
+   "scale": 1.0,
+   "palette": {
+    "main": "#e8352f",
+    "shade": "#a01a18",
+    "hi": "#ff9a8a",
+    "outline": [
+     72,
+     10,
+     12
+    ]
+   },
+   "portrait": true,
+   "anims": [
+    "idle",
+    "walk",
+    "run",
+    "windup",
+    "punch",
+    "hurt",
+    "defend",
+    "grabbed",
+    "knockdown",
+    "down",
+    "getup",
+    "lurk",
+    "swing",
+    "pickup",
+    "windup_armed"
+   ]
+  },
+  "brute": {
+   "kind": "enemy",
+   "type": "brute",
+   "scale": 1.25,
+   "palette": {
+    "main": "#b8232c",
+    "shade": "#6e1016",
+    "hi": "#f06a6a",
+    "outline": [
+     48,
+     4,
+     8
+    ]
+   },
+   "portrait": true,
+   "anims": [
+    "idle",
+    "walk",
+    "run",
+    "windup",
+    "hurt",
+    "defend",
+    "grabbed",
+    "knockdown",
+    "down",
+    "getup",
+    "lurk",
+    "smash"
+   ]
+  },
+  "boss_foreman": {
+   "kind": "enemy",
+   "type": "brute",
+   "scale": 1.45,
+   "palette": {
+    "main": "#ff4a2a",
+    "shade": "#b02010",
+    "hi": "#ffb090",
+    "outline": [
+     70,
+     12,
+     4
+    ],
+    "acc": "hat"
+   },
+   "portrait": true,
+   "anims": [
+    "idle",
+    "walk",
+    "run",
+    "windup",
+    "hurt",
+    "defend",
+    "grabbed",
+    "knockdown",
+    "down",
+    "getup",
+    "lurk",
+    "slam"
+   ]
+  },
+  "boss_bookie": {
+   "kind": "enemy",
+   "type": "brute",
+   "scale": 1.3,
+   "palette": {
+    "main": "#c8204a",
+    "shade": "#7a0e2a",
+    "hi": "#ff7aa0",
+    "outline": [
+     56,
+     4,
+     18
+    ],
+    "acc": "shades"
+   },
+   "portrait": true,
+   "anims": [
+    "idle",
+    "walk",
+    "run",
+    "windup",
+    "hurt",
+    "defend",
+    "grabbed",
+    "knockdown",
+    "down",
+    "getup",
+    "lurk",
+    "kick"
+   ]
+  },
+  "boss_landlord": {
+   "kind": "enemy",
+   "type": "brute",
+   "scale": 1.55,
+   "palette": {
+    "main": "#9a1a22",
+    "shade": "#560a10",
+    "hi": "#e05050",
+    "outline": [
+     36,
+     2,
+     6
+    ],
+    "acc": "chain"
+   },
+   "portrait": true,
+   "anims": [
+    "idle",
+    "walk",
+    "run",
+    "windup",
+    "hurt",
+    "defend",
+    "grabbed",
+    "knockdown",
+    "down",
+    "getup",
+    "lurk",
+    "slam"
+   ]
   }
+ }
 }

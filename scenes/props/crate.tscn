@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/breakable.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="2"]
+[ext_resource type="Texture2D" path="res://assets/levels/street/crate.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/levels/street/crate_damaged.png" id="4"]
+
+[node name="Crate" type="Node2D"]
+script = ExtResource("1")
+texture = ExtResource("3")
+damaged_texture = ExtResource("4")
+debris_colors = PackedColorArray(0.658824, 0.454902, 0.243137, 1, 0.541176, 0.352941, 0.180392, 1, 0.368627, 0.231373, 0.109804, 1)
+
+[node name="HealthSystem" type="Node" parent="."]
+script = ExtResource("2")
+max_hp = 12
+current_hp = 12
+shake_intensity = 1.5

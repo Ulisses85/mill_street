@@ -54,17 +54,41 @@ func frame_count(anim: StringName) -> int:
 	return int(anims[String(anim)]["frames"]) if has_animation(anim) else 1
 
 
+func frame_index(anim: StringName, ticks: int) -> int:
+	var key := String(anim)
+	if not anims.has(key):
+		return 0
+	var a: Dictionary = anims[key]
+	var n := int(a["frames"])
+	@warning_ignore("integer_division")
+	var f: int = ticks / maxi(1, int(a["ticks_per_frame"]))
+	return f % n if a.get("loop", false) else mini(f, n - 1)
+
+
 ## Shows the frame of `anim` that matches `ticks` since the animation started.
 func show_frame(anim: StringName, ticks: int) -> void:
 	var key := String(anim)
 	if not anims.has(key):
 		return
-	var a: Dictionary = anims[key]
-	var n := int(a["frames"])
-	@warning_ignore("integer_division")
-	var f: int = ticks / maxi(1, int(a["ticks_per_frame"]))
-	f = f % n if a.get("loop", false) else min(f, n - 1)
-	region_rect = Rect2(f * cell.x, int(a["row"]) * cell.y, cell.x, cell.y)
+	var f := frame_index(anim, ticks)
+	region_rect = Rect2(f * cell.x, int(anims[key]["row"]) * cell.y, cell.x, cell.y)
+
+
+## Weapon bone: hand position (relative to the feet, facing right) for the current frame.
+func hand_at(anim: StringName, ticks: int) -> Vector2:
+	var a: Dictionary = anims.get(String(anim), {})
+	var h: Array = a.get("hand", [])
+	if h.is_empty():
+		return Vector2(9, -38)
+	var p: Array = h[frame_index(anim, ticks)]
+	return Vector2(p[0], p[1])
+
+
+## Suggested weapon angle (radians, facing right) for the current frame.
+func weapon_angle_at(anim: StringName, ticks: int) -> float:
+	var a: Dictionary = anims.get(String(anim), {})
+	var w: Array = a.get("weapon_angle", [])
+	return -1.1 if w.is_empty() else float(w[frame_index(anim, ticks)])
 
 
 func set_flash(on: bool) -> void:

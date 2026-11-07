@@ -59,6 +59,10 @@ enum Team { PLAYER, ENEMY }
 ## If off, knockdown attacks break this unit's guard.
 @export var defence_stops_knockdown_attacks := false
 
+@export_group("Weapons")
+@export var lose_weapon_when_hit := false
+@export var lose_weapon_when_knocked_down := true
+
 @export_group("Hurtbox")
 ## Half-width of the body for hit checks (pixels).
 @export var body_half_width := 9.0
@@ -84,6 +88,12 @@ var squash := 0
 var current_attack: AttackData = null
 var hit_this_attack: Array = []
 var display_name := ""
+var held_weapon: WeaponData = null
+var weapon_uses := 0
+var carrying: Breakable = null
+var _weapon_sprite: Sprite2D
+var _carry_sprite: Sprite2D
+var _small_bar: Node2D
 
 @onready var body: SpriteAnimator = $Body
 @onready var shadow: Node2D = $Shadow
@@ -97,6 +107,19 @@ func _ready() -> void:
 	if show_name_in_all_caps:
 		display_name = display_name.to_upper()
 	health.died.connect(_on_died)
+	_weapon_sprite = Sprite2D.new()
+	_weapon_sprite.centered = false
+	_weapon_sprite.visible = false
+	add_child(_weapon_sprite)
+	_carry_sprite = Sprite2D.new()
+	_carry_sprite.centered = false
+	_carry_sprite.visible = false
+	add_child(_carry_sprite)
+	if health.show_small_health_bar:
+		_small_bar = preload("res://scripts/ui/small_health_bar.gd").new()
+		_small_bar.health = health
+		_small_bar.position = health.bar_offset
+		add_child(_small_bar)
 
 
 # ---------- per-tick ----------
@@ -143,12 +166,37 @@ func _update_visuals() -> void:
 	body.scale = Vector2(1.0 + sq, 1.0 - sq)
 	body.set_flash(health.flashing())
 	body.show_frame(anim, anim_t)
+	_update_held(jolt)
 	shadow.scale = Vector2.ONE * (1.0 - minf(z, 60.0) / 120.0)
 	if state == &"dead":
 		visible = (t / 4) % 2 == 0
 
 
+func _update_held(jolt: float) -> void:
+	var tossed := state == &"attack" and current_attack and held_weapon and held_weapon.thrown and t >= current_attack.ticks(current_attack.active_from)
+	_weapon_sprite.visible = held_weapon != null and not (state in [&"knockdown", &"dead", &"grabbed"]) and not tossed
+	if _weapon_sprite.visible:
+		var hand := body.hand_at(anim, anim_t) * Vector2(body.scale.x, body.scale.y)
+		var ang := body.weapon_angle_at(anim, anim_t)
+		if held_weapon.thrown and not (state == &"attack" and current_attack == held_weapon.throw_attack):
+			ang = -0.25
+		_weapon_sprite.texture = held_weapon.texture
+		_weapon_sprite.offset = -held_weapon.grip
+		_weapon_sprite.position = Vector2(hand.x * face + round(jolt), hand.y - round(z))
+		_weapon_sprite.rotation = ang if face > 0 else PI - ang
+		_weapon_sprite.flip_v = face < 0
+		_weapon_sprite.z_index = 1
+	_carry_sprite.visible = carrying != null
+	if carrying:
+		var tex := carrying.texture
+		_carry_sprite.texture = tex
+		_carry_sprite.position = Vector2(-tex.get_width() / 2.0, -round(z) - body_height - tex.get_height() + 8 + (1 if anim == &"carry" and (anim_t / 6) % 2 == 0 else 0))
+		_carry_sprite.z_index = 1
+
+
 func _clamp_to_floor() -> void:
+	if team == Team.PLAYER and not (state in [&"knockdown", &"dead"]):
+		Breakable.push_out(self, body_half_width)
 	var lvl := Level.current
 	if lvl:
 		position.y = clamp(position.y, lvl.walk_area.position.y, lvl.walk_area.end.y)
@@ -204,7 +252,52 @@ func process_attack_hits(a: AttackData, from_t: int = -1) -> int:
 		hit_this_attack.append(target)
 		if target.receive_hit(self, a):
 			n += 1
+	if team == Team.PLAYER:
+		for b in get_tree().get_nodes_in_group(&"breakables"):
+			var br := b as Breakable
+			if br in hit_this_attack or not br.can_be_hit() or absf(br.position.y - position.y) > a.depth_range or z > 40.0:
+				continue
+			var dx := (br.position.x - position.x) * (signf(br.position.x - position.x) if a.hits_both_sides else float(face))
+			if dx < -4.0 or dx > a.reach_to + br.half_width:
+				continue
+			hit_this_attack.append(br)
+			br.receive_hit(self, a)
+	if n > 0 and held_weapon and not held_weapon.thrown and (a == held_weapon.attack or a == held_weapon.enemy_attack):
+		use_weapon()
 	return n
+
+
+# ---------- weapons ----------
+func equip(w: WeaponData, uses: int) -> void:
+	held_weapon = w
+	weapon_uses = uses
+	Effects.float_text(get_parent(), position + Vector2(0, -body_height - 6), w.weapon_name + ("!" if team == Team.ENEMY else ""), Color("#c5ccd3") if team == Team.PLAYER else Color("#ff3a2a"))
+	Sfx.play(&"pickup" if team == Team.PLAYER else &"alert")
+
+
+func use_weapon() -> void:
+	weapon_uses -= 1
+	if weapon_uses <= 0:
+		Effects.float_text(get_parent(), position + Vector2(0, -body_height - 6), held_weapon.weapon_name + " BROKE", Color("#c5ccd3"))
+		held_weapon = null
+
+
+func drop_weapon() -> void:
+	if held_weapon == null:
+		return
+	Pickup.spawn_weapon(get_parent(), position, held_weapon, weapon_uses)
+	held_weapon = null
+
+
+func drop_carried() -> void:
+	if carrying == null:
+		return
+	var b := carrying
+	carrying = null
+	b.position = position + Vector2(face * 14, 0)
+	b.visible = true
+	b.add_to_group(&"breakables")
+	b.process_mode = Node.PROCESS_MODE_INHERIT
 
 
 func overlaps(a: AttackData, target: Unit) -> bool:
@@ -221,6 +314,8 @@ func overlaps(a: AttackData, target: Unit) -> bool:
 
 # ---------- combat: taking hits ----------
 func can_be_hit() -> bool:
+	if team == Team.PLAYER and Game.god_mode:
+		return false
 	return invulnerable_ticks <= 0 and not health.invulnerable and not (state in [&"down", &"getup", &"dead", &"knockdown"])
 
 
@@ -270,6 +365,9 @@ func guard_broken() -> void:
 
 
 func hurt(dir: float, push: float) -> void:
+	drop_carried()
+	if lose_weapon_when_hit:
+		drop_weapon()
 	position.x += dir * push * 2.0
 	face = -int(dir)
 	squash = 4
@@ -277,6 +375,9 @@ func hurt(dir: float, push: float) -> void:
 
 
 func knockdown(dir: float, force := 1.0) -> void:
+	drop_carried()
+	if lose_weapon_when_knocked_down or lose_weapon_when_hit:
+		drop_weapon()
 	face = -int(dir)
 	var v := sqrt(2.0 * gravity * knockdown_height)
 	vz = v
@@ -291,6 +392,7 @@ func knockdown(dir: float, force := 1.0) -> void:
 
 
 func thrown(by: Unit, dir: float) -> void:
+	drop_weapon()
 	face = int(dir)
 	var v := sqrt(2.0 * gravity * throw_height)
 	vz = v

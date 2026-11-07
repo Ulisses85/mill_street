@@ -341,7 +341,7 @@ function renderSprite(e) {
   if (pal.acc === 'hat') { sctx.fillStyle = '#ffcc1a'; sctx.beginPath(); sctx.arc(hd[0], hd[1] - 1.8, 6.8, Math.PI, Math.PI * 2); sctx.fill(); R2(hd[0] - 6, hd[1] - 2.4, 15, 2.2, '#c89a00'); }
   if (pal.acc === 'shades') { R2(hd[0] + 1, hd[1] - 1.8, 6, 2.2, '#16121a'); R2(hd[0] + 4.4, hd[1] - 1.6, 1.2, 0.8, '#ffffff'); }
   // weapon + near arm
-  if (e.weapon && !(e.state === 'attack' && e.atk === 'toss' && e.t >= ATK.toss.a0)) {
+  if (e.weapon && !e.noDraw && !(e.state === 'attack' && e.atk === 'toss' && e.t >= ATK.toss.a0)) {
     const wt = e.weapon.type, thrown = WEAPONS[wt].thrown;
     let ang = thrown ? -0.25 : -1.1;
     if (e.state === 'attack' && ATK[e.atk].swing) { const a = ATK[e.atk]; ang = e.t < a.a0 ? -2.5 : e.t <= a.a1 ? 0.05 : 0.6; }

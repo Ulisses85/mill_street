@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+attack_name = "Bat Swing"
+damage = 13
+knockdown = true
+animation = &"swing"
+duration = 0.33
+active_from = 0.1
+active_to = 0.17
+reach_to = 48.0
+hitstop_frames = 3
+screen_shake = 4.0

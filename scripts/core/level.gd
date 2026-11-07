@@ -19,6 +19,8 @@ static var current: Level = null
 @export_file("*.json") var layout_json := ""
 @export var signpost_texture: Texture2D
 @export var show_walk_area_in_editor := true
+## AudioItem name in the audio library (Sfx.music).
+@export var music := &"music_street"
 
 @onready var foreground: Node2D = get_node_or_null("Foreground")
 @onready var camera: Camera2D = get_node_or_null("BeatCamera")
@@ -38,6 +40,9 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	_place_signposts()
+	Sfx.music(music)
+	if Game.current_level < 0:
+		Game.current_level = Game._index_of_current_scene()
 
 
 func _place_signposts() -> void:

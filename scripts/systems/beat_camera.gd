@@ -49,7 +49,7 @@ func _physics_process(delta: float) -> void:
 	position.x = left + half.x
 	position.y = view_area.position.y + half.y + y_offset
 	furthest_left = maxf(furthest_left, left)
-	offset = Vector2(randf_range(-1, 1), randf_range(-0.6, 0.6)) * Game.shake if Game.shake > 0.0 else Vector2.ZERO
+	offset = Vector2(Game.fx_rng.randf_range(-1, 1), Game.fx_rng.randf_range(-0.6, 0.6)) * Game.shake if Game.shake > 0.0 else Vector2.ZERO
 	if restrict_targets_to_cam_view:
 		var right_edge := minf(left + half.x * 2.0, level_bound)
 		for n in list:

@@ -10,6 +10,21 @@ extends Unit
 @export_range(0.0, 5.0, 0.05, "suffix:s") var attack_cooldown_min := 0.85
 @export_range(0.0, 5.0, 0.05, "suffix:s") var attack_cooldown_max := 1.5
 
+@export_group("Weapons ")
+@export var can_pick_up_weapons := false
+@export var weapon_search_range := 170.0
+
+@export_group("Drops")
+@export_range(0.0, 1.0, 0.05) var drop_health_chance := 0.0
+@export var drop_health_amount := 15
+@export var drop_health_texture: Texture2D
+
+@export_group("Boss")
+## Big health bar, name banner when it engages, cannot be grabbed.
+@export var is_boss := false
+## Light hits do not interrupt its windup or attack.
+@export var super_armor := false
+
 @export_group("AI")
 ## How many enemies may wind up or attack at the same time (shared by all enemies).
 @export var max_simultaneous_attackers := 2
@@ -46,13 +61,20 @@ var wave: Node = null
 var cooldown := 0
 var alert_t := 0
 var grabber: Unit = null
+var weapon_goal: Pickup = null
+## Spreads waiting enemies around the player (seeded, so bot runs replay exactly).
+var spacing_slot := 0
 
 
 func _ready() -> void:
 	team = Team.ENEMY
+	if is_boss:
+		can_be_grabbed = false
 	super._ready()
 	add_to_group(&"enemies")
+	defeated.connect(_drop_loot)
 	cooldown = int(randf_range(0.5, 1.2) * 60.0)
+	spacing_slot = randi() % 6
 	set_state(&"wait", &"lurk" if enable_fov else &"idle")
 
 
@@ -65,6 +87,10 @@ func _physics_process(delta: float) -> void:
 func _tick() -> void:
 	if cooldown > 0:
 		cooldown -= 1
+	if state != &"wait":
+		var cam := get_viewport().get_camera_2d() as BeatCamera
+		if cam and cam.level_bound < INF and wave != null and wave.get("active") == true:
+			position.x = minf(position.x, cam.level_bound - 10.0)
 	var p := Game.player as Unit
 	match state:
 		&"wait":
@@ -73,7 +99,11 @@ func _tick() -> void:
 			_state_chase(p)
 		&"windup":
 			if t >= int(windup_time * 60.0):
-				begin_attack(attack)
+				begin_attack(_current_attack())
+		&"pickup":
+			if t >= 14:
+				cooldown = mini(cooldown, 20)
+				set_state(&"idle", &"idle")
 		&"attack":
 			process_attack_hits(current_attack)
 			if current_attack.is_active(t) and current_attack.forward_step != 0.0:
@@ -112,7 +142,7 @@ func _state_wait(p: Unit) -> void:
 	var wave_active: bool = wave != null and wave.get("active") == true
 	if look_around_time > 0.0 and enable_fov and t > 0 and t % int(look_around_time * 60.0) == 0:
 		face = -face
-	var on_screen := _on_screen(40.0)
+	var on_screen := _on_screen(120.0)
 	if wave_active and on_screen:
 		alert_t += 1
 	if target_in_sight or (p and position.distance_to(p.position) < 48.0) or (wave_active and not enable_fov) or (wave_active and on_screen and alert_t > int(alert_delay * 60.0)):
@@ -141,21 +171,62 @@ func activate() -> void:
 	Effects.float_text(get_parent(), position + Vector2(0, -body_height - 10), "!", Color("#ff3a2a"))
 	Sfx.play(&"alert")
 	Game.enemy_engaged.emit(self)
+	if is_boss:
+		Game.message(display_name, 2.2, true)
 	set_state(&"idle", &"idle")
 
 
-func _on_screen(margin: float) -> bool:
+func _current_attack() -> AttackData:
+	if held_weapon and held_weapon.enemy_attack:
+		return held_weapon.enemy_attack
+	return attack
+
+
+func _seek_weapon() -> bool:
+	if not can_pick_up_weapons or held_weapon:
+		return false
+	if weapon_goal and (not is_instance_valid(weapon_goal) or weapon_goal.is_queued_for_deletion()):
+		weapon_goal = null
+	if weapon_goal == null:
+		for n in get_tree().get_nodes_in_group(&"pickups"):
+			var pk := n as Pickup
+			if pk.kind != Pickup.Kind.WEAPON or pk.weapon == null or pk.weapon.thrown or pk.claimed_by != null:
+				continue
+			if pk.position.distance_to(position) < weapon_search_range and _on_screen(-10.0, pk.position.x):
+				weapon_goal = pk
+				pk.claimed_by = self
+				break
+	if weapon_goal == null:
+		return false
+	var to := weapon_goal.position - position
+	if absf(to.x) < 6.0 and absf(to.y) < 5.0:
+		equip(weapon_goal.weapon, weapon_goal.weapon_uses(true))
+		weapon_goal.queue_free()
+		weapon_goal = null
+		set_state(&"pickup", &"pickup")
+		return true
+	position += Vector2(signf(to.x) * minf(move_speed * 1.15 * Game.TICK, absf(to.x)), signf(to.y) * minf(move_speed * 0.8 * Game.TICK, absf(to.y)))
+	face = 1 if to.x >= 0.0 else -1
+	state = &"approach"
+	play_anim(&"walk", false)
+	return true
+
+
+func _on_screen(margin: float, at_x := INF) -> bool:
+	var x := position.x if at_x == INF else at_x
 	var cam := get_viewport().get_camera_2d()
 	if cam == null:
 		return true
 	var left := cam.get_screen_center_position().x - 240.0
-	return position.x > left - margin and position.x < left + 480.0 + margin
+	return x > left - margin and x < left + 480.0 + margin
 
 
 # ---------- chase / attack ----------
 func _state_chase(p: Unit) -> void:
 	if p == null or not p.is_alive():
 		play_anim(&"idle", false)
+		return
+	if _seek_weapon():
 		return
 	var p_busy: bool = p.state in [&"knockdown", &"getup", &"dead"] or p.invulnerable_ticks > 60
 	var attackers := 0
@@ -164,11 +235,12 @@ func _state_chase(p: Unit) -> void:
 			attackers += 1
 	var hang := p_busy or attackers >= max_simultaneous_attackers
 	var side := -1.0 if position.x < p.position.x else 1.0
-	var reach := attack.reach_to if attack else 28.0
-	var tx := p.position.x + side * ((wait_distance + float(get_instance_id() % 3) * 14.0) if hang else reach - 10.0)
+	var cur := _current_attack()
+	var reach := cur.reach_to if cur else 28.0
+	var tx := p.position.x + side * ((wait_distance + float(spacing_slot % 3) * 14.0) if hang else reach - 10.0)
 	var ty := p.position.y
 	if hang and Level.current:
-		ty = clampf(p.position.y + (-20.0 if get_instance_id() % 2 == 1 else 20.0), Level.current.walk_area.position.y, Level.current.walk_area.end.y)
+		ty = clampf(p.position.y + (-20.0 if spacing_slot % 2 == 1 else 20.0), Level.current.walk_area.position.y, Level.current.walk_area.end.y)
 	var to := Vector2(tx - position.x, ty - position.y)
 	var step := Vector2(signf(to.x) * minf(move_speed * Game.TICK, absf(to.x)) if absf(to.x) > 2.0 else 0.0,
 		signf(to.y) * minf(move_speed * vertical_speed_factor * Game.TICK, absf(to.y)) if absf(to.y) > 2.0 else 0.0)
@@ -180,8 +252,8 @@ func _state_chase(p: Unit) -> void:
 		state = new_state
 	play_anim(&"walk" if moving else &"idle", false)
 	var adx := absf(p.position.x - position.x)
-	if not hang and cooldown <= 0 and attack and adx <= reach - 2.0 and adx >= 6.0 and absf(p.position.y - position.y) < 8.0 and p.z < 20.0:
-		set_state(&"windup", &"windup")
+	if not hang and cooldown <= 0 and cur and adx <= reach - 2.0 and adx >= 6.0 and absf(p.position.y - position.y) < 8.0 and p.z < 20.0:
+		set_state(&"windup", &"windup_armed" if held_weapon and body.has_animation(&"windup_armed") else &"windup")
 
 
 # ---------- damage ----------
@@ -196,6 +268,12 @@ func receive_hit(attacker: Node2D, a: AttackData) -> bool:
 	if was_waiting and state == &"wait":
 		activate()
 	return ok
+
+
+func hurt(dir: float, push: float) -> void:
+	if super_armor and state in [&"windup", &"attack"]:
+		return
+	super.hurt(dir, push)
 
 
 func _on_hit(_attacker: Node2D, _a: AttackData) -> void:
@@ -216,6 +294,12 @@ func release() -> void:
 	if state == &"grabbed":
 		cooldown = 20
 		set_state(&"hurt", &"hurt")
+
+
+func _drop_loot() -> void:
+	Sfx.play(&"ko")
+	if drop_health_texture and randf() < drop_health_chance:
+		Pickup.spawn_health(get_parent(), position, drop_health_texture, drop_health_amount)
 
 
 func _on_died(_source: Node) -> void:

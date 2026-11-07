@@ -1,0 +1,53 @@
+name: Bot playthrough
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  playthrough:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GODOT_VERSION: "4.3-stable"
+      GODOT: /home/runner/godot/godot
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/godot
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Download Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p /home/runner/godot && cd /home/runner/godot
+          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q godot.zip && rm godot.zip
+          mv "Godot_v${GODOT_VERSION}_linux.x86_64" godot && chmod +x godot
+
+      - name: Import project
+        run: |
+          # The first import on a fresh clone builds the .godot cache; scripts that preload
+          # not-yet-imported assets report errors during it, so only the second pass is checked.
+          "$GODOT" --headless --path . --import > import-first-pass.log 2>&1 || true
+          "$GODOT" --headless --path . --import 2>&1 | tee import.log
+          if grep -E "SCRIPT ERROR|Parse Error" import.log; then exit 1; fi
+
+      - name: Every level can be finished (god mode)
+        run: tests/run_bot.sh god
+
+      - name: Balance report (normal play, 3 seeds per level)
+        continue-on-error: true
+        run: tests/run_bot.sh
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bot-logs
+          path: test-logs/

@@ -1,7 +1,90 @@
 {
-  "street": {
-    "index": 0, "world": 2600, "seed": 1868,
-    "mono": ["#2b2a36", "#4a4958", "#6c6b7c", "#8f8ea0", "#b2b1c2", "#d2d1de", "#ecebf3"],
-    "ghost": [["COTTON EXCHANGE", 240, 58], ["MILL ST. WORKS", 1120, 50]]
-  }
+ "street": {
+  "index": 0,
+  "world": 2600,
+  "seed": 1868,
+  "mono": [
+   "#2b2a36",
+   "#4a4958",
+   "#6c6b7c",
+   "#8f8ea0",
+   "#b2b1c2",
+   "#d2d1de",
+   "#ecebf3"
+  ],
+  "ghost": [
+   [
+    "COTTON EXCHANGE",
+    240,
+    58
+   ],
+   [
+    "MILL ST. WORKS",
+    1120,
+    50
+   ]
+  ]
+ },
+ "wharf": {
+  "index": 1,
+  "world": 2900,
+  "seed": 51,
+  "mono": [
+   "#262c38",
+   "#424b5c",
+   "#626d80",
+   "#8591a4",
+   "#a9b4c5",
+   "#cbd4e1",
+   "#e8edf4"
+  ],
+  "ghost": [
+   [
+    "CANAL CO.",
+    300,
+    56
+   ],
+   [
+    "WHARF 7",
+    1240,
+    50
+   ],
+   [
+    "BONDED STORE",
+    2050,
+    58
+   ]
+  ]
+ },
+ "market": {
+  "index": 2,
+  "world": 3200,
+  "seed": 999,
+  "mono": [
+   "#332b2c",
+   "#544a4a",
+   "#776c6b",
+   "#9a8f8c",
+   "#bdb2ae",
+   "#dad1cc",
+   "#f1ebe7"
+  ],
+  "ghost": [
+   [
+    "GRAND HOTEL",
+    260,
+    56
+   ],
+   [
+    "THEATRE ROYAL",
+    1300,
+    50
+   ],
+   [
+    "PALACE",
+    2400,
+    58
+   ]
+  ]
+ }
 }

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="LevelList" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/level_info.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/level_list.gd" id="2"]
+
+[sub_resource type="Resource" id="L0"]
+script = ExtResource("1")
+level_name = "MILL STREET"
+scene = "res://scenes/levels/level_01.tscn"
+boss_name = "THE FOREMAN"
+palette = PackedColorArray(0.168627, 0.164706, 0.211765, 1, 0.290196, 0.286275, 0.345098, 1, 0.423529, 0.419608, 0.486275, 1, 0.560784, 0.556863, 0.627451, 1, 0.698039, 0.694118, 0.760784, 1, 0.823529, 0.819608, 0.870588, 1, 0.92549, 0.921569, 0.952941, 1)
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1")
+level_name = "CANAL WHARF"
+scene = "res://scenes/levels/level_02.tscn"
+boss_name = "THE BOOKIE"
+palette = PackedColorArray(0.14902, 0.172549, 0.219608, 1, 0.258824, 0.294118, 0.360784, 1, 0.384314, 0.427451, 0.501961, 1, 0.521569, 0.568627, 0.643137, 1, 0.662745, 0.705882, 0.772549, 1, 0.796078, 0.831373, 0.882353, 1, 0.909804, 0.929412, 0.956863, 1)
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1")
+level_name = "MARKET ROW"
+scene = "res://scenes/levels/level_03.tscn"
+boss_name = "THE LANDLORD"
+palette = PackedColorArray(0.2, 0.168627, 0.172549, 1, 0.329412, 0.290196, 0.290196, 1, 0.466667, 0.423529, 0.419608, 1, 0.603922, 0.560784, 0.54902, 1, 0.741176, 0.698039, 0.682353, 1, 0.854902, 0.819608, 0.8, 1, 0.945098, 0.921569, 0.905882, 1)
+
+[resource]
+script = ExtResource("2")
+levels = Array[ExtResource("1")]([SubResource("L0"), SubResource("L1"), SubResource("L2")])
