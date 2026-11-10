@@ -1,0 +1,248 @@
+{
+  "id": "mel",
+  "display_name": "Mel",
+  "role": "player",
+  "scene": "scenes/characters/player_mel.tscn",
+  "concept": "Retired Mill Street beat officer turned vigilante. Grappler: short hard strikes, control holds and a heavy slam. Slower and tougher than Del.",
+  "target_height": 62,
+  "source_facing": "right",
+  "background": "none",
+  "palette": {
+    "max_colors": 24
+  },
+  "stats": {
+    "max_hp": 120,
+    "move_speed": 115.0
+  },
+  "attacks": {
+    "punch_1": {
+      "attack_name": "Palm Strike",
+      "damage": 5
+    },
+    "punch_2": {
+      "attack_name": "Lunge Punch",
+      "damage": 7
+    },
+    "kick_1": {
+      "attack_name": "Knee",
+      "damage": 7
+    },
+    "punch_3": {
+      "attack_name": "Uppercut",
+      "damage": 12
+    },
+    "slam": {
+      "attack_name": "Arrest Slam",
+      "damage": 15
+    }
+  },
+  "generator": {
+    "provider": "pixellab",
+    "style": "detailed 32-bit pixel art, side view slightly turned toward the viewer, clean dark outline",
+    "prompt": "beat em up hero, weathered retired police officer, long navy blue coat with silver buttons, navy flat cap, white gloves, dark trousers, polished black boots, standing in a ready fighting stance with both hands raised, full body, detailed 32-bit pixel art",
+    "animations_requested": [
+      "idle",
+      "walk",
+      "run",
+      "jump",
+      "punch (palm strike, then elbow)",
+      "kick (knee)",
+      "uppercut (punch_3)",
+      "slam",
+      "flying_kick",
+      "dash_attack (slide)",
+      "special (spin)",
+      "super",
+      "hurt",
+      "knockdown",
+      "getup",
+      "win"
+    ],
+    "pixellab_character_id": "79ed13d4-9135-4857-92ea-4b218e7a107e",
+    "base_image": "raw/base/east.png"
+  },
+  "animations": {
+    "idle": {
+      "source": "raw/slots/idle.png",
+      "frames": 6,
+      "fps": 6,
+      "loop": true,
+      "note": "raw/idle.png frames 0,1,2,3,2,1"
+    },
+    "walk": {
+      "source": "raw/slots/walk.png",
+      "frames": 8,
+      "fps": 12,
+      "loop": true,
+      "note": "raw/walk.png frames 1,2,3,4,5,6,7,8"
+    },
+    "run": {
+      "source": "raw/slots/run.png",
+      "frames": 8,
+      "fps": 14,
+      "loop": true,
+      "note": "raw/run.png frames 1,2,3,4,5,6,7,8"
+    },
+    "jump": {
+      "source": "raw/slots/jump.png",
+      "frames": 4,
+      "fps": 8,
+      "loop": false,
+      "note": "raw/jump.png frames 5,6,7,8"
+    },
+    "punch": {
+      "source": "raw/slots/punch.png",
+      "frames": 8,
+      "fps": 18,
+      "active": [
+        2,
+        3
+      ],
+      "note": "raw/punch.png frames 1,2,3,4,5,6,7,8"
+    },
+    "kick": {
+      "source": "raw/slots/kick.png",
+      "frames": 8,
+      "fps": 18,
+      "active": [
+        3,
+        5
+      ],
+      "note": "raw/kick.png frames 1,2,3,4,5,6,7,8"
+    },
+    "punch_1": {
+      "source": "raw/slots/punch_1.png",
+      "frames": 4,
+      "fps": 20,
+      "active": [
+        1,
+        2
+      ],
+      "note": "raw/punch.png frames 2,3,4,5"
+    },
+    "punch_2": {
+      "source": "raw/slots/punch_2.png",
+      "frames": 4,
+      "fps": 20,
+      "active": [
+        2,
+        3
+      ],
+      "note": "raw/punch.png frames 6,7,8,8"
+    },
+    "kick_1": {
+      "source": "raw/slots/kick_1.png",
+      "frames": 6,
+      "fps": 20,
+      "active": [
+        2,
+        4
+      ],
+      "note": "raw/kick.png frames 2,3,4,5,6,7"
+    },
+    "punch_3": {
+      "source": "raw/slots/punch_3.png",
+      "frames": 7,
+      "fps": 20,
+      "active": [
+        3,
+        4
+      ],
+      "note": "raw/uppercut.png frames 1,2,3,4,5,6,7"
+    },
+    "kick_2": {
+      "source": "raw/slots/kick_2.png",
+      "frames": 8,
+      "fps": 18,
+      "active": [
+        3,
+        5
+      ],
+      "note": "raw/kick.png frames 1,2,3,4,5,6,7,8"
+    },
+    "slam": {
+      "source": "raw/slots/slam.png",
+      "frames": 7,
+      "fps": 18,
+      "active": [
+        4,
+        6
+      ],
+      "note": "raw/slam.png frames 2,3,4,5,6,7,8"
+    },
+    "flying_kick": {
+      "source": "raw/slots/flying_kick.png",
+      "frames": 3,
+      "fps": 12,
+      "loop": false,
+      "note": "raw/flying_kick.png frames 5,6,7"
+    },
+    "dash_attack": {
+      "source": "raw/slots/dash_attack.png",
+      "frames": 6,
+      "fps": 18,
+      "active": [
+        1,
+        3
+      ],
+      "note": "raw/dash_attack.png frames 3,4,5,6,7,8"
+    },
+    "special": {
+      "source": "raw/slots/special.png",
+      "frames": 6,
+      "fps": 18,
+      "active": [
+        1,
+        4
+      ],
+      "note": "raw/special.png frames 1,2,3,4,5,6"
+    },
+    "super": {
+      "source": "raw/slots/super.png",
+      "frames": 10,
+      "fps": 16,
+      "active": [
+        3,
+        5
+      ],
+      "note": "raw/super.png frames 1,2,3,4,5,6,7,8,9,10"
+    },
+    "hurt": {
+      "source": "raw/slots/hurt.png",
+      "frames": 3,
+      "fps": 10,
+      "note": "raw/hurt.png frames 0,1,2 (placeholder: the generated hurt steps forward instead of recoiling)"
+    },
+    "knockdown": {
+      "source": "raw/slots/knockdown.png",
+      "frames": 7,
+      "fps": 15,
+      "loop": false,
+      "align": "canvas",
+      "note": "raw/knockdown.png frames 1,2,3,4,5,6,7"
+    },
+    "down": {
+      "source": "raw/slots/down.png",
+      "frames": 1,
+      "fps": 10,
+      "loop": true,
+      "align": "canvas",
+      "note": "raw/knockdown.png frames 8"
+    },
+    "getup": {
+      "source": "raw/slots/getup.png",
+      "frames": 6,
+      "fps": 20,
+      "loop": false,
+      "align": "canvas",
+      "note": "raw/getup.png frames 1,2,3,4,5,6"
+    },
+    "win": {
+      "source": "raw/slots/win.png",
+      "frames": 8,
+      "fps": 8,
+      "loop": false,
+      "note": "raw/win.png frames 1,2,3,4,5,6,7,8"
+    }
+  }
+}

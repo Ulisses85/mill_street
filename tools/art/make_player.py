@@ -3,6 +3,8 @@
 
     python3 tools/art/make_player.py art/characters/<id>/character.json [--out scenes/characters/player.tscn]
 
+The scene is --out, else the spec's "scene", else scenes/characters/player.tscn (the hero every level spawns).
+
 Run tools/art/import_character.py first. Writes:
   scenes/characters/player.tscn                  the hero every level spawns (or --out)
   resources/combos/<id>_punch_combo.tres         punch_1 > punch_2 > punch_3 (finisher), timed to the hero's animations
@@ -207,7 +209,7 @@ def main(spec_path: Path, out: Path) -> int:
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    out = ROOT / "scenes/characters/player.tscn"
+    out = None
     if "--out" in args:
         i = args.index("--out")
         out = (Path.cwd() / args[i + 1]).resolve()
@@ -215,4 +217,7 @@ if __name__ == "__main__":
     if len(args) != 1:
         print(__doc__)
         sys.exit(2)
-    sys.exit(main(Path(args[0]).resolve(), out))
+    spec_path = Path(args[0]).resolve()
+    if out is None:   # a spec can name its own scene ("scene": "scenes/characters/player_mel.tscn"), so several heroes coexist
+        out = ROOT / json.loads(spec_path.read_text()).get("scene", "scenes/characters/player.tscn")
+    sys.exit(main(spec_path, out))
