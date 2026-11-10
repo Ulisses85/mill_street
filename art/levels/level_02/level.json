@@ -1,0 +1,123 @@
+{
+  "id": "level_02",
+  "display_name": "Canal Wharf",
+  "art": "wharf",
+  "music": "music_wharf",
+  "world": 2900,
+  "seed": 51,
+  "palette": [
+    "#262c38",
+    "#424b5c",
+    "#626d80",
+    "#8591a4",
+    "#a9b4c5",
+    "#cbd4e1",
+    "#e8edf4"
+  ],
+  "sky": {
+    "detail": "smog"
+  },
+  "skyline": {
+    "theme": "docks"
+  },
+  "parallax": {
+    "sky": 0.05,
+    "far": 0.25,
+    "near": 0.5
+  },
+  "facade": {
+    "landmarks": [
+      {
+        "piece": "warehouse",
+        "x": 200,
+        "width": 240,
+        "name": "CANAL CO."
+      },
+      {
+        "piece": "shed",
+        "x": 1180,
+        "width": 200,
+        "name": "WHARF 7"
+      },
+      {
+        "piece": "pub",
+        "x": 1640,
+        "name": "LOCK KEEPER"
+      },
+      {
+        "piece": "warehouse",
+        "x": 2040,
+        "width": 250,
+        "name": "BONDED STORE"
+      }
+    ],
+    "fill": {
+      "warehouse": 3,
+      "shed": 2,
+      "alley": 1,
+      "terrace": 1
+    }
+  },
+  "furniture": {
+    "bollard": 3,
+    "drum": 2,
+    "bags": 2,
+    "lamp": 1
+  },
+  "_enemy": "[scene, x, y, field_of_view] - field_of_view false: runs in when its wave starts",
+  "waves": [
+    {
+      "bound": 720,
+      "enemies": [
+        ["thug", 520, 196, true],
+        ["thug", 600, 230, true],
+        ["thug", 780, 186, false]
+      ]
+    },
+    {
+      "bound": 1220,
+      "enemies": [
+        ["brute", 1060, 206, true],
+        ["thug", 1120, 178, true],
+        ["thug", 1280, 230, false]
+      ]
+    },
+    {
+      "bound": 1720,
+      "enemies": [
+        ["thug", 1540, 190, true],
+        ["biker", 1600, 226, true],
+        ["thug", 1780, 200, false],
+        ["biker", 1800, 176, false]
+      ]
+    },
+    {
+      "bound": 2220,
+      "enemies": [
+        ["brute", 2020, 196, true],
+        ["thug", 2080, 230, true],
+        ["bouncer", 2290, 210, false]
+      ]
+    },
+    {
+      "bound": 2900,
+      "enemies": [
+        ["boss_bookie", 2700, 206, true],
+        ["thug", 2600, 182, true],
+        ["thug", 2880, 230, false],
+        ["thug", 2890, 190, false]
+      ]
+    }
+  ],
+  "pickups": [
+    ["knife", 760, 220],
+    ["pipe", 1500, 190],
+    ["bat", 2300, 226]
+  ],
+  "props": [
+    ["crate", 620, 236, "can"],
+    ["crate", 1200, 176, "knife"],
+    ["barrel", 1820, 210, "chips"],
+    ["crate", 2420, 190, "can"]
+  ]
+}

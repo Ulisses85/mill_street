@@ -1,18 +1,168 @@
 {
+ "format": "parallax-background-v2",
  "world": 2600,
- "hydrants": [
+ "canvas": {
+  "width": 480,
+  "height": 270
+ },
+ "layers": [
   {
-   "x": 1402,
-   "y": 148,
-   "spray": true
+   "layer_id": "sky",
+   "asset_ref": "res://assets/levels/street/sky.png",
+   "order": 0,
+   "width": 960,
+   "height": 270,
+   "parallax": 0.05,
+   "offset_x": 0,
+   "offset_y": 0,
+   "repeat_x": true,
+   "repeat_y": false
+  },
+  {
+   "layer_id": "far",
+   "asset_ref": "res://assets/levels/street/far.png",
+   "order": 1,
+   "width": 960,
+   "height": 270,
+   "parallax": 0.25,
+   "offset_x": 0,
+   "offset_y": 0,
+   "repeat_x": true,
+   "repeat_y": false
+  },
+  {
+   "layer_id": "near",
+   "asset_ref": "res://assets/levels/street/near.png",
+   "order": 2,
+   "width": 960,
+   "height": 270,
+   "parallax": 0.5,
+   "offset_x": 0,
+   "offset_y": 0,
+   "repeat_x": true,
+   "repeat_y": false
+  },
+  {
+   "layer_id": "street",
+   "asset_ref": "res://assets/levels/street/background.png",
+   "order": 3,
+   "width": 2600,
+   "height": 270,
+   "parallax": 1.0,
+   "offset_x": 0,
+   "offset_y": 0,
+   "repeat_x": false,
+   "repeat_y": false
+  }
+ ],
+ "facade": [
+  {
+   "piece": "billboard",
+   "x": 0,
+   "width": 220
+  },
+  {
+   "piece": "shop",
+   "x": 220,
+   "width": 154
+  },
+  {
+   "piece": "terrace",
+   "x": 374,
+   "width": 136
+  },
+  {
+   "piece": "alley",
+   "x": 510,
+   "width": 64
+  },
+  {
+   "piece": "alley",
+   "x": 574,
+   "width": 66
+  },
+  {
+   "piece": "pub",
+   "x": 640,
+   "width": 160
+  },
+  {
+   "piece": "alley",
+   "x": 800,
+   "width": 45
+  },
+  {
+   "piece": "terrace",
+   "x": 845,
+   "width": 126
+  },
+  {
+   "piece": "alley",
+   "x": 971,
+   "width": 60
+  },
+  {
+   "piece": "alley",
+   "x": 1031,
+   "width": 49
+  },
+  {
+   "piece": "mill",
+   "x": 1080,
+   "width": 280
+  },
+  {
+   "piece": "shop",
+   "x": 1360,
+   "width": 140
+  },
+  {
+   "piece": "billboard",
+   "x": 1500,
+   "width": 210
+  },
+  {
+   "piece": "alley",
+   "x": 1710,
+   "width": 57
+  },
+  {
+   "piece": "warehouse",
+   "x": 1767,
+   "width": 198
+  },
+  {
+   "piece": "terrace",
+   "x": 1965,
+   "width": 175
+  },
+  {
+   "piece": "mill",
+   "x": 2140,
+   "width": 300
+  },
+  {
+   "piece": "alley",
+   "x": 2440,
+   "width": 63
+  },
+  {
+   "piece": "alley",
+   "x": 2503,
+   "width": 47
+  },
+  {
+   "piece": "alley",
+   "x": 2550,
+   "width": 50
   }
  ],
  "signposts": [
   340,
-  968,
-  1568,
-  2130,
-  2838,
-  3514
+  1066,
+  1584,
+  2127,
+  2866,
+  3416
  ]
 }

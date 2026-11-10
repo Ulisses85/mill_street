@@ -1,34 +1,143 @@
 {
+ "format": "parallax-background-v2",
  "world": 2900,
- "hydrants": [
+ "canvas": {
+  "width": 480,
+  "height": 270
+ },
+ "layers": [
   {
-   "x": 122,
-   "y": 148,
-   "spray": true
+   "layer_id": "sky",
+   "asset_ref": "res://assets/levels/wharf/sky.png",
+   "order": 0,
+   "width": 960,
+   "height": 270,
+   "parallax": 0.05,
+   "offset_x": 0,
+   "offset_y": 0,
+   "repeat_x": true,
+   "repeat_y": false
   },
   {
-   "x": 2383,
-   "y": 148,
-   "spray": false
+   "layer_id": "far",
+   "asset_ref": "res://assets/levels/wharf/far.png",
+   "order": 1,
+   "width": 960,
+   "height": 270,
+   "parallax": 0.25,
+   "offset_x": 0,
+   "offset_y": 0,
+   "repeat_x": true,
+   "repeat_y": false
   },
   {
-   "x": 2536,
-   "y": 148,
-   "spray": false
+   "layer_id": "near",
+   "asset_ref": "res://assets/levels/wharf/near.png",
+   "order": 2,
+   "width": 960,
+   "height": 270,
+   "parallax": 0.5,
+   "offset_x": 0,
+   "offset_y": 0,
+   "repeat_x": true,
+   "repeat_y": false
   },
   {
-   "x": 2778,
-   "y": 148,
-   "spray": false
+   "layer_id": "street",
+   "asset_ref": "res://assets/levels/wharf/background.png",
+   "order": 3,
+   "width": 2900,
+   "height": 270,
+   "parallax": 1.0,
+   "offset_x": 0,
+   "offset_y": 0,
+   "repeat_x": false,
+   "repeat_y": false
+  }
+ ],
+ "facade": [
+  {
+   "piece": "warehouse",
+   "x": 0,
+   "width": 200
+  },
+  {
+   "piece": "warehouse",
+   "x": 200,
+   "width": 240
+  },
+  {
+   "piece": "shed",
+   "x": 440,
+   "width": 181
+  },
+  {
+   "piece": "alley",
+   "x": 621,
+   "width": 47
+  },
+  {
+   "piece": "warehouse",
+   "x": 668,
+   "width": 230
+  },
+  {
+   "piece": "shed",
+   "x": 898,
+   "width": 209
+  },
+  {
+   "piece": "alley",
+   "x": 1107,
+   "width": 73
+  },
+  {
+   "piece": "shed",
+   "x": 1180,
+   "width": 200
+  },
+  {
+   "piece": "warehouse",
+   "x": 1380,
+   "width": 260
+  },
+  {
+   "piece": "pub",
+   "x": 1640,
+   "width": 160
+  },
+  {
+   "piece": "warehouse",
+   "x": 1800,
+   "width": 240
+  },
+  {
+   "piece": "warehouse",
+   "x": 2040,
+   "width": 250
+  },
+  {
+   "piece": "terrace",
+   "x": 2290,
+   "width": 174
+  },
+  {
+   "piece": "warehouse",
+   "x": 2464,
+   "width": 248
+  },
+  {
+   "piece": "shed",
+   "x": 2712,
+   "width": 188
   }
  ],
  "signposts": [
   340,
-  1043,
-  1590,
-  2185,
-  2731,
-  3224,
-  3856
+  890,
+  1594,
+  2226,
+  2953,
+  3682
  ]
 }

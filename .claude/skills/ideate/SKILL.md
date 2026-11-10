@@ -16,7 +16,7 @@ Turn a rough idea into something the art pipeline can build. Keep it a conversat
 4. **Write it down:**
    - `art/characters/<id>/concept.md`: the idea, gameplay role, look, and any open questions.
    - `art/characters/<id>/character.json`: follow `tools/art/README.md`. Set `role`, `preset`, `target_height`, `attack_animation`, `stats` overrides, and `generator.prompt` plus `generator.animations_requested`. Leave `animations` with the expected `raw/` paths, to be filled after generation.
-5. **For a level idea:** write `art/levels/<id>/concept.md` (setting, landmarks, palette, wave plan, boss). The level art pipeline is milestone 3 part 3; note this in the file.
-6. **Confirm with the user,** then suggest `/new-enemy` to build it.
+5. **For a level idea:** write `art/levels/<id>/concept.md` (setting, landmarks with their sign text, skyline theme, palette mood, wave plan, boss), then build it with `/new-level`.
+6. **Confirm with the user,** then suggest `/new-enemy`, `/new-hero` or `/new-level` to build it.
 
 Good prompts are concrete: "heavy-set nightclub bouncer, purple bomber jacket, dark shades, bald, side view facing right, pixel art, clean dark outline, transparent background".

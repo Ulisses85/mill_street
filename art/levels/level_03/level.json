@@ -1,0 +1,141 @@
+{
+  "id": "level_03",
+  "display_name": "Market Row",
+  "art": "market",
+  "music": "music_market",
+  "world": 3200,
+  "seed": 999,
+  "palette": [
+    "#332b2c",
+    "#544a4a",
+    "#776c6b",
+    "#9a8f8c",
+    "#bdb2ae",
+    "#dad1cc",
+    "#f1ebe7"
+  ],
+  "sky": {
+    "detail": "clouds",
+    "count": 10
+  },
+  "skyline": {
+    "theme": "town"
+  },
+  "parallax": {
+    "sky": 0.05,
+    "far": 0.25,
+    "near": 0.5
+  },
+  "facade": {
+    "landmarks": [
+      {
+        "piece": "grand",
+        "x": 180,
+        "width": 260,
+        "name": "GRAND HOTEL"
+      },
+      {
+        "piece": "market_hall",
+        "x": 860,
+        "width": 300,
+        "name": "MARKET HALL"
+      },
+      {
+        "piece": "grand",
+        "x": 1460,
+        "width": 280,
+        "name": "THEATRE ROYAL"
+      },
+      {
+        "piece": "pub",
+        "x": 2100,
+        "name": "THE GOLDEN FLEECE"
+      },
+      {
+        "piece": "grand",
+        "x": 2620,
+        "width": 280,
+        "name": "PALACE"
+      }
+    ],
+    "fill": {
+      "shop": 4,
+      "terrace": 2,
+      "pub": 1,
+      "alley": 1
+    }
+  },
+  "furniture": {
+    "lamp": 3,
+    "postbox": 1,
+    "bollard": 1,
+    "bags": 1
+  },
+  "_enemy": "[scene, x, y, field_of_view] - field_of_view false: runs in when its wave starts",
+  "waves": [
+    {
+      "bound": 700,
+      "enemies": [
+        ["thug", 500, 186, true],
+        ["thug", 560, 226, true],
+        ["brute", 760, 206, false]
+      ]
+    },
+    {
+      "bound": 1200,
+      "enemies": [
+        ["thug", 1020, 190, true],
+        ["thug", 1080, 230, true],
+        ["thug", 1260, 178, false],
+        ["thug", 1280, 214, false]
+      ]
+    },
+    {
+      "bound": 1700,
+      "enemies": [
+        ["brute", 1520, 196, true],
+        ["brute", 1580, 230, true],
+        ["thug", 1760, 186, false]
+      ]
+    },
+    {
+      "bound": 2200,
+      "enemies": [
+        ["thug", 2000, 186, true],
+        ["thug", 2060, 226, true],
+        ["thug", 2080, 200, true],
+        ["brute", 2270, 210, false]
+      ]
+    },
+    {
+      "bound": 2700,
+      "enemies": [
+        ["brute", 2500, 190, true],
+        ["brute", 2560, 230, true],
+        ["thug", 2760, 200, false],
+        ["thug", 2780, 180, false]
+      ]
+    },
+    {
+      "bound": 3200,
+      "enemies": [
+        ["boss_landlord", 3000, 206, true],
+        ["brute", 2900, 186, true],
+        ["thug", 3180, 230, false]
+      ]
+    }
+  ],
+  "pickups": [
+    ["bat", 700, 230],
+    ["knife", 1300, 180],
+    ["pipe", 2000, 214],
+    ["bat", 2600, 196]
+  ],
+  "props": [
+    ["barrel", 560, 186, "can"],
+    ["crate", 1100, 228, "chips"],
+    ["crate", 1700, 180, "knife"],
+    ["barrel", 2200, 232, "chips"],
+    ["crate", 2760, 200, "can"]
+  ]
+}

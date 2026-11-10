@@ -52,7 +52,16 @@ Open the folder in Godot 4.3 or newer and press **F5**. On the very first open, 
 A unit's node position is the point on the floor under its feet: `x` runs along the street and `y` is depth. Its height off the floor is `z`. The `World` node y-sorts its children, so whoever stands nearer is drawn in front. Hits only connect when the attacker and target are within the attack's `depth_range` and `height_range`.
 
 ### Levels
-`tools/make_levels.py` writes `scenes/levels/level_0N.tscn` from a short layout for each level: waves, enemies, props and pickups. Edit the layout and re-run it. You can also edit the scenes in the Godot editor, but don't re-run the script afterwards or it will overwrite your edits. To add a level, append a `LevelInfo` to `resources/level_list.tres`.
+Each level is one spec, `art/levels/<id>/level.json`: its look (palette, sky, skyline, building fronts with sign text, street furniture) and its gameplay (waves, enemies, props, pickups). Two scripts build it:
+
+```
+python3 tools/levels/level_kit.py    # draws the art: assets/levels/<art>/background.png, sky/far/near.png, layout.json
+python3 tools/make_levels.py         # writes scenes/levels/<id>.tscn: waves, props, pickups and the parallax layers
+```
+
+**The level kit draws everything by code** (Python + Pillow, no AI, no browser), so it's free, unlimited and the same every run. It has a library of building fronts (`terrace`, `mill`, `shop`, `pub`, `warehouse`, `shed`, `billboard`, `alley`, `grand`, `market_hall`) and street furniture. In the spec, `landmarks` pin named buildings to an x position (e.g. a mill called "MILL ST. WORKS" at x 1080) and `fill` sets how often each piece fills the gaps. Behind the street are three repeating parallax layers: `sky` (clouds, smog or stars), `far` (skyline theme: `mills`, `docks` or `town`) and `near` rooftops. `layout.json` lists every layer with its scroll factor and repeat flag (the same shape as FX Games' `parallax-background-v2`), and `make_levels.py` turns each into a Godot `Parallax2D` node.
+
+You can still edit the scenes in the Godot editor, but don't re-run `make_levels.py` afterwards or it will overwrite your edits. To add a level, copy a spec folder, change it, run both scripts and append a `LevelInfo` to `resources/level_list.tres`. In Claude Code, `/new-level` walks through it.
 
 ### Adding an enemy to a wave
 Instance `scenes/characters/thug.tscn` under a `Wave` node:
@@ -67,12 +76,13 @@ To turn AI-generated (or hand-drawn) art into playable characters, see **[tools/
 ```
 python3 tools/sprite_pipeline/render.py   # needs: pip install playwright (+ Chromium)
 python3 tools/sfx/make_sfx.py             # regenerates the placeholder sounds and music loops
+python3 tools/levels/level_kit.py         # regenerates the level backgrounds and parallax layers
 python3 tools/make_levels.py              # regenerates the three level scenes
 ```
 
 `tools/sprite_pipeline/` holds a procedural mannequin rig (`rig.js`), which headless Chrome renders to:
 - `assets/characters/<name>/sheet.png` + `sheet.json` (128×112 cells, feet anchor at 64,100, frame timing in 60 Hz ticks) + `portrait.png`
-- `assets/levels/<name>/background.png` + `signpost.png` + `layout.json` + crate/barrel sprites
+- `assets/levels/<name>/signpost.png` + crate/barrel sprites, in each level's palette (the backgrounds come from the level kit)
 - `assets/items/` weapons (grip at 6,6) and health items
 
 Each animation in `sheet.json` also stores per-frame `hand` positions and a `weapon_angle` for the weapon bone. Custom art needs these as well (or leave them out, and weapons sit at a default hand position).
@@ -120,8 +130,8 @@ Logs are uploaded as the `bot-logs` artifact.
 - ~~Milestone 2: full Osarion parity~~ ✔
 - **Milestone 3: AI art pipeline.**
   - Part 1 ✔ New enemies from AI art: `tools/art/` (importer, enemy builder, Retro Diffusion client) and Claude Code skills `/ideate`, `/new-enemy` and `/character-art` with PixelLab MCP. Example: the Bouncer (Mill Street wave 3, Canal Wharf wave 4).
-  - Part 2: AI-made hero.
-  - Part 3: AI-made level backgrounds.
+  - Part 2 ✔ AI-made hero: Del, the retired boxer, built with `tools/art/make_player.py` and `/new-hero`.
+  - Part 3 ✔ Level backgrounds drawn by code: `tools/levels/level_kit.py`, one spec per level with parallax layers, and `/new-level`.
 - **Exports:** Windows/Mac/Linux (Steam), Android/iOS, Web (itch.io).
 
 Fonts: Silkscreen (SIL Open Font License, `assets/fonts/OFL.txt`).
