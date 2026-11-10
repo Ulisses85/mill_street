@@ -1,0 +1,33 @@
+{
+ "id": "bouncer",
+ "animations": [
+  "idle",
+  "walk",
+  "run",
+  "windup",
+  "hurt",
+  "defend",
+  "grabbed",
+  "knockdown",
+  "down",
+  "getup",
+  "lurk",
+  "smash"
+ ],
+ "synthesized": [
+  "run: copy of walk",
+  "windup: held first frame of smash",
+  "defend: held first frame of idle",
+  "grabbed: copy of hurt",
+  "knockdown: rotated hurt falling",
+  "down: hurt lying flat",
+  "getup: hurt rotating back up",
+  "lurk: copy of idle"
+ ],
+ "warnings": [],
+ "missing": [],
+ "colors": 20,
+ "timing": {
+  "smash": 0.47
+ }
+}

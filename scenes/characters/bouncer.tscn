@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/enemy.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
+[ext_resource type="Resource" path="res://resources/attacks/bouncer_attack.tres" id="5"]
+[ext_resource type="Texture2D" path="res://assets/characters/bouncer/portrait.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/characters/bouncer/sheet.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/items/chips.png" id="8"]
+
+[node name="Bouncer" type="Node2D"]
+script = ExtResource("1")
+unit_name = "Bouncer"
+portrait = ExtResource("6")
+start_direction = -1
+attack = ExtResource("5")
+random_name_file = "res://resources/enemy_names.txt"
+move_speed = 42
+hit_stun_time = 0.27
+knockdown_floor_time = 0.75
+knockdown_height = 14.0
+knockdown_distance = 40.0
+body_half_width = 11.0
+body_height = 72.0
+windup_time = 0.4
+attack_cooldown_min = 1.17
+attack_cooldown_max = 1.83
+defend_chance = 45
+wait_distance = 80.0
+score_value = 700
+can_pick_up_weapons = false
+drop_health_chance = 1.0
+drop_health_amount = 35
+drop_health_texture = ExtResource("8")
+
+[node name="Shadow" type="Node2D" parent="."]
+script = ExtResource("3")
+radius = Vector2(17, 4)
+
+[node name="Body" type="Sprite2D" parent="."]
+texture = ExtResource("7")
+centered = false
+offset = Vector2(-80, -116)
+region_enabled = true
+region_rect = Rect2(0, 0, 160, 128)
+script = ExtResource("2")
+sheet_json = "res://assets/characters/bouncer/sheet.json"
+
+[node name="HealthSystem" type="Node" parent="."]
+script = ExtResource("4")
+max_hp = 90
+current_hp = 90
