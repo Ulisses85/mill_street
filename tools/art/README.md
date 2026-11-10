@@ -28,10 +28,13 @@ In Claude Code, the skills in `.claude/skills/` run this whole flow: `/ideate`, 
     "idle":  { "source": "raw/idle", "fps": 8, "loop": true },                    // folder of frames
     "walk":  { "source": "raw/walk_strip.png", "frames": 8, "fps": 12, "loop": true },   // strip (or "grid": [4, 2])
     "smash": { "source": "raw/attack.gif", "fps": 20, "active": [4, 6] },         // GIF; active = hit frames
-    "hurt":  { "source": "raw/hurt.png", "fps": 8 }                               // single image
+    "hurt":  { "source": "raw/hurt.png", "fps": 8 },                              // single image
+    "down":  { "source": "raw/down", "fps": 10, "align": "canvas" }               // align canvas: see below
   }
 }
 ```
+
+Each frame is normally placed with its own feet on the anchor. `"align": "canvas"` keeps the offset from the source canvas instead (the reference idle frame's), so a fall, a lying pose and a get-up generated on the same canvas line up with each other. Use it for knockdown, down and getup.
 
 The source formats are a folder of PNGs, a strip or grid PNG (with `frames`, or split automatically on empty columns) or a GIF.
 

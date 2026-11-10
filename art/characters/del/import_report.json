@@ -26,21 +26,20 @@
   "pickup",
   "walk",
   "punch",
-  "block"
+  "block",
+  "special",
+  "dodge",
+  "dash_attack",
+  "slam",
+  "taunt"
  ],
  "synthesized": [
-  "run: copy of walk",
-  "jump: held first frame of idle",
   "jump_punch: held active frame of punch",
   "jump_kick: held active frame of kick_2",
   "defend: copy of block",
-  "knockdown: rotated hurt falling",
-  "down: hurt lying flat",
-  "getup: hurt rotating back up",
   "grab: held first frame of punch",
   "grab_knee: held active frame of kick_2",
   "throw: held last frame of punch",
-  "swing: copy of punch",
   "toss: copy of punch",
   "carry: copy of walk",
   "carry_idle: held first frame of idle",
@@ -50,13 +49,16 @@
  "missing": [],
  "colors": 20,
  "timing": {
-  "punch_1": 0.2,
+  "punch_1": 0.25,
   "punch_2": 0.25,
   "punch_3": 0.3,
   "kick_1": 0.25,
   "kick_2": 0.35,
-  "swing": 0.35,
+  "swing": 0.3,
   "toss": 0.35,
-  "punch": 0.35
+  "punch": 0.35,
+  "special": 0.4,
+  "dash_attack": 0.4,
+  "slam": 0.35
  }
 }

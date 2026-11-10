@@ -10,9 +10,9 @@ animation = &"punch_1"
 damage = 6
 reach_to = 30.0
 knockback = 1.2
-duration = 0.2
-active_from = 0.07
-active_to = 0.13
+duration = 0.25
+active_from = 0.05
+active_to = 0.15
 
 [sub_resource type="Resource" id="punch_2"]
 script = ExtResource("1")
