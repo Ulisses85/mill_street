@@ -135,7 +135,7 @@
       "source": "raw/run_loop",
       "fps": 14,
       "loop": true,
-      "note": "raw/run_guard frames 1-8 (guard start frame)"
+      "note": "raw/run_lean frames 1-8: stronger forward lean than raw/run_guard (kept for reference)"
     },
     "jump": {
       "source": "raw/jump_air",
@@ -172,6 +172,45 @@
         3
       ],
       "note": "raw/swing_overhead frames 4,5,6,6,7,8: downswing lands at 0.10 s to fit bat/pipe hit windows (0.10-0.17 s)"
+    },
+    "special": {
+      "source": "raw/special_slot",
+      "fps": 18,
+      "active": [
+        5,
+        7
+      ],
+      "note": "raw/special frames 1-8: turns to face the viewer, then a full-extension strike forward"
+    },
+    "dodge": {
+      "source": "raw/dodge_slot",
+      "fps": 20,
+      "loop": false,
+      "note": "raw/dodge frames 2-5 (12 ticks; the dodge lasts 13). The game moves him back and adds afterimages"
+    },
+    "dash_attack": {
+      "source": "raw/dash_slot",
+      "fps": 20,
+      "active": [
+        2,
+        4
+      ],
+      "note": "raw/dash_attack frames 1-8: low shoulder lean, straightens up"
+    },
+    "slam": {
+      "source": "raw/slam_slot",
+      "fps": 16,
+      "active": [
+        4,
+        5
+      ],
+      "note": "raw/slam frames 1-6: reach, grab, yank in. Frames 7-8 were a forward punch, not a throw, so they're dropped"
+    },
+    "taunt": {
+      "source": "raw/taunt_slot",
+      "fps": 12,
+      "loop": false,
+      "note": "raw/taunt frames 1-8 (40 ticks)"
     }
   }
 }

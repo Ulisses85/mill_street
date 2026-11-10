@@ -26,7 +26,12 @@
   "pickup",
   "walk",
   "punch",
-  "block"
+  "block",
+  "special",
+  "dodge",
+  "dash_attack",
+  "slam",
+  "taunt"
  ],
  "synthesized": [
   "jump_punch: held active frame of punch",
@@ -51,6 +56,9 @@
   "kick_2": 0.35,
   "swing": 0.3,
   "toss": 0.35,
-  "punch": 0.35
+  "punch": 0.35,
+  "special": 0.4,
+  "dash_attack": 0.4,
+  "slam": 0.4
  }
 }
