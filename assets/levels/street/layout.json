@@ -61,39 +61,34 @@
  ],
  "facade": [
   {
-   "piece": "ai:terrace.png",
+   "piece": "alley",
    "x": 0,
+   "width": 20
+  },
+  {
+   "piece": "billboard",
+   "x": 20,
+   "width": 220
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 240,
    "width": 132
   },
   {
    "piece": "ai:shop.png",
-   "x": 132,
+   "x": 372,
    "width": 72
   },
   {
    "piece": "ai:terrace.png",
-   "x": 204,
+   "x": 444,
    "width": 132
-  },
-  {
-   "piece": "ai:house.png",
-   "x": 336,
-   "width": 77
-  },
-  {
-   "piece": "ai:terrace.png",
-   "x": 413,
-   "width": 132
-  },
-  {
-   "piece": "ai:shop.png",
-   "x": 545,
-   "width": 72
   },
   {
    "piece": "alley",
-   "x": 617,
-   "width": 23
+   "x": 576,
+   "width": 64
   },
   {
    "piece": "ai:pub.png",
@@ -126,54 +121,49 @@
    "width": 206
   },
   {
-   "piece": "ai:shop.png",
+   "piece": "ai:house.png",
    "x": 1286,
-   "width": 72
-  },
-  {
-   "piece": "ai:house.png",
-   "x": 1358,
    "width": 77
   },
   {
    "piece": "ai:terrace.png",
-   "x": 1435,
+   "x": 1363,
    "width": 132
-  },
-  {
-   "piece": "ai:house.png",
-   "x": 1567,
-   "width": 77
-  },
-  {
-   "piece": "ai:terrace.png",
-   "x": 1644,
-   "width": 132
-  },
-  {
-   "piece": "ai:house.png",
-   "x": 1776,
-   "width": 77
-  },
-  {
-   "piece": "ai:shop.png",
-   "x": 1853,
-   "width": 72
-  },
-  {
-   "piece": "ai:terrace.png",
-   "x": 1925,
-   "width": 132
-  },
-  {
-   "piece": "ai:house.png",
-   "x": 2057,
-   "width": 77
   },
   {
    "piece": "alley",
-   "x": 2134,
-   "width": 6
+   "x": 1495,
+   "width": 5
+  },
+  {
+   "piece": "billboard",
+   "x": 1500,
+   "width": 200
+  },
+  {
+   "piece": "ai:house.png",
+   "x": 1700,
+   "width": 77
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 1777,
+   "width": 132
+  },
+  {
+   "piece": "ai:house.png",
+   "x": 1909,
+   "width": 77
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 1986,
+   "width": 132
+  },
+  {
+   "piece": "alley",
+   "x": 2118,
+   "width": 22
   },
   {
    "piece": "ai:exchange.png",
