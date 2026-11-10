@@ -16,7 +16,7 @@
  ],
  "synthesized": [
   "run: copy of walk",
-  "windup: held first frame of smash",
+  "windup: smash frames 0-3 (lead-in before the hit; trimmed from smash)",
   "defend: held first frame of idle",
   "grabbed: copy of hurt",
   "knockdown: rotated hurt falling",
@@ -28,6 +28,6 @@
  "missing": [],
  "colors": 20,
  "timing": {
-  "smash": 0.47
+  "smash": 0.33
  }
 }
