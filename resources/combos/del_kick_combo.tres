@@ -3,10 +3,10 @@
 [ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/combat/combo_data.gd" id="2"]
 
-[sub_resource type="Resource" id="lowkick"]
+[sub_resource type="Resource" id="kick_1"]
 script = ExtResource("1")
 attack_name = "Low Kick"
-animation = &"lowkick"
+animation = &"kick_1"
 damage = 7
 reach_to = 34.0
 knockback = 1.6
@@ -14,10 +14,10 @@ duration = 0.25
 active_from = 0.1
 active_to = 0.2
 
-[sub_resource type="Resource" id="kick"]
+[sub_resource type="Resource" id="kick_2"]
 script = ExtResource("1")
 attack_name = "Roundhouse"
-animation = &"kick"
+animation = &"kick_2"
 damage = 12
 knockdown = true
 reach_to = 38.0
@@ -32,4 +32,4 @@ active_to = 0.3
 script = ExtResource("2")
 combo_reset_time = 0.37
 continue_combo_on_hit = true
-attacks = Array[ExtResource("1")]([SubResource("lowkick"), SubResource("kick")])
+attacks = Array[ExtResource("1")]([SubResource("kick_1"), SubResource("kick_2")])

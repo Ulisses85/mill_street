@@ -6,7 +6,7 @@ idea ──► character.json ──► generate (PixelLab MCP / Retro Diffusion
                                                        make_enemy.py ◄─────────────────┘──► scenes/characters/<id>.tscn ──► make_levels.py ──► bot test
 ```
 
-In Claude Code, the skills in `.claude/skills/` run this whole flow: `/ideate`, `/new-enemy` and `/character-art`.
+In Claude Code, the skills in `.claude/skills/` run this whole flow: `/ideate`, `/new-enemy`, `/new-hero` and `/character-art`.
 
 ## 1. A character spec: `art/characters/<id>/character.json`
 
@@ -63,9 +63,9 @@ It writes the following, and exits 1 if a required animation is missing with no 
 | grabbed | `hurt` |
 | pickup | `idle` squashed into a crouch |
 | swing (armed thugs) | the attack |
-| player: jab/cross/hook, lowkick/kick, jpunch/jkick, grab, grab_knee, throw, toss, carry | `punch` and `kick` (copies, held active frames), `walk`/`idle` |
+| player: combo slots `punch_1`–`punch_3`, `kick_1`, `kick_2`; `jump_punch`, `jump_kick`, grab, grab_knee, throw, toss, carry | `punch` and `kick` (copies, held active frames), `walk`/`idle`. A hero's `kick` becomes `kick_2`, the kick finisher |
 
-The minimum useful set is **idle, walk, attack and hurt**. For a hero, add **punch and kick**. Give a separate `block`, `knockdown` or `jump` and it's used instead of the fallback.
+The minimum useful set is **idle, walk, attack and hurt**. For a hero, add **punch and kick**: one main attack per combo, in any style. The combo slots are IDs, not moves; see the `new-hero` skill. Give a separate `block`, `knockdown` or `jump` and it's used instead of the fallback.
 
 The importer also prints each attack's timing (duration and hit window). `make_enemy.py` uses those numbers so damage lines up with the animation.
 
@@ -77,10 +77,10 @@ To place the enemy, add `("<id>", x, y, fov)` to a wave in `tools/make_levels.py
 
 **A hero** (`"role": "player"`) uses `python3 tools/art/make_player.py art/characters/<id>/character.json` instead. It writes:
 - `scenes/characters/player.tscn`, the hero every level spawns. Use `--out` to write somewhere else.
-- `resources/combos/<id>_punch_combo.tres`: jab, cross, hook.
-- `resources/combos/<id>_kick_combo.tres`: low kick, roundhouse.
+- `resources/combos/<id>_punch_combo.tres`: `punch_1` > `punch_2` > `punch_3` (the finisher, knocks down).
+- `resources/combos/<id>_kick_combo.tres`: `kick_1` > `kick_2` (the finisher).
 
-Each combo attack's duration and hit window come from the sheet. Damage, reach, knockdown and step start from the built-in hero's values. You can override them per attack in the spec, for example `"attacks": {"hook": {"damage": 10}}`. You can override hero stats in `stats`, for example `max_hp` or `move_speed`. The jump, grab, throw and carry attacks are shared. The built-in Max scene is in git history if you want him back.
+Each combo attack's duration and hit window come from the sheet. Damage, reach, knockdown and step start from the built-in hero's values. You can override them per attack in the spec, for example `"attacks": {"punch_3": {"attack_name": "Uppercut", "damage": 10}}`. Specs that still use the old names (`jab`, `cross`, `hook`, `lowkick`, `jpunch`, `jkick`) keep working; the tools print a rename hint. You can override hero stats in `stats`, for example `max_hp` or `move_speed`. The jump, grab, throw and carry attacks are shared. The built-in Max scene is in git history if you want him back.
 
 ## 4. Check it
 
