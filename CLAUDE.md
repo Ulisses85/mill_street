@@ -19,6 +19,7 @@ godot --headless --path . --import            # run twice on a fresh clone (firs
 GODOT=godot tests/run_bot.sh god              # gate: every level finishable, no script errors
 GODOT=godot tests/run_bot.sh                  # balance report (3 seeds, normal damage)
 godot --headless --path . --fixed-fps 60 --disable-vsync res://tests/sim.tscn -- level_02 seed=3   # one bot run
+pip install -r tools/art/requirements.txt    # before importing art (pins Pillow; CI compares sheets byte for byte)
 python3 tools/art/import_character.py art/characters/<id>/character.json
 python3 tools/art/make_enemy.py art/characters/<id>/character.json
 python3 tools/make_levels.py                  # regenerates scenes/levels/level_0N.tscn

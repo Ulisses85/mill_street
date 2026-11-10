@@ -32,8 +32,8 @@ jobs:
 
       - name: Art pipeline still imports every character
         run: |
-          # Pinned: the sheets are compared byte for byte below, and palette reduction can change between versions.
-          pip install --quiet pillow==12.3.0
+          # Pinned in requirements.txt: the sheets are compared byte for byte below.
+          pip install --quiet -r tools/art/requirements.txt
           for spec in art/characters/*/character.json; do
             python3 tools/art/import_character.py "$spec"
             role=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('role', 'enemy'))" "$spec")

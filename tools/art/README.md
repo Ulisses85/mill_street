@@ -37,6 +37,8 @@ The source formats are a folder of PNGs, a strip or grid PNG (with `frames`, or 
 
 ## 2. Import: `python3 tools/art/import_character.py art/characters/<id>/character.json`
 
+`pip install -r tools/art/requirements.txt` before importing art. It pins Pillow: CI rebuilds every character and fails if the committed sheets differ byte for byte, and a different Pillow version can change the palette.
+
 For each frame, the importer:
 - removes the background
 - scales to `target_height`, using the first `idle` frame as the reference
