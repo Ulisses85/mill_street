@@ -30,7 +30,12 @@ ROOT = Path(__file__).resolve().parents[2]
 CELL = (160, 128)
 ANCHOR = (80, 116)
 
-PLAYER_ANIMS = ["idle", "run", "jab", "cross", "hook", "lowkick", "kick", "jump", "jpunch", "jkick", "defend", "hurt",
+# The hero's move slots. punch_N / kick_N are the hits of the punch and kick combos (the last one is the finisher);
+# their names are slot IDs, the art in them can be any move (a jab, a slash, a headbutt...).
+COMBO_SLOTS = ["punch_1", "punch_2", "punch_3", "kick_1", "kick_2"]
+# Names used before the slots were renamed; specs that still use them keep working.
+LEGACY_NAMES = {"jab": "punch_1", "cross": "punch_2", "hook": "punch_3", "lowkick": "kick_1", "jpunch": "jump_punch", "jkick": "jump_kick"}
+PLAYER_ANIMS = ["idle", "run", *COMBO_SLOTS, "jump", "jump_punch", "jump_kick", "defend", "hurt",
                 "knockdown", "down", "getup", "grab", "grab_knee", "throw", "swing", "toss", "carry", "carry_idle", "pickup"]
 ENEMY_BASE = ["idle", "walk", "run", "windup", "hurt", "defend", "grabbed", "knockdown", "down", "getup", "lurk"]
 ARMED = ["swing", "pickup", "windup_armed"]
@@ -293,7 +298,7 @@ def weapon_angles(name: str, n: int, active: list[int] | None) -> list[float]:
     if name == "toss":
         a0 = active[0] if active else n // 3
         return [(-2.2 if i < a0 else -0.3) for i in range(n)]
-    if name in ("jab", "cross", "hook", "lowkick", "kick", "jump", "jpunch", "jkick", "punch"):
+    if name in (*COMBO_SLOTS, "kick", "jump", "jump_punch", "jump_kick", "punch"):
         return [-0.3] * n
     return [-1.1] * n
 
@@ -370,11 +375,11 @@ def synth(name: str, have: dict, spec: dict) -> dict | None:
         "windup_armed": [("windup", "copy"), (atk, "first")],
         "defend": [("block", "copy"), ("idle", "first")], "grabbed": [("hurt", "copy"), ("idle", "first")],
         "hurt": [("idle", "first")], "swing": [(atk, "copy"), ("punch", "copy")],
-        "jab": [("punch", "copy")], "cross": [("punch", "copy", 1.1)], "hook": [("cross", "copy", 1.4), ("punch", "copy", 1.5)],
-        "lowkick": [("kick", "copy", 0.8), ("punch", "copy")], "kick": [("lowkick", "copy", 1.4), ("punch", "copy", 1.6)],
-        "jump": [("idle", "first")], "jpunch": [("punch", "active"), ("jab", "active")], "jkick": [("kick", "active"), ("lowkick", "active")],
-        "grab": [("punch", "first"), ("jab", "first")], "grab_knee": [("kick", "active"), ("lowkick", "active")],
-        "throw": [("punch", "last"), ("jab", "last")], "toss": [("punch", "copy"), ("jab", "copy")],
+        "punch_1": [("punch", "copy")], "punch_2": [("punch", "copy", 1.1)], "punch_3": [("punch_2", "copy", 1.4), ("punch", "copy", 1.5)],
+        "kick_1": [("kick_2", "copy", 0.8), ("punch", "copy")], "kick_2": [("kick_1", "copy", 1.4), ("punch", "copy", 1.6)],
+        "jump": [("idle", "first")], "jump_punch": [("punch", "active"), ("punch_1", "active")], "jump_kick": [("kick_2", "active"), ("kick_1", "active")],
+        "grab": [("punch", "first"), ("punch_1", "first")], "grab_knee": [("kick_2", "active"), ("kick_1", "active")],
+        "throw": [("punch", "last"), ("punch_1", "last")], "toss": [("punch", "copy"), ("punch_1", "copy")],
         "carry": [("walk", "copy"), ("run", "copy", 1.4)], "carry_idle": [("idle", "first")],
     }
     for rule in rules.get(name, []):
@@ -399,6 +404,14 @@ def main(spec_path: Path) -> int:
     flip = spec.get("source_facing", "right") == "left"
     warnings: list[str] = []
 
+    if spec.get("role") == "player":
+        for old, new in LEGACY_NAMES.items():
+            if old in spec["animations"] and new not in spec["animations"]:
+                spec["animations"][new] = spec["animations"].pop(old)
+                warnings.append(f"animation '{old}' is now called '{new}' - rename it in the spec")
+        # A hero's generated "kick" is the kick combo's finisher; the other kick slots are cut from it.
+        if "kick" in spec["animations"] and "kick_2" not in spec["animations"]:
+            spec["animations"]["kick_2"] = spec["animations"].pop("kick")
     raw: dict[str, list[Image.Image]] = {}
     for name, a in spec["animations"].items():
         frames = [clean(f, bg_setting) for f in load_frames(base, a)]
@@ -429,7 +442,7 @@ def main(spec_path: Path) -> int:
         entry = {"frames": cells, "tpf": max(1, round(60 / fps)), "loop": bool(a.get("loop", name in ("idle", "walk", "run", "lurk", "carry")))}
         if "active" in a:
             entry["active"] = a["active"]
-        elif name in (spec.get("attack_animation", "punch"), "punch", "jab", "cross", "hook", "kick", "lowkick", "swing", "smash", "slam", "toss"):
+        elif name in (spec.get("attack_animation", "punch"), "punch", "kick", *COMBO_SLOTS, "swing", "smash", "slam", "toss"):
             n = len(cells)
             entry["active"] = [n // 3, max(n // 3, (2 * n) // 3 - 1)]
         have[name] = entry

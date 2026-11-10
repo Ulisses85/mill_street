@@ -5,12 +5,15 @@
 
 Run tools/art/import_character.py first. Writes:
   scenes/characters/player.tscn                  the hero every level spawns (or --out)
-  resources/combos/<id>_punch_combo.tres         jab > cross > hook, timed to the hero's animations
-  resources/combos/<id>_kick_combo.tres          low kick > roundhouse, timed the same way
+  resources/combos/<id>_punch_combo.tres         punch_1 > punch_2 > punch_3 (finisher), timed to the hero's animations
+  resources/combos/<id>_kick_combo.tres          kick_1 > kick_2 (finisher), timed the same way
+
+The slot names are IDs, not moves: punch_3 can be a hook, an uppercut or a sword slash. Name the move with
+"attack_name" in the spec's "attacks", e.g. "attacks": {"punch_3": {"attack_name": "Hook", "damage": 11}}.
 
 Combo attack timing (duration and hit window) comes from sheet.json, so damage lines up with the art.
 Everything else about an attack (damage, reach, knockdown, step) starts from the built-in hero's values
-and can be overridden per attack in the spec, e.g. "attacks": {"hook": {"damage": 10, "reach_to": 36}}.
+and can be overridden per attack in the spec, e.g. "attacks": {"punch_3": {"damage": 10, "reach_to": 36}}.
 Hero stats (Unit/Player properties) can be overridden in "stats", e.g. {"max_hp": 110, "move_speed": 120}.
 Jump, grab, throw and carry attacks are shared (resources/attacks/) because they don't depend on frame timing.
 """
@@ -22,12 +25,13 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # The built-in hero's attacks, minus timing (which comes from the sheet).
 COMBOS = {
-    "punch": [("jab", "Jab", dict(damage=5, reach_to=30.0, knockback=1.2)),
-              ("cross", "Cross", dict(damage=6, reach_to=32.0, knockback=1.6)),
-              ("hook", "Hook", dict(damage=9, knockdown=True, reach_to=32.0, forward_step=48.0, hitstop_frames=3, screen_shake=4.0))],
-    "kick": [("lowkick", "Low Kick", dict(damage=7, reach_to=34.0, knockback=1.6)),
-             ("kick", "Roundhouse", dict(damage=12, knockdown=True, reach_to=38.0, forward_step=48.0, hitstop_frames=3, screen_shake=5.0))],
+    "punch": [("punch_1", "Punch 1", dict(damage=5, reach_to=30.0, knockback=1.2)),
+              ("punch_2", "Punch 2", dict(damage=6, reach_to=32.0, knockback=1.6)),
+              ("punch_3", "Punch Finisher", dict(damage=9, knockdown=True, reach_to=32.0, forward_step=48.0, hitstop_frames=3, screen_shake=4.0))],
+    "kick": [("kick_1", "Kick 1", dict(damage=7, reach_to=34.0, knockback=1.6)),
+             ("kick_2", "Kick Finisher", dict(damage=12, knockdown=True, reach_to=38.0, forward_step=48.0, hitstop_frames=3, screen_shake=5.0))],
 }
+LEGACY_NAMES = {"jab": "punch_1", "cross": "punch_2", "hook": "punch_3", "lowkick": "kick_1"}
 COMBO_SETTINGS = dict(combo_reset_time=0.37, continue_combo_on_hit=True)
 
 # The built-in hero's scene settings; any of these (or other Unit/Player exports) can be set in "stats".
@@ -91,7 +95,11 @@ def main(spec_path: Path, out: Path) -> int:
     meta = json.loads(sheet_json.read_text())
     stats = dict(STATS)
     stats.update(spec.get("stats", {}))
-    overrides = spec.get("attacks", {})
+    overrides = dict(spec.get("attacks", {}))
+    for old, new in LEGACY_NAMES.items():   # specs written before the slots were renamed
+        if old in overrides and new not in overrides:
+            overrides[new] = overrides.pop(old)
+            print(f"[{cid}] attacks.{old} is now attacks.{new} - rename it in the spec")
 
     combos = {w: write_combo(cid, w, meta, overrides) for w in COMBOS}
 

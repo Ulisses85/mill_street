@@ -9,24 +9,25 @@ Read `CLAUDE.md` and `tools/art/README.md` first. Work on a branch off `main` (`
 Worked example: `art/characters/del/character.json` (Del, a boxer). Copy the method, not the moves.
 
 ## The hero's move slots
-The game has fixed slots; their names are internal IDs, and the art in them can be anything that fits the character's style.
+The game has fixed slots. Their names are IDs, not moves: the art in them can be anything that fits the character's style. Name the actual move with `attack_name` in the spec's `attacks` (Del: `"punch_3": {"attack_name": "Hook"}`).
 
 | Slot (animation name) | Role | Del (boxer) | Other ideas |
 |---|---|---|---|
-| `jab` | punch combo hit 1: light, fast | jab | elbow, backhand, quick slash |
-| `cross` | punch combo hit 2: light | straight right | headbutt, second slash |
-| `hook` | punch combo finisher: heavy, knocks down | hook | uppercut, overhead smash, spin slash |
-| `lowkick` | kick combo hit 1 | low kick | knee, shin kick, shoulder barge |
-| `kick` | kick combo finisher, knocks down | roundhouse | flying kick, dropkick, shield bash |
-| `punch`, `idle`, `walk`, `hurt`, `block` | source art and basics | | |
-| `jump`, `jump punch/kick`, grab, throw, carry | optional; synthesized if missing | | |
+| `punch_1` | punch combo hit 1: light, fast | jab | elbow, backhand, quick slash |
+| `punch_2` | punch combo hit 2: light | cross | headbutt, second slash |
+| `punch_3` | punch combo finisher: heavy, knocks down | hook | uppercut, overhead smash, spin slash |
+| `kick_1` | kick combo hit 1 | low kick | knee, shin kick, shoulder barge |
+| `kick_2` | kick combo finisher, knocks down | roundhouse | flying kick, dropkick, shield bash |
+| `punch`, `kick` | the generated attacks the slots are cut from (`kick` becomes `kick_2` if you don't fill it) | straight punch, roundhouse | haymaker, stomp, slash |
+| `idle`, `walk`, `hurt`, `block` | basics | | |
+| `jump`, `jump_punch`, `jump_kick`, grab, throw, carry | optional; synthesized if missing | | |
 
 Pick the slot moves from the concept in step 1 and write them into the spec (`concept` and `generator.animations_requested`).
 
 ## 1. Spec
 If there's no `art/characters/<id>/character.json`, run the `ideate` skill or write one with the user.
 - `role: "player"`, `target_height` about 58–62 (enemies: thug 58, Biker 62).
-- Give the hero an identity against the built-in hero (Max: 100 HP, speed 126, jab/cross/hook 5/6/9, low kick/roundhouse 7/12). Override in `stats` and per attack in `attacks` (`damage`, `reach_to`, ...).
+- Give the hero an identity against the built-in hero (Max: 100 HP, speed 126, punch_1/2/3 5/6/9, kick_1/2 7/12). Override in `stats` and per attack in `attacks` (`damage`, `reach_to`, ...).
 - Readability: the hero must be easy to find in a crowd of red/black enemies. Distinct colours, not necessarily white.
 
 ## 2. Generate the art (quote the cost first, ask before every retry)
@@ -44,7 +45,7 @@ One generated attack can fill a whole combo: start each hit at a different point
 Hit timing targets (time from the start of the slot to the first active frame), whatever the move is:
 - hit 1: ~0.07 s (start near the end of the attack)
 - hit 2: ~0.10 s
-- finisher: ~0.15 s, extension held a little longer. Later than ~0.2 s and enemies interrupt the combo.
+- finisher (`punch_3`, `kick_2`): ~0.15 s, extension held a little longer. Later than ~0.2 s and enemies interrupt the combo.
 - kick slots: the same pattern.
 - idle: loop only the frames that are fully in the stance (Del: 6,7,8,7).
 Record the source frames in each animation's `note`. An armed hero keeps the weapon in every frame; the template's pickup weapons still attach to the `hand` the importer estimates.

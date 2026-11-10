@@ -89,7 +89,7 @@
     -1.1
    ]
   },
-  "jab": {
+  "punch_1": {
    "row": 2,
    "frames": 3,
    "ticks_per_frame": 4,
@@ -118,7 +118,7 @@
     1
    ]
   },
-  "cross": {
+  "punch_2": {
    "row": 3,
    "frames": 5,
    "ticks_per_frame": 3,
@@ -157,7 +157,7 @@
     3
    ]
   },
-  "hook": {
+  "punch_3": {
    "row": 4,
    "frames": 6,
    "ticks_per_frame": 3,
@@ -201,7 +201,7 @@
     4
    ]
   },
-  "lowkick": {
+  "kick_1": {
    "row": 5,
    "frames": 5,
    "ticks_per_frame": 3,
@@ -240,7 +240,7 @@
     3
    ]
   },
-  "kick": {
+  "kick_2": {
    "row": 6,
    "frames": 7,
    "ticks_per_frame": 3,
@@ -304,7 +304,7 @@
     -0.3
    ]
   },
-  "jpunch": {
+  "jump_punch": {
    "row": 8,
    "frames": 1,
    "ticks_per_frame": 1,
@@ -319,7 +319,7 @@
     -0.3
    ]
   },
-  "jkick": {
+  "jump_kick": {
    "row": 9,
    "frames": 1,
    "ticks_per_frame": 1,

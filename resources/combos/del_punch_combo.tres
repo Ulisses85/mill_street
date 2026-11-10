@@ -3,10 +3,10 @@
 [ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/combat/combo_data.gd" id="2"]
 
-[sub_resource type="Resource" id="jab"]
+[sub_resource type="Resource" id="punch_1"]
 script = ExtResource("1")
 attack_name = "Jab"
-animation = &"jab"
+animation = &"punch_1"
 damage = 6
 reach_to = 30.0
 knockback = 1.2
@@ -14,10 +14,10 @@ duration = 0.2
 active_from = 0.07
 active_to = 0.13
 
-[sub_resource type="Resource" id="cross"]
+[sub_resource type="Resource" id="punch_2"]
 script = ExtResource("1")
 attack_name = "Cross"
-animation = &"cross"
+animation = &"punch_2"
 damage = 7
 reach_to = 32.0
 knockback = 1.6
@@ -25,10 +25,10 @@ duration = 0.25
 active_from = 0.15
 active_to = 0.2
 
-[sub_resource type="Resource" id="hook"]
+[sub_resource type="Resource" id="punch_3"]
 script = ExtResource("1")
 attack_name = "Hook"
-animation = &"hook"
+animation = &"punch_3"
 damage = 11
 knockdown = true
 reach_to = 34.0
@@ -43,4 +43,4 @@ active_to = 0.25
 script = ExtResource("2")
 combo_reset_time = 0.37
 continue_combo_on_hit = true
-attacks = Array[ExtResource("1")]([SubResource("jab"), SubResource("cross"), SubResource("hook")])
+attacks = Array[ExtResource("1")]([SubResource("punch_1"), SubResource("punch_2"), SubResource("punch_3")])

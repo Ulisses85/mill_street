@@ -14,15 +14,24 @@
     "move_speed": 118.0
   },
   "attacks": {
-    "jab": {
+    "punch_1": {
+      "attack_name": "Jab",
       "damage": 6
     },
-    "cross": {
+    "punch_2": {
+      "attack_name": "Cross",
       "damage": 7
     },
-    "hook": {
+    "punch_3": {
+      "attack_name": "Hook",
       "damage": 11,
       "reach_to": 34.0
+    },
+    "kick_1": {
+      "attack_name": "Low Kick"
+    },
+    "kick_2": {
+      "attack_name": "Roundhouse"
     }
   },
   "generator": {
@@ -78,7 +87,7 @@
       "source": "raw/block",
       "fps": 12
     },
-    "jab": {
+    "punch_1": {
       "source": "raw/jab",
       "fps": 15,
       "active": [
@@ -87,7 +96,7 @@
       ],
       "note": "raw/punch frames 6-8"
     },
-    "cross": {
+    "punch_2": {
       "source": "raw/cross",
       "fps": 18,
       "active": [
@@ -96,7 +105,7 @@
       ],
       "note": "raw/punch frames 4-8"
     },
-    "hook": {
+    "punch_3": {
       "source": "raw/hook",
       "fps": 20,
       "active": [
@@ -105,7 +114,7 @@
       ],
       "note": "raw/punch frames 4-8, full extension held"
     },
-    "lowkick": {
+    "kick_1": {
       "source": "raw/lowkick",
       "fps": 18,
       "active": [

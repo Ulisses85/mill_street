@@ -10,7 +10,7 @@ extends Resource
 ## Knocks the target off its feet. Knockdown attacks also break an enemy's guard.
 @export var knockdown := false
 ## Animation in the unit's sprite sheet (sheet.json "anims" key).
-@export var animation := &"jab"
+@export var animation := &"punch_1"
 
 @export_group("Timing")
 ## Total length of the attack.
