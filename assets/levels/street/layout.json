@@ -71,24 +71,34 @@
    "width": 220
   },
   {
-   "piece": "ai:terrace.png",
+   "piece": "ai:shuttered.png",
    "x": 240,
-   "width": 132
-  },
-  {
-   "piece": "ai:shop.png",
-   "x": 372,
    "width": 72
   },
   {
-   "piece": "ai:terrace.png",
-   "x": 444,
-   "width": 132
+   "piece": "ai:launderette.png",
+   "x": 312,
+   "width": 80
+  },
+  {
+   "piece": "ai:newsagent.png",
+   "x": 392,
+   "width": 85
+  },
+  {
+   "piece": "ai:chippy.png",
+   "x": 477,
+   "width": 77
+  },
+  {
+   "piece": "ai:launderette.png",
+   "x": 554,
+   "width": 80
   },
   {
    "piece": "alley",
-   "x": 576,
-   "width": 64
+   "x": 634,
+   "width": 6
   },
   {
    "piece": "ai:pub.png",
@@ -96,24 +106,24 @@
    "width": 155
   },
   {
-   "piece": "ai:house.png",
+   "piece": "ai:newsagent.png",
    "x": 795,
-   "width": 77
+   "width": 85
   },
   {
-   "piece": "ai:terrace.png",
-   "x": 872,
-   "width": 132
+   "piece": "ai:chapel.png",
+   "x": 880,
+   "width": 102
   },
   {
-   "piece": "ai:shop.png",
-   "x": 1004,
+   "piece": "ai:shuttered.png",
+   "x": 982,
    "width": 72
   },
   {
    "piece": "alley",
-   "x": 1076,
-   "width": 4
+   "x": 1054,
+   "width": 26
   },
   {
    "piece": "ai:mill.png",
@@ -121,19 +131,19 @@
    "width": 206
   },
   {
-   "piece": "ai:house.png",
+   "piece": "ai:bookies.png",
    "x": 1286,
-   "width": 77
+   "width": 91
   },
   {
-   "piece": "ai:terrace.png",
-   "x": 1363,
-   "width": 132
+   "piece": "ai:shuttered.png",
+   "x": 1377,
+   "width": 72
   },
   {
    "piece": "alley",
-   "x": 1495,
-   "width": 5
+   "x": 1449,
+   "width": 51
   },
   {
    "piece": "billboard",
@@ -141,29 +151,34 @@
    "width": 200
   },
   {
-   "piece": "ai:house.png",
+   "piece": "ai:end_terrace.png",
    "x": 1700,
+   "width": 61
+  },
+  {
+   "piece": "ai:bookies.png",
+   "x": 1761,
+   "width": 91
+  },
+  {
+   "piece": "ai:chippy.png",
+   "x": 1852,
    "width": 77
   },
   {
-   "piece": "ai:terrace.png",
-   "x": 1777,
-   "width": 132
+   "piece": "ai:launderette.png",
+   "x": 1929,
+   "width": 80
   },
   {
-   "piece": "ai:house.png",
-   "x": 1909,
-   "width": 77
-  },
-  {
-   "piece": "ai:terrace.png",
-   "x": 1986,
-   "width": 132
+   "piece": "ai:bookies.png",
+   "x": 2009,
+   "width": 91
   },
   {
    "piece": "alley",
-   "x": 2118,
-   "width": 22
+   "x": 2100,
+   "width": 40
   },
   {
    "piece": "ai:exchange.png",
@@ -171,29 +186,34 @@
    "width": 206
   },
   {
-   "piece": "ai:house.png",
+   "piece": "ai:launderette.png",
    "x": 2346,
-   "width": 77
+   "width": 80
   },
   {
-   "piece": "ai:terrace.png",
-   "x": 2423,
-   "width": 132
+   "piece": "ai:bookies.png",
+   "x": 2426,
+   "width": 91
+  },
+  {
+   "piece": "ai:shuttered.png",
+   "x": 2517,
+   "width": 72
   },
   {
    "piece": "alley",
-   "x": 2555,
-   "width": 45
+   "x": 2589,
+   "width": 11
   }
  ],
  "palette": [
   "#120f21",
-  "#1d1d2a",
-  "#42242f",
-  "#424054",
-  "#6e5c7a",
-  "#8b5f7f",
-  "#af8797"
+  "#1d1d2b",
+  "#313142",
+  "#66393c",
+  "#665880",
+  "#7b678b",
+  "#ac9b9c"
  ],
  "signposts": [
   340,
