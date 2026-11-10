@@ -67,6 +67,44 @@ static func swoosh(parent: Node, pos: Vector2, facing: float, r: float, from_deg
 	e.thickness = thick
 
 
+## Afterimage: a fading copy of a unit's current frame (dodges, dashes, supers).
+static func ghost(u: Unit, tint := Color(0.55, 0.8, 1.0, 0.6), frames := 14) -> void:
+	var b := u.body
+	if b == null or b.texture == null or u.get_parent() == null:
+		return
+	var g := Sprite2D.new()
+	g.texture = b.texture
+	g.region_enabled = true
+	g.region_rect = b.region_rect
+	g.centered = false
+	g.offset = b.offset
+	g.flip_h = b.flip_h
+	g.position = u.position + b.position
+	g.z_index = u.z_index
+	g.modulate = tint
+	u.get_parent().add_child(g)
+	var tw := g.create_tween()
+	tw.tween_property(g, "modulate:a", 0.0, frames / 60.0)
+	tw.tween_callback(g.queue_free)
+
+
+## Full-screen flash (supers, perfect dodges).
+static func flash_screen(from: Node, c := Color(1, 1, 1, 0.8), frames := 12) -> void:
+	if from == null or not from.is_inside_tree():
+		return
+	var layer := CanvasLayer.new()
+	layer.layer = 40
+	var r := ColorRect.new()
+	r.color = c
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	r.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(r)
+	from.get_tree().current_scene.add_child(layer)
+	var tw := r.create_tween()
+	tw.tween_property(r, "color:a", 0.0, frames / 60.0)
+	tw.tween_callback(layer.queue_free)
+
+
 static func shield(parent: Node, pos: Vector2, facing: float) -> void:
 	var e := _spawn(parent, pos, Kind.SHIELD, 9)
 	e.radius = 11.0

@@ -22,6 +22,21 @@ The game has fixed slots. Their names are IDs, not moves: the art in them can be
 | `idle`, `walk`, `hurt`, `block` | basics | | |
 | `jump`, `jump_punch`, `jump_kick`, grab, throw, carry | optional; synthesized if missing | | |
 
+**Brawler moves** (Shredder's Revenge style, the default `"controls": "brawler"`): the Attack button runs `punch_1` > `punch_2` > `kick_1` > `punch_3`, and these optional animations give the other moves their own art. Until they exist, `make_player.py` uses punch/kick animations instead and the code adds afterimages, so generate them in this order of payoff:
+
+| Animation | Move | Falls back to |
+|---|---|---|
+| `special` | spinning attack hitting all round (costs power, invulnerable) | `kick_2` |
+| `dodge` | quick dash or roll | `defend` + afterimages |
+| `dash_attack` | running attack (shoulder charge, sliding kick) | `kick_2` |
+| `slam` | over-the-shoulder throw finisher | `punch_3` |
+| `flying_kick`, `dive` | running jump attack; downward dive kick | `jump_kick` |
+| `super` | big showy move for the full-power super | `punch_3` |
+| `taunt` | short taunt (fills power) | `idle` |
+| `run` | a real run, different from `walk` | `walk` played faster |
+
+Each is about 2 PixelLab generations from the stance start frame. Name the folder after the animation (`raw/special/`) and add it to `animations` in the spec, then re-run the importer and `make_player.py`.
+
 Pick the slot moves from the concept in step 1 and write them into the spec (`concept` and `generator.animations_requested`).
 
 ## 1. Spec

@@ -46,6 +46,10 @@ enum Team { PLAYER, ENEMY }
 ## Time spent lying on the floor before getting up.
 @export_range(0.0, 5.0, 0.05, "suffix:s") var knockdown_floor_time := 0.7
 @export var knockdown_bounce := true
+## How many times an airborne (knocked-down) unit can be hit again before it lands. 0 = no juggles.
+@export var max_juggles := 4
+## Bodies knocked flying by a finisher bounce off the screen edges.
+@export var bounce_off_screen_edges := true
 @export_range(0.0, 3.0, 0.05, "suffix:s") var getup_invulnerable_time := 0.6
 
 @export_group("Throw")
@@ -89,6 +93,7 @@ var landed := true
 var slide := 0.0
 var thrown_by: Unit = null
 var thrown_hits: Array = []
+var juggles := 0
 var invulnerable_ticks := 0
 var squash := 0
 var current_attack: AttackData = null
@@ -131,6 +136,8 @@ func _ready() -> void:
 # ---------- per-tick ----------
 func _physics_process(_delta: float) -> void:
 	if Game.hitstop > 0:
+		return
+	if Game.slowmo > 0 and team == Team.ENEMY and Engine.get_physics_frames() % 2 == 1:
 		return
 	t += 1
 	_anim_acc += anim_rate
@@ -300,7 +307,7 @@ func process_attack_hits(a: AttackData, from_t: int = -1) -> int:
 		var target := u as Unit
 		if target == self or target.team == team or target in hit_this_attack:
 			continue
-		if not target.can_be_hit() or not overlaps(a, target):
+		if not (target.can_be_hit() or (team == Team.PLAYER and target.can_be_juggled())) or not overlaps(a, target):
 			continue
 		hit_this_attack.append(target)
 		if target.receive_hit(self, a):
@@ -369,7 +376,14 @@ func overlaps(a: AttackData, target: Unit) -> bool:
 func can_be_hit() -> bool:
 	if team == Team.PLAYER and Game.god_mode:
 		return false
+	if state == &"attack" and current_attack and current_attack.invulnerable:
+		return false
 	return invulnerable_ticks <= 0 and not health.invulnerable and not (state in [&"down", &"getup", &"dead", &"knockdown"])
+
+
+## Airborne after a knockdown and not yet out of juggles: player attacks can keep it in the air.
+func can_be_juggled() -> bool:
+	return state == &"knockdown" and not landed and z > 2.0 and juggles < max_juggles and not health.invulnerable
 
 
 func is_defending() -> bool:
@@ -381,6 +395,12 @@ func receive_hit(attacker: Node2D, a: AttackData) -> bool:
 	var dir := signf(position.x - attacker.position.x)
 	if dir == 0.0:
 		dir = float(attacker.get("face") if attacker.get("face") != null else 1)
+	if can_be_juggled():
+		health.damage(a.damage, attacker)
+		_hit_feedback(a, dir)
+		_juggle(attacker, a, dir)
+		_on_hit(attacker, a)
+		return true
 	var from_front := signf(attacker.position.x - position.x) == float(face) or attacker.position.x == position.x
 	if is_defending() and (from_front or rear_defence_enabled):
 		if not a.knockdown or defence_stops_knockdown_attacks:
@@ -389,12 +409,35 @@ func receive_hit(attacker: Node2D, a: AttackData) -> bool:
 		guard_broken()
 	health.damage(a.damage, attacker)
 	_hit_feedback(a, dir)
-	if health.is_dead() or (a.knockdown and can_be_knocked_down) or state == &"jump":
+	if a.throw_behind and can_be_knocked_down and attacker is Unit:
+		thrown(attacker as Unit, -dir)
+	elif health.is_dead() or (a.knockdown and can_be_knocked_down) or state == &"jump" or a.launch_height > 0.0:
 		knockdown(dir, a.knockdown_force)
+		if a.launch_height > 0.0 and can_be_knocked_down:
+			vz = sqrt(2.0 * gravity * a.launch_height)
+			vx = dir * 25.0
+		if a.bowls and attacker is Unit:
+			thrown_by = attacker as Unit
+			thrown_hits.clear()
 	else:
 		hurt(dir, a.knockback)
 	_on_hit(attacker, a)
 	return true
+
+
+## Hit again while airborne: pop back up (a little lower each time) and drift away from the hit.
+func _juggle(attacker: Node2D, a: AttackData, dir: float) -> void:
+	juggles += 1
+	var h := maxf(a.launch_height, knockdown_height * 1.4) * pow(0.78, juggles)
+	vz = sqrt(2.0 * gravity * maxf(h, 8.0))
+	vx = dir * (60.0 if a.knockdown else 30.0) * a.knockdown_force
+	bounced = not knockdown_bounce
+	face = -int(dir)
+	squash = 4
+	if (a.bowls or a.knockdown) and attacker is Unit:
+		thrown_by = attacker as Unit
+		thrown_hits.clear()
+	play_anim(&"knockdown")
 
 
 func _hit_feedback(a: AttackData, dir: float) -> void:
@@ -467,6 +510,7 @@ func knockdown_step() -> bool:
 		position.x += vx * Game.TICK
 		if thrown_by:
 			_thrown_collisions()
+		_screen_edge_bounce()
 		if air_step():
 			Effects.dust(get_parent(), position)
 			Game.request_shake(6.0 if thrown_by else 3.0)
@@ -481,6 +525,7 @@ func knockdown_step() -> bool:
 				vx = 0.0
 				squash = 4
 				thrown_by = null
+				juggles = 0
 				t = 0
 				play_anim(&"down")
 		return false
@@ -495,6 +540,20 @@ func knockdown_step() -> bool:
 			defeated.emit()
 		return false
 	return t > int(knockdown_floor_time * 60.0)
+
+
+## A body flying fast towards the edge of the screen bounces back off it (like hitting the glass).
+func _screen_edge_bounce() -> void:
+	if not bounce_off_screen_edges or absf(vx) < 90.0 or Level.current == null or Level.current.camera == null:
+		return
+	var cx := Level.current.camera.get_screen_center_position().x
+	var half := get_viewport_rect().size.x * 0.5 - 10.0
+	if (vx > 0.0 and position.x > cx + half) or (vx < 0.0 and position.x < cx - half):
+		vx = -vx * 0.5
+		position.x = clampf(position.x, cx - half, cx + half)
+		Game.request_shake(5.0)
+		Game.request_hitstop(3)
+		Effects.impact(get_parent(), position + Vector2(signf(-vx) * 8, -z - body_height * 0.5), signf(vx), 8.0, true)
 
 
 func _thrown_collisions() -> void:

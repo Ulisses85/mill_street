@@ -16,6 +16,8 @@ const TICK := 1.0 / 60.0
 
 ## Frames left in the current hit-stop. Units skip their update while this is above zero.
 var hitstop := 0
+## While > 0, enemies run at half speed (perfect dodge).
+var slowmo := 0
 ## Current screen-shake strength in pixels (decays every frame).
 var shake := 0.0
 
@@ -37,6 +39,7 @@ const DEFAULT_ACTIONS := {
 	"defend":     {"keys": [KEY_I, KEY_C, KEY_SHIFT], "pad_buttons": [JOY_BUTTON_RIGHT_SHOULDER]},
 	"grab":       {"keys": [KEY_U, KEY_V],     "pad_buttons": [JOY_BUTTON_B]},
 	"jump":       {"keys": [KEY_L, KEY_SPACE], "pad_buttons": [JOY_BUTTON_A]},
+	"taunt":      {"keys": [KEY_T],            "pad_buttons": [JOY_BUTTON_BACK]},
 	"pause":      {"keys": [KEY_P, KEY_ESCAPE], "pad_buttons": [JOY_BUTTON_START]},
 }
 
@@ -58,6 +61,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	if slowmo > 0 and hitstop == 0:
+		slowmo -= 1
 	if hitstop > 0:
 		hitstop -= 1
 	shake = shake * 0.85 if shake > 0.3 else 0.0
