@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+attack_name = "Biker Attack"
+damage = 9
+knockdown = false
+animation = &"chain_whip"
+duration = 0.25
+active_from = 0.0
+active_to = 0.15
+reach_to = 34.0
+screen_shake = 2.0
+hitstop_frames = 3

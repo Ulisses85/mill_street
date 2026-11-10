@@ -20,7 +20,7 @@ LEVELS = [
     dict(file="level_02", name="Level02", art="wharf", music="music_wharf", world=2900,
          waves=[(720, [("thug", 520, 196, True), ("thug", 600, 230, True), ("thug", 780, 186, False)]),
                 (1220, [("brute", 1060, 206, True), ("thug", 1120, 178, True), ("thug", 1280, 230, False)]),
-                (1720, [("thug", 1540, 190, True), ("thug", 1600, 226, True), ("thug", 1780, 200, False), ("thug", 1800, 176, False)]),
+                (1720, [("thug", 1540, 190, True), ("biker", 1600, 226, True), ("thug", 1780, 200, False), ("biker", 1800, 176, False)]),
                 (2220, [("brute", 2020, 196, True), ("thug", 2080, 230, True), ("bouncer", 2290, 210, False)]),
                 (2900, [("boss_bookie", 2700, 206, True), ("thug", 2600, 182, True), ("thug", 2880, 230, False), ("thug", 2890, 190, False)])],
          pickups=[("knife", 760, 220), ("pipe", 1500, 190), ("bat", 2300, 226)],

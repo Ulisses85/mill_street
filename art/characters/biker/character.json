@@ -1,0 +1,61 @@
+{
+  "id": "biker",
+  "display_name": "Biker",
+  "role": "enemy",
+  "preset": "thug",
+  "concept": "Leather-jacket biker with a bike chain. Quick on his feet, rarely blocks, whips the chain at mid range so he can hit from a bit further than a thug's punch. Rides in with the Mill Street gangs.",
+  "target_height": 62,
+  "source_facing": "right",
+  "attack_animation": "chain_whip",
+  "background": "none",
+  "palette": {
+    "max_colors": 20
+  },
+  "stats": {
+    "max_hp": 42,
+    "move_speed": 70,
+    "defend_chance": 10,
+    "attack_damage": 9,
+    "attack_reach": 34,
+    "windup_time": 0.3,
+    "score_value": 450,
+    "can_pick_up_weapons": false
+  },
+  "generator": {
+    "provider": "pixellab",
+    "prompt": "beat em up enemy, lean biker, black leather jacket with red patches, red bandana, sunglasses, jeans, boots, holding a steel bike chain, side view facing right, pixel art, clean dark outline",
+    "animations_requested": [
+      "idle",
+      "walk",
+      "attack (horizontal chain whip)",
+      "hurt"
+    ],
+    "base_image": "raw/base/east.png",
+    "pixellab_character_id": "10618c23-2d02-4386-99b4-47bf9dfc8619"
+  },
+  "animations": {
+    "idle": {
+      "source": "raw/idle",
+      "fps": 8,
+      "loop": true
+    },
+    "walk": {
+      "source": "raw/walk",
+      "fps": 12,
+      "loop": true
+    },
+    "chain_whip": {
+      "source": "raw/chain_whip_fwd",
+      "fps": 18,
+      "active": [
+        3,
+        5
+      ],
+      "note": "frames 0-6,10 of raw/chain_whip_v2; glints erased by hand on 3-5 (3 and 4 rebuilt from 5's hand and chain)"
+    },
+    "hurt": {
+      "source": "raw/hurt",
+      "fps": 10
+    }
+  }
+}
