@@ -28,6 +28,7 @@ python3 tools/make_levels.py                  # scenes/levels/<id>.tscn from the
 python3 tools/check_generated.py assets scenes resources   # after regenerating: committed output must match (PNGs by pixels)
 python3 tools/sprite_pipeline/render.py       # regenerates the built-in mannequin art
 ```
+Animation feel check (walk, double-tap run, bat swings, punch and kick combos, saved as `feel_<frame>.png`): `xvfb-run godot --path . --rendering-driver opengl3 --resolution 480x270 --fixed-fps 60 res://tests/feel.tscn`.
 Screenshots for visual checks: `xvfb-run godot --path . --rendering-driver opengl3 --resolution 480x270 --fixed-fps 60 res://tests/sim.tscn -- level_01 shots=600,1200 quiet`. Files land in Godot's user data folder (`sim_<level>_<frame>.png`). Look at them before calling visual work done.
 
 ## Conventions

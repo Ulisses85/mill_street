@@ -3,6 +3,12 @@ extends Unit
 ## Player-controlled fighter: move, jump with air attacks, punch and kick combos, defend,
 ## grab (knee / throw), hurt, knockdown, get up, lives.
 
+@export_group("Run")
+## Double-tap left or right to run.
+@export var can_run := true
+@export_range(1.0, 3.0, 0.05) var run_speed_scale := 1.6
+@export_range(0.1, 0.5, 0.01, "suffix:s") var double_tap_window := 0.25
+
 @export_group("Combat")
 @export var punch_combo: ComboData
 @export var kick_combo: ComboData
@@ -50,6 +56,10 @@ var grabbed: Unit = null
 var knees := 0
 var knee_t := 0
 var move := Vector2.ZERO
+var running := false
+var _tap_dir := 0
+var _prev_move_x := 0.0
+var _since_tap := 999
 var combo_count := 0
 var combo_count_timer := 0
 
@@ -64,6 +74,23 @@ func _ready() -> void:
 	Game.player_spawned.emit(self)
 
 
+## Double-tap detection: a second press in the same direction within double_tap_window starts a run;
+## it lasts until the player lets go, turns round or does anything else.
+func _read_run() -> void:
+	_since_tap += 1
+	var tap := 0
+	if move.x != 0.0 and _prev_move_x == 0.0:       # a new press left or right (keys, d-pad or stick)
+		tap = int(move.x)
+	_prev_move_x = move.x
+	if tap != 0:
+		if can_run and tap == _tap_dir and _since_tap <= int(double_tap_window * 60.0) and state in [&"idle", &"walk"]:
+			running = true
+		_tap_dir = tap
+		_since_tap = 0
+	if running and (move.x == 0.0 or int(move.x) != _tap_dir or not (state in [&"idle", &"walk"])):
+		running = false
+
+
 func _read_move() -> Vector2:
 	var m := Vector2(Input.get_axis(&"move_left", &"move_right"), Input.get_axis(&"move_up", &"move_down"))
 	return Vector2(signf(m.x) if absf(m.x) > 0.3 else 0.0, signf(m.y) if absf(m.y) > 0.3 else 0.0)
@@ -71,6 +98,7 @@ func _read_move() -> Vector2:
 
 func _tick() -> void:
 	move = _read_move()
+	_read_run()
 	if combo_count_timer > 0:
 		combo_count_timer -= 1
 		if combo_count_timer == 0:
@@ -148,14 +176,21 @@ func _state_ground() -> void:
 		vx = 0.0
 		set_state(&"defend", &"defend")
 		return
-	ground_move(move)
+	ground_move(move, run_speed_scale if running else 1.0)
 	if move != Vector2.ZERO:
 		if move.x != 0.0:
 			face = int(move.x)
-		if state != &"walk":
+		# Walk and run use their own animations when the sheet has both; otherwise one cycle, played faster.
+		var has_walk := body.has_animation(&"walk")
+		var want := &"run" if running or not has_walk else &"walk"
+		if state != &"walk" or anim != want:
 			state = &"walk"
-			play_anim(&"run")
-		if anim_t % 11 == 0:
+			play_anim(want)
+		var speed := Vector2(vx, vy).length() / maxf(move_speed, 1.0)
+		anim_rate = clampf(speed, 0.5, 1.2) * (1.35 if running and not has_walk else 1.0)
+		if running and t % 6 == 0:
+			Effects.puff(get_parent(), position + Vector2(-face * 8, 0), 3.0)
+		elif not running and anim_t % 11 == 0:
 			Effects.puff(get_parent(), position + Vector2(-face * 4, 0), 2.5)
 	elif state != &"idle" or anim != &"idle":
 		state = &"idle"

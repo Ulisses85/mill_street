@@ -336,22 +336,10 @@
   },
   "defend": {
    "row": 10,
-   "frames": 5,
-   "ticks_per_frame": 5,
+   "frames": 2,
+   "ticks_per_frame": 3,
    "loop": false,
    "hand": [
-    [
-     5,
-     -40
-    ],
-    [
-     6,
-     -30
-    ],
-    [
-     12,
-     -30
-    ],
     [
      16,
      -40
@@ -362,9 +350,6 @@
     ]
    ],
    "weapon_angle": [
-    -1.1,
-    -1.1,
-    -1.1,
     -1.1,
     -1.1
    ]
@@ -853,22 +838,10 @@
   },
   "block": {
    "row": 25,
-   "frames": 5,
-   "ticks_per_frame": 5,
+   "frames": 2,
+   "ticks_per_frame": 3,
    "loop": false,
    "hand": [
-    [
-     5,
-     -40
-    ],
-    [
-     6,
-     -30
-    ],
-    [
-     12,
-     -30
-    ],
     [
      16,
      -40
@@ -879,9 +852,6 @@
     ]
    ],
    "weapon_angle": [
-    -1.1,
-    -1.1,
-    -1.1,
     -1.1,
     -1.1
    ]

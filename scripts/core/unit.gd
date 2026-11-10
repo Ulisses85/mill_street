@@ -60,6 +60,9 @@ enum Team { PLAYER, ENEMY }
 @export var defence_stops_knockdown_attacks := false
 
 @export_group("Weapons")
+## Swing held weapons from the attack timing (raise, whip through, follow through) instead of
+## the sheet's per-frame weapon angles. Turn off for art that already animates the swing.
+@export var procedural_weapon_swing := true
 @export var lose_weapon_when_hit := false
 @export var lose_weapon_when_knocked_down := true
 
@@ -78,6 +81,9 @@ var state: StringName = &"idle"
 var t := 0  ## ticks spent in the current state
 var anim: StringName = &"idle"
 var anim_t := 0
+## Playback speed of the current animation (1.0 = as authored). Walk/run cycles follow movement speed.
+var anim_rate := 1.0
+var _anim_acc := 0.0
 var bounced := false
 var landed := true
 var slide := 0.0
@@ -127,12 +133,16 @@ func _physics_process(_delta: float) -> void:
 	if Game.hitstop > 0:
 		return
 	t += 1
-	anim_t += 1
+	_anim_acc += anim_rate
+	while _anim_acc >= 1.0:
+		_anim_acc -= 1.0
+		anim_t += 1
 	if invulnerable_ticks > 0:
 		invulnerable_ticks -= 1
 	if squash > 0:
 		squash -= 1
 	_tick()
+	_attack_smear()
 	_clamp_to_floor()
 	_update_visuals()
 
@@ -153,7 +163,28 @@ func set_state(s: StringName, play: StringName = &"") -> void:
 func play_anim(a: StringName, restart := true) -> void:
 	if a != anim or restart:
 		anim_t = 0
+		_anim_acc = 0.0
+		anim_rate = 1.0
 	anim = a
+
+
+## A white motion arc in front of the unit on the first active tick of each attack.
+func _attack_smear() -> void:
+	if state != &"attack" or current_attack == null or z > 1.0 and current_attack.duration > 5.0:
+		return
+	var a := current_attack
+	if t != a.ticks(a.active_from) or a.reach_to <= 0.0:
+		return
+	var armed := held_weapon != null and a == held_weapon.attack
+	var hand := body.hand_at(anim, anim_t)
+	var c := position + Vector2(face * 4, hand.y * 0.6 - z)
+	var r := clampf(a.reach_to * 0.7, 14.0, 34.0) + (6.0 if armed else 0.0)
+	if armed:
+		Effects.swoosh(get_parent(), c, face, r, -100.0, 40.0, 4.0)
+	elif a.knockdown:
+		Effects.swoosh(get_parent(), c, face, r, -60.0, 30.0, 3.0)
+	else:
+		Effects.swoosh(get_parent(), c + Vector2(0, -2), face, r * 0.8, -25.0, 15.0, 2.0)
 
 
 func _update_visuals() -> void:
@@ -178,6 +209,11 @@ func _update_held(jolt: float) -> void:
 	if _weapon_sprite.visible:
 		var hand := body.hand_at(anim, anim_t) * Vector2(body.scale.x, body.scale.y)
 		var ang := body.weapon_angle_at(anim, anim_t)
+		var a := current_attack
+		if procedural_weapon_swing and state == &"attack" and a and a == held_weapon.attack and not held_weapon.thrown:
+			var sw := _swing_pose(a)
+			ang = sw.x
+			hand += Vector2(sw.y, sw.z)
 		if held_weapon.thrown and not (state == &"attack" and current_attack == held_weapon.throw_attack):
 			ang = -0.25
 		_weapon_sprite.texture = held_weapon.texture
@@ -192,6 +228,23 @@ func _update_held(jolt: float) -> void:
 		_carry_sprite.texture = tex
 		_carry_sprite.position = Vector2(-tex.get_width() / 2.0, -round(z) - body_height - tex.get_height() + 8 + (1 if anim == &"carry" and (anim_t / 6) % 2 == 0 else 0))
 		_carry_sprite.z_index = 1
+
+
+## Weapon swing driven by the attack's timing, so any sprite swings a held weapon convincingly:
+## raise it back during the wind-up, whip it through during the hit window, follow through after.
+## Returns (angle, hand dx, hand dy).
+func _swing_pose(a: AttackData) -> Vector3:
+	var t0 := float(a.ticks(a.active_from))
+	var t1 := maxf(t0 + 1.0, float(a.ticks(a.active_to)))
+	var tt := float(t)
+	if tt < t0:
+		var k := ease(tt / maxf(t0, 1.0), 0.5)
+		return Vector3(lerpf(-1.2, -2.7, k), lerpf(0.0, -5.0, k), lerpf(0.0, -8.0, k))
+	if tt <= t1:
+		var k := ease((tt - t0) / (t1 - t0), 0.4)
+		return Vector3(lerpf(-2.7, 0.7, k), lerpf(-5.0, 6.0, k), lerpf(-8.0, 2.0, k))
+	var k := clampf((tt - t1) / 10.0, 0.0, 1.0)
+	return Vector3(lerpf(0.7, 0.2, k), lerpf(6.0, 3.0, k), lerpf(2.0, 0.0, k))
 
 
 func _clamp_to_floor() -> void:
@@ -345,9 +398,12 @@ func receive_hit(attacker: Node2D, a: AttackData) -> bool:
 
 
 func _hit_feedback(a: AttackData, dir: float) -> void:
-	Game.request_hitstop(a.hitstop_frames + (3 if a.knockdown else 0))
-	Game.request_shake(a.screen_shake)
-	Effects.burst(get_parent(), position + Vector2(-dir * 4, -z - body_height * 0.55), 13.0 if a.knockdown else 8.0)
+	# Heavier hits freeze longer, shake harder and throw out more sparks.
+	Game.request_hitstop(a.hitstop_frames + mini(3, a.damage / 5) + (3 if a.knockdown else 0))
+	Game.request_shake(a.screen_shake + (1.5 if a.knockdown else 0.0))
+	Effects.impact(get_parent(), position + Vector2(-dir * 4, -z - body_height * 0.55), dir, float(a.damage), a.knockdown)
+	if a.knockdown:
+		Effects.puff(get_parent(), position + Vector2(-dir * 6, 0), 4.0)
 
 
 func _on_blocked(_attacker: Node2D, a: AttackData, dir: float) -> void:
