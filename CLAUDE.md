@@ -11,7 +11,7 @@ A 2D side-scrolling beat 'em up template plus a demo game: three levels with bos
 - `scenes/`: characters, props, levels (generated), ui. `resources/`: attacks, combos, weapons, audio library, level list.
 - `assets/`: sprite sheets, items, level art, sfx, fonts. **Generated, do not hand-edit:** `assets/characters/*/sheet.*`, `assets/levels/*` and `scenes/levels/*`.
 - `art/`: source art and specs: `art/characters/<id>/character.json` (+ `raw/`, `preview/`) and `art/levels/<id>/level.json` (look + waves).
-- `tools/`: `art/` (AI art importer and enemy builder), `levels/level_kit.py` (level art drawn by code), `sprite_pipeline/` (procedural mannequin rig), `make_levels.py`, `check_generated.py`, `sfx/`.
+- `tools/`: `art/` (AI art importer and enemy builder), `levels/level_kit.py` (level art: drawn by code and/or imported AI layers via `ai_layers.py`), `sprite_pipeline/` (procedural mannequin rig), `make_levels.py`, `check_generated.py`, `sfx/`.
 
 ## Commands
 ```
@@ -47,7 +47,8 @@ Screenshots for visual checks: `xvfb-run godot --path . --rendering-driver openg
 Use the skills in `.claude/skills/`:
 - `ideate`: brainstorm a character or level.
 - `new-enemy`: idea → art → playable enemy in a level.
-- `new-level`: idea → level spec → art drawn by code → waves → bot test and screenshots.
+- `new-level`: idea → level spec → art (drawn by code, AI-made, or both) → waves → bot test and screenshots.
+- `level-art`: AI backgrounds (sky, skyline, rooftops, building fronts) in one style with Retro Diffusion or PixelLab, imported by the level kit.
 - `new-hero`: idea (any fighting style) → art in a stance → combo slots picked from generated attacks → `make_player.py` → balance against Max.
 - `character-art`: provider specifics for PixelLab (MCP) and Retro Diffusion (`tools/art/retrodiffusion.py`).
 

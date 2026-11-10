@@ -6,6 +6,7 @@
     python3 tools/art/retrodiffusion.py ... --check-cost          # free price check, nothing generated
     python3 tools/art/retrodiffusion.py ... --input-image raw/idle/frame_00.png --style rd_advanced_animation__walking
     python3 tools/art/retrodiffusion.py ... --palette art/palettes/mono_red.png --remove-bg
+    python3 tools/art/retrodiffusion.py --prompt "..." --style rd_plus__environment --size 384 270 --tile-x --out art/levels/<id>/raw/sky
 
 API: POST https://api.retrodiffusion.ai/v2/inferences (header X-RD-Token), then poll
 GET /v2/inferences/tasks/<id>. Field names follow Retro Diffusion's public docs and examples
@@ -61,6 +62,9 @@ def main() -> int:
     ap.add_argument("--input-image", help="first frame for advanced animations / image-to-image")
     ap.add_argument("--palette", help="PNG whose colours constrain the output")
     ap.add_argument("--remove-bg", action="store_true")
+    ap.add_argument("--tile-x", action="store_true", help="seamless left-right (parallax layers)")
+    ap.add_argument("--tile-y", action="store_true", help="seamless top-bottom")
+    ap.add_argument("--strength", type=float, help="0-1, how far img2img may move from --input-image (default 0.75)")
     ap.add_argument("--seed", type=int)
     ap.add_argument("--check-cost", action="store_true", help="ask for the price only (free)")
     ap.add_argument("--out", required=False, help="folder to save NN.png images into")
@@ -76,6 +80,12 @@ def main() -> int:
         body["input_palette"] = b64(a.palette)
     if a.remove_bg:
         body["remove_bg"] = True
+    if a.tile_x:
+        body["tile_x"] = True
+    if a.tile_y:
+        body["tile_y"] = True
+    if a.strength is not None:
+        body["strength"] = a.strength
     if a.seed is not None:
         body["seed"] = a.seed
     if a.check_cost:

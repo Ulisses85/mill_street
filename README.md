@@ -61,6 +61,8 @@ python3 tools/make_levels.py         # writes scenes/levels/<id>.tscn: waves, pr
 
 **The level kit draws everything by code** (Python + Pillow, no AI, no browser), so it's free, unlimited and the same every run. It has a library of building fronts (`terrace`, `mill`, `shop`, `pub`, `warehouse`, `shed`, `billboard`, `alley`, `grand`, `market_hall`) and street furniture. In the spec, `landmarks` pin named buildings to an x position (e.g. a mill called "MILL ST. WORKS" at x 1080) and `fill` sets how often each piece fills the gaps. Behind the street are three repeating parallax layers: `sky` (clouds, smog or stars), `far` (skyline theme: `mills`, `docks` or `town`) and `near` rooftops. `layout.json` lists every layer with its scroll factor and repeat flag (the same shape as FX Games' `parallax-background-v2`), and `make_levels.py` turns each into a Godot `Parallax2D` node.
 
+**AI-made backgrounds** plug into the same kit: put images in `art/levels/<id>/raw/` (`sky/`, `far/`, `near/`, `facade/`) and add an `ai` block to the spec. Those layers come from the images (background removed, made to repeat, reduced to one shared palette); the rest, and always the floor, is drawn by code in colours taken from the art. Landmark signs are painted by the kit so the text is crisp. In Claude Code, `/level-art` covers style, prompts, sizes and costs (Retro Diffusion `rd_plus__environment`: about $0.50–1.00 a level).
+
 You can still edit the scenes in the Godot editor, but don't re-run `make_levels.py` afterwards or it will overwrite your edits. To add a level, copy a spec folder, change it, run both scripts and append a `LevelInfo` to `resources/level_list.tres`. In Claude Code, `/new-level` walks through it.
 
 ### Adding an enemy to a wave

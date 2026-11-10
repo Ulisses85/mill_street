@@ -16,7 +16,8 @@
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
-   "repeat_y": false
+   "repeat_y": false,
+   "construction": "code"
   },
   {
    "layer_id": "far",
@@ -28,7 +29,8 @@
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
-   "repeat_y": false
+   "repeat_y": false,
+   "construction": "code"
   },
   {
    "layer_id": "near",
@@ -40,7 +42,8 @@
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
-   "repeat_y": false
+   "repeat_y": false,
+   "construction": "code"
   },
   {
    "layer_id": "street",
@@ -52,7 +55,8 @@
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": false,
-   "repeat_y": false
+   "repeat_y": false,
+   "construction": "code"
   }
  ],
  "facade": [
@@ -131,6 +135,15 @@
    "x": 2712,
    "width": 188
   }
+ ],
+ "palette": [
+  "#262c38",
+  "#424b5c",
+  "#626d80",
+  "#8591a4",
+  "#a9b4c5",
+  "#cbd4e1",
+  "#e8edf4"
  ],
  "signposts": [
   340,
