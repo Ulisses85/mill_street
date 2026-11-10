@@ -10,40 +10,40 @@
    "layer_id": "sky",
    "asset_ref": "res://assets/levels/street/sky.png",
    "order": 0,
-   "width": 960,
+   "width": 355,
    "height": 270,
    "parallax": 0.05,
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
    "repeat_y": false,
-   "construction": "code"
+   "construction": "ai"
   },
   {
    "layer_id": "far",
    "asset_ref": "res://assets/levels/street/far.png",
    "order": 1,
-   "width": 960,
+   "width": 352,
    "height": 270,
    "parallax": 0.25,
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
    "repeat_y": false,
-   "construction": "code"
+   "construction": "ai"
   },
   {
    "layer_id": "near",
    "asset_ref": "res://assets/levels/street/near.png",
    "order": 2,
-   "width": 960,
+   "width": 352,
    "height": 270,
    "parallax": 0.5,
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
    "repeat_y": false,
-   "construction": "code"
+   "construction": "ai"
   },
   {
    "layer_id": "street",
@@ -56,119 +56,164 @@
    "offset_y": 0,
    "repeat_x": false,
    "repeat_y": false,
-   "construction": "code"
+   "construction": "ai+code"
   }
  ],
  "facade": [
   {
-   "piece": "billboard",
+   "piece": "alley",
    "x": 0,
+   "width": 20
+  },
+  {
+   "piece": "billboard",
+   "x": 20,
    "width": 220
   },
   {
-   "piece": "shop",
-   "x": 220,
-   "width": 154
+   "piece": "ai:shuttered.png",
+   "x": 240,
+   "width": 72
   },
   {
-   "piece": "terrace",
-   "x": 374,
-   "width": 136
+   "piece": "ai:launderette.png",
+   "x": 312,
+   "width": 80
+  },
+  {
+   "piece": "ai:newsagent.png",
+   "x": 392,
+   "width": 85
+  },
+  {
+   "piece": "ai:chippy.png",
+   "x": 477,
+   "width": 77
+  },
+  {
+   "piece": "ai:launderette.png",
+   "x": 554,
+   "width": 80
   },
   {
    "piece": "alley",
-   "x": 510,
-   "width": 64
+   "x": 634,
+   "width": 6
   },
   {
-   "piece": "alley",
-   "x": 574,
-   "width": 66
-  },
-  {
-   "piece": "pub",
+   "piece": "ai:pub.png",
    "x": 640,
-   "width": 160
+   "width": 155
+  },
+  {
+   "piece": "ai:newsagent.png",
+   "x": 795,
+   "width": 85
+  },
+  {
+   "piece": "ai:chapel.png",
+   "x": 880,
+   "width": 102
+  },
+  {
+   "piece": "ai:shuttered.png",
+   "x": 982,
+   "width": 72
   },
   {
    "piece": "alley",
-   "x": 800,
-   "width": 45
+   "x": 1054,
+   "width": 26
   },
   {
-   "piece": "terrace",
-   "x": 845,
-   "width": 126
-  },
-  {
-   "piece": "alley",
-   "x": 971,
-   "width": 60
-  },
-  {
-   "piece": "alley",
-   "x": 1031,
-   "width": 49
-  },
-  {
-   "piece": "mill",
+   "piece": "ai:mill.png",
    "x": 1080,
-   "width": 280
+   "width": 206
   },
   {
-   "piece": "shop",
-   "x": 1360,
-   "width": 140
+   "piece": "ai:bookies.png",
+   "x": 1286,
+   "width": 91
+  },
+  {
+   "piece": "ai:shuttered.png",
+   "x": 1377,
+   "width": 72
+  },
+  {
+   "piece": "alley",
+   "x": 1449,
+   "width": 51
   },
   {
    "piece": "billboard",
    "x": 1500,
-   "width": 210
+   "width": 200
+  },
+  {
+   "piece": "ai:end_terrace.png",
+   "x": 1700,
+   "width": 61
+  },
+  {
+   "piece": "ai:bookies.png",
+   "x": 1761,
+   "width": 91
+  },
+  {
+   "piece": "ai:chippy.png",
+   "x": 1852,
+   "width": 77
+  },
+  {
+   "piece": "ai:launderette.png",
+   "x": 1929,
+   "width": 80
+  },
+  {
+   "piece": "ai:bookies.png",
+   "x": 2009,
+   "width": 91
   },
   {
    "piece": "alley",
-   "x": 1710,
-   "width": 57
+   "x": 2100,
+   "width": 40
   },
   {
-   "piece": "warehouse",
-   "x": 1767,
-   "width": 198
-  },
-  {
-   "piece": "terrace",
-   "x": 1965,
-   "width": 175
-  },
-  {
-   "piece": "mill",
+   "piece": "ai:exchange.png",
    "x": 2140,
-   "width": 300
+   "width": 206
+  },
+  {
+   "piece": "ai:launderette.png",
+   "x": 2346,
+   "width": 80
+  },
+  {
+   "piece": "ai:bookies.png",
+   "x": 2426,
+   "width": 91
+  },
+  {
+   "piece": "ai:shuttered.png",
+   "x": 2517,
+   "width": 72
   },
   {
    "piece": "alley",
-   "x": 2440,
-   "width": 63
-  },
-  {
-   "piece": "alley",
-   "x": 2503,
-   "width": 47
-  },
-  {
-   "piece": "alley",
-   "x": 2550,
-   "width": 50
+   "x": 2589,
+   "width": 11
   }
  ],
  "palette": [
-  "#2b2a36",
-  "#4a4958",
-  "#6c6b7c",
-  "#8f8ea0",
-  "#b2b1c2",
-  "#d2d1de",
-  "#ecebf3"
+  "#120f21",
+  "#1d1d2b",
+  "#313142",
+  "#66393c",
+  "#665880",
+  "#7b678b",
+  "#ac9b9c"
  ],
  "signposts": [
   340,

@@ -37,8 +37,21 @@ python3 tools/art/retrodiffusion.py --prompt "pub front, blank sign board, <styl
 - `--palette <png>` locks colours to a palette image if the layers drift apart.
 - Rename the files to something meaningful (`pub.png`, `mill.png`) before using them as landmarks.
 
-## 4. PixelLab
-Use its MCP tools only if they list a scene, background or map-object tool; check the tool list and `get_balance` first. Keep the same sizes and rules.
+## 4. PixelLab (MCP, generations from a subscription)
+Check `get_balance` first and quote generations before generating. `search_help(tool="<name>")` gives any tool's full parameters and prices for free. Keep the same sizes and rules as above.
+
+| Tool | Canvas | Transparent background | Cost | Style control |
+|---|---|---|---|---|
+| **`create_image_pixen`** (default) | 16–768 per side, **multiples of 4**, area ≤ 262,144 px | up to 65,536 px (384×140 is fine); larger is refused with `no_background` | 1 | none: description, view, outline, detail, seed |
+| `create_image_pixflux` | 16–400 per side, area ≤ 160,000; multiples of 4 at large sizes | up to 40,000 px; above that a **flat colour** (cut it away before import) | 1 | **`color_image_url`** = forced palette, `init_image_url` = image-to-image |
+| `create_image_pro` | about 0.25 MP by aspect ratio (3:2 632×424, 21:9 792×336) | yes | 10 / 15 / 25 per call | `style_image_url`, `reference_images`, `palette` (hex) |
+| `create_image_pro_flash` | 16–256, multiples of 4 | yes | 5–9 | `style_image`, `palette` |
+
+- **Default: `pixen`** for building fronts and skylines: 1 generation, transparent at full size.
+- **To lock the palette across layers:** `pixflux` with `color_image_url` set to the reference front, uploaded with `get_upload_url`. Pixen has no palette input. Its fronts are unified by the kit's shared palette (`palette_mode: free`), or snap them to the reference's colours before import.
+- **Sky:** no PixelLab tool tiles. Generate 384×268 or 384×272 (270 isn't a multiple of 4; the kit scales the sky to 270) and leave `tiles` off, so the kit blends the edges.
+- **Not useful here:** `create_building_kit`, `create_room`, the tilesets and `create_map` make tiles, top-down rooms or maps, not front-view pictures. `inpaint_image` above 256 px per side needs Tier 2.
+- Every prompt: the style line, plus "flat front elevation, no perspective, ground floor touching the bottom edge, nothing in front of it, no plants, no fence". The models still add trees, fences, planters and shrubs, so check each front and crop or clean it before import. Keep the downloads in `raw/originals/`, which the kit doesn't read.
 
 ## 5. Wire it into the spec
 Add to `art/levels/<id>/level.json`:

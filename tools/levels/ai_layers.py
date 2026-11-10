@@ -13,7 +13,10 @@ without images is still drawn by code, so a level can mix both (e.g. AI skyline,
         "far":    {"source": "raw/far", "bottom": 150},        skyline on a transparent or plain background
         "near":   {"source": "raw/near", "bottom": 150},
         "facade": {"source": "raw/facade",                     building fronts, one per image, feet on the ground line
-                   "landmarks": [{"image": "pub.png", "x": 640, "sign": {"text": "SPINNERS ARMS", "y": 92}}]}
+                   "landmarks": [{"image": "pub.png", "x": 640, "sign": {"text": "SPINNERS ARMS", "y": 92}},
+                                 {"piece": "billboard", "x": 20, "width": 220, "text": ["MILL ST."]}]}
+                                       a landmark with "piece" (billboard, alley, ... any level_kit piece) is drawn
+                                       by code at its x and width, among the AI fronts
       }
     }
 
@@ -113,12 +116,17 @@ def load_facades(base: Path, cfg: dict) -> dict[str, Image.Image]:
     return out
 
 
-def plan_facades(fronts: dict[str, Image.Image], cfg: dict, world: int, seed: int) -> tuple[list, list]:
-    """Lay the fronts along the street. Returns (placed [(name, x)], gaps [(x, width)] for code-drawn pieces)."""
+def plan_facades(fronts: dict[str, Image.Image], cfg: dict, world: int, seed: int) -> tuple[list, list, list]:
+    """Lay the fronts along the street.
+
+    A landmark is either an AI front ({"image": "pub.png", "x": ...}) or a code-drawn piece
+    ({"piece": "billboard", "x": ..., "width": ..., "text": [...]}, any key of level_kit.PIECES), which
+    keeps its x and width among the AI fronts.
+    Returns (placed [(name, x)], gaps [(x, width)] for code-drawn filler, pieces [(piece, x, width, landmark)])."""
     rng = random.Random(seed)
     marks = sorted(cfg.get("landmarks", []), key=lambda m: m["x"])
-    fill = [n for n in fronts if n not in {m["image"] for m in marks}] or list(fronts)
-    placed, gaps, x, prev = [], [], 0, None
+    fill = [n for n in fronts if n not in {m["image"] for m in marks if "image" in m}] or list(fronts)
+    placed, gaps, pieces, x, prev = [], [], [], 0, None
 
     def fill_to(end):
         nonlocal x, prev
@@ -135,6 +143,13 @@ def plan_facades(fronts: dict[str, Image.Image], cfg: dict, world: int, seed: in
             prev = n
 
     for m in marks:
+        if "piece" in m:                                    # code-drawn landmark at its own x
+            fill_to(max(x, m["x"]))
+            w = int(m.get("width", 200))
+            pieces.append((m["piece"], x, w, m))
+            x += w
+            prev = None
+            continue
         if m["image"] not in fronts:
             raise SystemExit(f"landmark image {m['image']} not found in the facade folder")
         fill_to(max(x, m["x"]))
@@ -142,7 +157,7 @@ def plan_facades(fronts: dict[str, Image.Image], cfg: dict, world: int, seed: in
         x += fronts[m["image"]].width
         prev = m["image"]
     fill_to(world)
-    return placed, gaps
+    return placed, gaps, pieces
 
 
 # ---------------------------------------------------------------- palette

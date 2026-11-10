@@ -700,13 +700,18 @@ def build(spec_path: Path) -> dict:
     main = Canvas(world, H, pal)
     rng = random.Random(seed)
     if fronts:
-        placed, gaps = AI.plan_facades(fronts, ai_cfg["facade"], world, seed)
+        placed, gaps, coded = AI.plan_facades(fronts, ai_cfg["facade"], world, seed)
         plan = []
         for gx, gw in gaps:                                 # gaps too small for any front: code-drawn piece
             piece = "alley" if gw < 110 else "terrace"
             PIECES[piece](main, random.Random(seed * 7919 + gx), gx, gw, {})
             plan.append((piece, gx, gw, {}))
-        signs_at = {m["image"]: m.get("sign") for m in ai_cfg["facade"].get("landmarks", [])}
+        for piece, px0, pw, m in coded:                     # code-drawn landmarks (billboards ...) among the AI fronts
+            if piece not in PIECES:
+                raise SystemExit(f"unknown piece '{piece}' in ai.facade.landmarks (have: {', '.join(PIECES)})")
+            PIECES[piece](main, random.Random(seed * 7919 + px0), px0, pw, m)
+            plan.append((piece, px0, pw, m))
+        signs_at = {m["image"]: m.get("sign") for m in ai_cfg["facade"].get("landmarks", []) if "image" in m}
         for name, x0 in placed:
             im = fronts[name]
             main.im.alpha_composite(im, (x0, BASE - im.height))
@@ -724,7 +729,7 @@ def build(spec_path: Path) -> dict:
     street(main, random.Random(seed + 1), world)
     frng = random.Random(seed + 2)
     furn = spec.get("furniture", {"lamp": 2, "bollard": 2, "postbox": 1, "drum": 1, "bags": 1})
-    marks = {m["image"] for m in ai_cfg.get("facade", {}).get("landmarks", [])} if fronts else set()
+    marks = {m["image"] for m in ai_cfg.get("facade", {}).get("landmarks", []) if "image" in m} if fronts else set()
     signs = [(x0, x0 + w) for n, x0, w, _ in plan if n == "billboard" or n[3:] in marks]   # keep lamp posts off signs
     px = 60 + frng.randrange(60)
     while px < world - 30:
