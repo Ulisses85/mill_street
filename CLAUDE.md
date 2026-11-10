@@ -22,6 +22,7 @@ godot --headless --path . --fixed-fps 60 --disable-vsync res://tests/sim.tscn --
 pip install -r tools/art/requirements.txt    # before importing art (pins Pillow; CI compares sheets byte for byte)
 python3 tools/art/import_character.py art/characters/<id>/character.json
 python3 tools/art/make_enemy.py art/characters/<id>/character.json
+python3 tools/art/make_player.py art/characters/<id>/character.json   # hero spec ("role": "player") -> scenes/characters/player.tscn
 python3 tools/make_levels.py                  # regenerates scenes/levels/level_0N.tscn
 python3 tools/sprite_pipeline/render.py       # regenerates the built-in mannequin art
 ```

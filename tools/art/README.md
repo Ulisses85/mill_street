@@ -75,6 +75,13 @@ This writes `scenes/characters/<id>.tscn` and `resources/attacks/<id>_attack.tre
 
 To place the enemy, add `("<id>", x, y, fov)` to a wave in `tools/make_levels.py`, then run `python3 tools/make_levels.py`.
 
+**A hero** (`"role": "player"`) uses `python3 tools/art/make_player.py art/characters/<id>/character.json` instead. It writes:
+- `scenes/characters/player.tscn`, the hero every level spawns. Use `--out` to write somewhere else.
+- `resources/combos/<id>_punch_combo.tres`: jab, cross, hook.
+- `resources/combos/<id>_kick_combo.tres`: low kick, roundhouse.
+
+Each combo attack's duration and hit window come from the sheet. Damage, reach, knockdown and step start from the built-in hero's values. You can override them per attack in the spec, for example `"attacks": {"hook": {"damage": 10}}`. You can override hero stats in `stats`, for example `max_hp` or `move_speed`. The jump, grab, throw and carry attacks are shared. The built-in Max scene is in git history if you want him back.
+
 ## 4. Check it
 
 ```

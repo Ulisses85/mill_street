@@ -37,12 +37,12 @@ jobs:
           for spec in art/characters/*/character.json; do
             python3 tools/art/import_character.py "$spec"
             role=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('role', 'enemy'))" "$spec")
-            if [ "$role" != "player" ]; then python3 tools/art/make_enemy.py "$spec"; fi
+            if [ "$role" = "player" ]; then python3 tools/art/make_player.py "$spec"; else python3 tools/art/make_enemy.py "$spec"; fi
           done
           # Committed sheets, scenes and attacks must match what the pipeline produces.
           # If this fails, re-run the two scripts above locally and commit the result.
-          git diff --stat -- assets/characters scenes/characters resources/attacks
-          git diff --exit-code --quiet -- assets/characters scenes/characters resources/attacks
+          git diff --stat -- assets/characters scenes/characters resources/attacks resources/combos
+          git diff --exit-code --quiet -- assets/characters scenes/characters resources/attacks resources/combos
 
       - name: Import project
         run: |
