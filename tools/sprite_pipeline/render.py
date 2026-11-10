@@ -3,9 +3,9 @@
 Usage (from the project root):
     python3 tools/sprite_pipeline/render.py
 
-Reads characters.json and levels.json, writes into assets/:
+Reads characters.json and the level palettes in art/levels/*/level.json, writes into assets/:
     assets/characters/<name>/sheet.png + sheet.json + portrait.png
-    assets/levels/<name>/background.png + signpost.png + layout.json
+    assets/levels/<name>/signpost.png + crate/barrel sprites (backgrounds: tools/levels/level_kit.py)
 Swap any of these PNGs for hand-made or AI-made art with the same cell size and anchor
 and the game picks them up unchanged.
 """
@@ -30,7 +30,11 @@ def save_png(data_url: str, path: pathlib.Path) -> None:
 
 async def main() -> None:
     chars = json.loads((HERE / "characters.json").read_text())
-    levels = json.loads((HERE / "levels.json").read_text())
+    # Level palettes come from the level specs; the kit (tools/levels/level_kit.py) draws the backgrounds.
+    levels = {}
+    for spec in sorted((ROOT / "art/levels").glob("*/level.json")):
+        d = json.loads(spec.read_text())
+        levels[d["art"]] = {"mono": d["palette"], "world": d["world"]}
     async with async_playwright() as p:
         browser = await p.chromium.launch(args=["--allow-file-access-from-files"])
         page = await browser.new_page()
@@ -57,13 +61,11 @@ async def main() -> None:
         print("items")
         for name, lv in levels.items():
             out = ROOT / "assets/levels" / name
-            res = await page.evaluate("(lv) => Pipeline.buildBackground(lv)", lv)
-            save_png(res["png"], out / "background.png")
+            # The background, parallax layers and layout.json come from tools/levels/level_kit.py.
             save_png(await page.evaluate("(m) => Pipeline.buildSignpost(m)", lv["mono"]), out / "signpost.png")
             for prop in ("crate", "barrel"):
                 for dmg in (False, True):
                     save_png(await page.evaluate("([k, d, m]) => Pipeline.buildProp(k, d, m)", [prop, dmg, lv["mono"]]), out / f"{prop}{'_damaged' if dmg else ''}.png")
-            (out / "layout.json").write_text(json.dumps({"world": lv["world"], "hydrants": res["hydrants"], "signposts": res["signposts"]}, indent=1))
             print("level", name)
         tmp.unlink()
         await browser.close()

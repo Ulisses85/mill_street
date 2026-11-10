@@ -1,3 +1,4 @@
-# Python packages for tools/art/. Pillow is pinned because CI compares the generated
-# sprite sheets byte for byte, and palette reduction can change between versions.
+# Python packages for tools/art/ and tools/levels/. Pillow is pinned because CI checks that the
+# committed sprites and level art match what the tools produce, and palette reduction can change
+# between versions.
 pillow==12.3.0

@@ -1,40 +1,27 @@
-"""Writes scenes/levels/level_0N.tscn from the layouts below.
+"""Writes scenes/levels/<id>.tscn from art/levels/<id>/level.json.
 
-Each level: art folder, music, length, waves (bound x + enemies), props and floor pickups.
-Enemy tuple: (scene, x, y, fov)  fov=False means it runs in when its wave starts.
-Re-run after editing:  python3 tools/make_levels.py
+Each spec holds the level's art folder, music, length, waves (bound x + enemies), props and floor pickups.
+Enemy: [scene, x, y, fov]  fov=false means it runs in when its wave starts.
+The parallax layers come from assets/levels/<art>/layout.json, written by tools/levels/level_kit.py
+from the same spec. Run the kit first when the look changes, then this:
+    python3 tools/levels/level_kit.py && python3 tools/make_levels.py
 You can also edit the generated scenes in the Godot editor; just don't re-run this script afterwards.
 """
+import json
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
-LEVELS = [
-    dict(file="level_01", name="Level01", art="street", music="music_street", world=2600,
-         waves=[(700, [("thug", 500, 190, True), ("thug", 560, 228, True), ("thug", 760, 200, False)]),
-                (1300, [("thug", 1040, 186, True), ("thug", 1130, 230, True), ("thug", 1360, 200, False), ("thug", 1400, 222, False)]),
-                (1900, [("bouncer", 1640, 200, True), ("thug", 1700, 180, True), ("thug", 1960, 226, False), ("thug", 2000, 196, False)]),
-                (2600, [("boss_foreman", 2420, 206, True), ("thug", 2300, 184, True), ("thug", 2590, 236, False)])],
-         pickups=[("pipe", 990, 214), ("bat", 1560, 196)],
-         props=[("crate", 620, 176, "can"), ("barrel", 1460, 236, "chips"), ("crate", 2180, 200, "knife")]),
-    dict(file="level_02", name="Level02", art="wharf", music="music_wharf", world=2900,
-         waves=[(720, [("thug", 520, 196, True), ("thug", 600, 230, True), ("thug", 780, 186, False)]),
-                (1220, [("brute", 1060, 206, True), ("thug", 1120, 178, True), ("thug", 1280, 230, False)]),
-                (1720, [("thug", 1540, 190, True), ("biker", 1600, 226, True), ("thug", 1780, 200, False), ("biker", 1800, 176, False)]),
-                (2220, [("brute", 2020, 196, True), ("thug", 2080, 230, True), ("bouncer", 2290, 210, False)]),
-                (2900, [("boss_bookie", 2700, 206, True), ("thug", 2600, 182, True), ("thug", 2880, 230, False), ("thug", 2890, 190, False)])],
-         pickups=[("knife", 760, 220), ("pipe", 1500, 190), ("bat", 2300, 226)],
-         props=[("crate", 620, 236, "can"), ("crate", 1200, 176, "knife"), ("barrel", 1820, 210, "chips"), ("crate", 2420, 190, "can")]),
-    dict(file="level_03", name="Level03", art="market", music="music_market", world=3200,
-         waves=[(700, [("thug", 500, 186, True), ("thug", 560, 226, True), ("brute", 760, 206, False)]),
-                (1200, [("thug", 1020, 190, True), ("thug", 1080, 230, True), ("thug", 1260, 178, False), ("thug", 1280, 214, False)]),
-                (1700, [("brute", 1520, 196, True), ("brute", 1580, 230, True), ("thug", 1760, 186, False)]),
-                (2200, [("thug", 2000, 186, True), ("thug", 2060, 226, True), ("thug", 2080, 200, True), ("brute", 2270, 210, False)]),
-                (2700, [("brute", 2500, 190, True), ("brute", 2560, 230, True), ("thug", 2760, 200, False), ("thug", 2780, 180, False)]),
-                (3200, [("boss_landlord", 3000, 206, True), ("brute", 2900, 186, True), ("thug", 3180, 230, False)])],
-         pickups=[("bat", 700, 230), ("knife", 1300, 180), ("pipe", 2000, 214), ("bat", 2600, 196)],
-         props=[("barrel", 560, 186, "can"), ("crate", 1100, 228, "chips"), ("crate", 1700, 180, "knife"), ("barrel", 2200, 232, "chips"), ("crate", 2760, 200, "can")]),
-]
+def load_levels() -> list[dict]:
+    """One spec per level: art/levels/<id>/level.json (background, waves, pickups, props)."""
+    out = []
+    for spec in sorted((ROOT / "art/levels").glob("*/level.json")):
+        d = json.loads(spec.read_text())
+        out.append(dict(file=d["id"], name="Level" + d["id"].split("_")[-1], art=d["art"], music=d["music"],
+                        world=d["world"], waves=[(w["bound"], [tuple(e) for e in w["enemies"]]) for w in d["waves"]],
+                        pickups=[tuple(p) for p in d["pickups"]], props=[tuple(p) for p in d["props"]]))
+    return out
+
 
 HEAL = {"can": 15, "chips": 35}
 
@@ -57,6 +44,22 @@ walk_area = Rect2(0, 164, {lv['world']}, 82)
 layout_json = "{art}/layout.json"
 signpost_texture = {ref("Texture2D", art + "/signpost.png")}
 music = &"{lv['music']}"
+''')
+    layout = ROOT / "assets/levels" / lv["art"] / "layout.json"
+    layers = json.loads(layout.read_text()).get("layers", []) if layout.exists() else []
+    for L in sorted(layers, key=lambda l: l["order"]):
+        if L["parallax"] == 1.0:
+            continue                          # the street itself is the Background sprite below
+        node = L["layer_id"].title()
+        nodes.append(f'''[node name="{node}" type="Parallax2D" parent="."]
+scroll_scale = Vector2({L["parallax"]}, 1)
+scroll_offset = Vector2({L["offset_x"]}, {L["offset_y"]})
+repeat_size = Vector2({L["width"] if L["repeat_x"] else 0}, 0)
+repeat_times = 2
+''')
+        nodes.append(f'''[node name="Sprite" type="Sprite2D" parent="{node}"]
+texture = {ref("Texture2D", L["asset_ref"])}
+centered = false
 ''')
     nodes.append(f'''[node name="Background" type="Sprite2D" parent="."]
 texture = {ref("Texture2D", art + "/background.png")}
@@ -107,6 +110,6 @@ script = {ref("Script", "res://scripts/ui/hud.gd")}
     return f'[gd_scene load_steps={len(ext) + 1} format=3]\n\n' + "\n".join(ext) + "\n\n" + "\n".join(nodes)
 
 
-for lv in LEVELS:
+for lv in load_levels():
     (ROOT / "scenes/levels" / f"{lv['file']}.tscn").write_text(build(lv))
     print("wrote", lv["file"])
