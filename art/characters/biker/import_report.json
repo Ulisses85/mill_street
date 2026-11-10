@@ -1,0 +1,40 @@
+{
+ "id": "biker",
+ "animations": [
+  "idle",
+  "walk",
+  "run",
+  "windup",
+  "hurt",
+  "defend",
+  "grabbed",
+  "knockdown",
+  "down",
+  "getup",
+  "lurk",
+  "chain_whip",
+  "swing",
+  "pickup",
+  "windup_armed"
+ ],
+ "synthesized": [
+  "run: copy of walk",
+  "windup: held first frame of chain_whip",
+  "defend: held first frame of idle",
+  "grabbed: copy of hurt",
+  "knockdown: rotated hurt falling",
+  "down: hurt lying flat",
+  "getup: hurt rotating back up",
+  "lurk: copy of idle",
+  "swing: copy of chain_whip",
+  "pickup: idle squashed into a crouch",
+  "windup_armed: copy of windup"
+ ],
+ "warnings": [],
+ "missing": [],
+ "colors": 20,
+ "timing": {
+  "chain_whip": 0.4,
+  "swing": 0.4
+ }
+}
