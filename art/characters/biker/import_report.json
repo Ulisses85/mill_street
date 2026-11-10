@@ -19,7 +19,7 @@
  ],
  "synthesized": [
   "run: copy of walk",
-  "windup: chain_whip frames 1-2 (lead-in before the hit)",
+  "windup: chain_whip frames 1-2 (lead-in before the hit; trimmed from chain_whip)",
   "defend: held first frame of idle",
   "grabbed: copy of hurt",
   "knockdown: rotated hurt falling",
@@ -34,7 +34,7 @@
  "missing": [],
  "colors": 20,
  "timing": {
-  "chain_whip": 0.4,
-  "swing": 0.4
+  "chain_whip": 0.25,
+  "swing": 0.25
  }
 }

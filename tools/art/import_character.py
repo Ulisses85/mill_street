@@ -336,8 +336,10 @@ def synth(name: str, have: dict, spec: dict) -> dict | None:
             start = next((i for i, f in enumerate(s["frames"]) if not idle or min(pose_diff(f, g) for g in idle) > WINDUP_POSE_DIFF), 0)
             end = s["active"][0] if s.get("active") else 1
             if start < end:
-                return {"frames": s["frames"][start:end], "tpf": s["tpf"], "loop": False,
-                        "note": f"{src} frames {start}-{end - 1} (lead-in before the hit)"}
+                # trim=(src, end): the caller drops frames 0..end-1 from the attack so it doesn't replay
+                # the lead-in (arm drops back, then raises again) right after the windup
+                return {"frames": s["frames"][start:end], "tpf": s["tpf"], "loop": False, "trim": (src, end),
+                        "note": f"{src} frames {start}-{end - 1} (lead-in before the hit; trimmed from {src})"}
             return hold(src, "first")
 
     hurt_src = pick("hurt", "idle")
@@ -440,6 +442,12 @@ def main(spec_path: Path) -> int:
                 continue
             s = synth(name, have, spec)
             if s:
+                trim = s.pop("trim", None)
+                if trim:   # the windup took the attack's lead-in: start the attack at its first hit frame
+                    src, cut = trim
+                    a = have[src]
+                    a["frames"] = a["frames"][cut:]
+                    a["active"] = [a["active"][0] - cut, a["active"][1] - cut]
                 have[name] = s
                 synthesized.append(f"{name}: {s.pop('note')}")
     missing = [n for n in required if n not in have]
