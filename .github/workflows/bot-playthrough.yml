@@ -30,12 +30,19 @@ jobs:
           unzip -q godot.zip && rm godot.zip
           mv "Godot_v${GODOT_VERSION}_linux.x86_64" godot && chmod +x godot
 
-      - name: Art pipeline still imports the example character
+      - name: Art pipeline still imports every character
         run: |
-          pip install --quiet pillow
-          python3 tools/art/import_character.py art/characters/bouncer/character.json
-          python3 tools/art/make_enemy.py art/characters/bouncer/character.json
-          git diff --stat -- scenes/characters/bouncer.tscn resources/attacks/bouncer_attack.tres
+          # Pinned in requirements.txt: the sheets are compared byte for byte below.
+          pip install --quiet -r tools/art/requirements.txt
+          for spec in art/characters/*/character.json; do
+            python3 tools/art/import_character.py "$spec"
+            role=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('role', 'enemy'))" "$spec")
+            if [ "$role" != "player" ]; then python3 tools/art/make_enemy.py "$spec"; fi
+          done
+          # Committed sheets, scenes and attacks must match what the pipeline produces.
+          # If this fails, re-run the two scripts above locally and commit the result.
+          git diff --stat -- assets/characters scenes/characters resources/attacks
+          git diff --exit-code --quiet -- assets/characters scenes/characters resources/attacks
 
       - name: Import project
         run: |

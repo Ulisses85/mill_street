@@ -36,6 +36,7 @@ ENEMY_BASE = ["idle", "walk", "run", "windup", "hurt", "defend", "grabbed", "kno
 ARMED = ["swing", "pickup", "windup_armed"]
 
 SWING_ANIMS = {"swing", "smash", "slam"}
+WINDUP_POSE_DIFF = 0.1   # an attack frame counts as "wound up" once >10% of it differs from every idle frame
 
 
 def required_anims(spec: dict) -> list[str]:
@@ -158,6 +159,21 @@ def clean(im: Image.Image, bg_setting) -> Image.Image:
 # ---------------------------------------------------------------- geometry
 def bbox(im: Image.Image):
     return im.getchannel("A").point(lambda v: 255 if v >= 128 else 0).getbbox()
+
+
+def pose_diff(a: Image.Image, b: Image.Image) -> float:
+    """Share of pixels (over the union of both silhouettes) that differ in coverage or colour."""
+    pa, pb = a.convert("RGBA").load(), b.convert("RGBA").load()
+    n = d = 0
+    for y in range(min(a.height, b.height)):
+        for x in range(min(a.width, b.width)):
+            A, B = pa[x, y], pb[x, y]
+            if A[3] < 128 and B[3] < 128:
+                continue
+            n += 1
+            if (A[3] >= 128) != (B[3] >= 128) or abs(A[0] - B[0]) + abs(A[1] - B[1]) + abs(A[2] - B[2]) > 60:
+                d += 1
+    return d / n if n else 0.0
 
 
 def feet(im: Image.Image) -> tuple[float, int]:
@@ -310,6 +326,22 @@ def synth(name: str, have: dict, spec: dict) -> dict | None:
             d["active"] = list(s["active"])
         return d
 
+    if name == "windup":
+        src = pick(atk, "punch")
+        if src:
+            s = have[src]
+            idle = have["idle"]["frames"] if "idle" in have else []
+            # wind-up = the attack's lead-in: from the first frame that no longer matches an idle pose
+            # up to the frame before the hit; played once, holding the last (most wound-up) frame
+            start = next((i for i, f in enumerate(s["frames"]) if not idle or min(pose_diff(f, g) for g in idle) > WINDUP_POSE_DIFF), 0)
+            end = s["active"][0] if s.get("active") else 1
+            if start < end:
+                # trim=(src, end): the caller drops frames 0..end-1 from the attack so it doesn't replay
+                # the lead-in (arm drops back, then raises again) right after the windup
+                return {"frames": s["frames"][start:end], "tpf": s["tpf"], "loop": False, "trim": (src, end),
+                        "note": f"{src} frames {start}-{end - 1} (lead-in before the hit; trimmed from {src})"}
+            return hold(src, "first")
+
     hurt_src = pick("hurt", "idle")
     if name == "knockdown" and hurt_src:
         f0 = have[hurt_src]["frames"][0]
@@ -335,7 +367,7 @@ def synth(name: str, have: dict, spec: dict) -> dict | None:
         return {"frames": [squat], "tpf": 1, "loop": True, "note": "idle squashed into a crouch"}
     rules = {
         "run": [("walk", "copy", 0.75)], "walk": [("run", "copy", 1.33)], "lurk": [("idle", "copy", 1.8)],
-        "windup": [(atk, "first"), ("punch", "first")], "windup_armed": [("windup", "copy"), (atk, "first")],
+        "windup_armed": [("windup", "copy"), (atk, "first")],
         "defend": [("block", "copy"), ("idle", "first")], "grabbed": [("hurt", "copy"), ("idle", "first")],
         "hurt": [("idle", "first")], "swing": [(atk, "copy"), ("punch", "copy")],
         "jab": [("punch", "copy")], "cross": [("punch", "copy", 1.1)], "hook": [("cross", "copy", 1.4), ("punch", "copy", 1.5)],
@@ -410,6 +442,12 @@ def main(spec_path: Path) -> int:
                 continue
             s = synth(name, have, spec)
             if s:
+                trim = s.pop("trim", None)
+                if trim:   # the windup took the attack's lead-in: start the attack at its first hit frame
+                    src, cut = trim
+                    a = have[src]
+                    a["frames"] = a["frames"][cut:]
+                    a["active"] = [a["active"][0] - cut, a["active"][1] - cut]
                 have[name] = s
                 synthesized.append(f"{name}: {s.pop('note')}")
     missing = [n for n in required if n not in have]

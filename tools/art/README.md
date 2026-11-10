@@ -37,6 +37,8 @@ The source formats are a folder of PNGs, a strip or grid PNG (with `frames`, or 
 
 ## 2. Import: `python3 tools/art/import_character.py art/characters/<id>/character.json`
 
+`pip install -r tools/art/requirements.txt` before importing art. It pins Pillow: CI rebuilds every character and fails if the committed sheets differ byte for byte, and a different Pillow version can change the palette.
+
 For each frame, the importer:
 - removes the background
 - scales to `target_height`, using the first `idle` frame as the reference
@@ -56,7 +58,7 @@ It writes the following, and exits 1 if a required animation is missing with no 
 | knockdown, down, getup | `hurt` rotated to the floor and back (same motion as the built-in fighters) |
 | run / walk | each other, re-timed |
 | lurk | `idle`, slowed |
-| windup | first frame of the attack |
+| windup | the attack's lead-in: from the first frame that differs from every idle pose up to the frame before `active`, played once. Those frames are then trimmed from the start of the attack (and `active` shifted) so the attack opens on the hit. Falls back to the attack's first frame |
 | defend | `block` if given, else first `idle` frame |
 | grabbed | `hurt` |
 | pickup | `idle` squashed into a crouch |

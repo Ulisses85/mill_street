@@ -1,0 +1,51 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/enemy.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
+[ext_resource type="Resource" path="res://resources/attacks/biker_attack.tres" id="5"]
+[ext_resource type="Texture2D" path="res://assets/characters/biker/portrait.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/characters/biker/sheet.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/items/can.png" id="8"]
+
+[node name="Biker" type="Node2D"]
+script = ExtResource("1")
+unit_name = "Biker"
+portrait = ExtResource("6")
+start_direction = -1
+attack = ExtResource("5")
+random_name_file = "res://resources/enemy_names.txt"
+move_speed = 70
+hit_stun_time = 0.27
+knockdown_floor_time = 0.67
+body_half_width = 9.0
+body_height = 58.0
+windup_time = 0.3
+attack_cooldown_min = 0.85
+attack_cooldown_max = 1.5
+defend_chance = 10
+wait_distance = 70.0
+score_value = 450
+can_pick_up_weapons = false
+drop_health_chance = 0.25
+drop_health_amount = 15
+drop_health_texture = ExtResource("8")
+
+[node name="Shadow" type="Node2D" parent="."]
+script = ExtResource("3")
+radius = Vector2(14, 3.5)
+
+[node name="Body" type="Sprite2D" parent="."]
+texture = ExtResource("7")
+centered = false
+offset = Vector2(-80, -116)
+region_enabled = true
+region_rect = Rect2(0, 0, 160, 128)
+script = ExtResource("2")
+sheet_json = "res://assets/characters/biker/sheet.json"
+
+[node name="HealthSystem" type="Node" parent="."]
+script = ExtResource("4")
+max_hp = 42
+current_hp = 42
