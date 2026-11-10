@@ -176,16 +176,21 @@
   },
   "windup": {
    "row": 3,
-   "frames": 1,
-   "ticks_per_frame": 1,
-   "loop": true,
+   "frames": 2,
+   "ticks_per_frame": 3,
+   "loop": false,
    "hand": [
     [
      6,
      -34
+    ],
+    [
+     8,
+     -28
     ]
    ],
    "weapon_angle": [
+    -2.5,
     -2.5
    ]
   },
@@ -589,16 +594,21 @@
   },
   "windup_armed": {
    "row": 14,
-   "frames": 1,
-   "ticks_per_frame": 1,
-   "loop": true,
+   "frames": 2,
+   "ticks_per_frame": 3,
+   "loop": false,
    "hand": [
     [
      6,
      -34
+    ],
+    [
+     8,
+     -28
     ]
    ],
    "weapon_angle": [
+    -2.5,
     -2.5
    ]
   }

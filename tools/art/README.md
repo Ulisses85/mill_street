@@ -56,7 +56,7 @@ It writes the following, and exits 1 if a required animation is missing with no 
 | knockdown, down, getup | `hurt` rotated to the floor and back (same motion as the built-in fighters) |
 | run / walk | each other, re-timed |
 | lurk | `idle`, slowed |
-| windup | first frame of the attack |
+| windup | the attack's lead-in: from the first frame that differs from every idle pose up to the frame before `active`, played once (falls back to the first frame) |
 | defend | `block` if given, else first `idle` frame |
 | grabbed | `hurt` |
 | pickup | `idle` squashed into a crouch |

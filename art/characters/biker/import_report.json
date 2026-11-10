@@ -19,7 +19,7 @@
  ],
  "synthesized": [
   "run: copy of walk",
-  "windup: held first frame of chain_whip",
+  "windup: chain_whip frames 1-2 (lead-in before the hit)",
   "defend: held first frame of idle",
   "grabbed: copy of hurt",
   "knockdown: rotated hurt falling",
