@@ -52,7 +52,7 @@
  "timing": {
   "jab": 0.2,
   "cross": 0.25,
-  "hook": 0.47,
+  "hook": 0.3,
   "lowkick": 0.25,
   "kick": 0.35,
   "swing": 0.35,

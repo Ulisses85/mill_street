@@ -80,12 +80,12 @@
     },
     "jab": {
       "source": "raw/jab",
-      "fps": 18,
+      "fps": 15,
       "active": [
-        2,
-        2
+        1,
+        1
       ],
-      "note": "raw/punch frames 5-8"
+      "note": "raw/punch frames 6-8"
     },
     "cross": {
       "source": "raw/cross",
@@ -98,12 +98,12 @@
     },
     "hook": {
       "source": "raw/hook",
-      "fps": 16,
+      "fps": 20,
       "active": [
-        4,
-        5
+        3,
+        4
       ],
-      "note": "raw/punch frames 3-8, full extension held"
+      "note": "raw/punch frames 4-8, full extension held"
     },
     "lowkick": {
       "source": "raw/lowkick",

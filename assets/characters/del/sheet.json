@@ -91,14 +91,10 @@
   },
   "jab": {
    "row": 2,
-   "frames": 4,
-   "ticks_per_frame": 3,
+   "frames": 3,
+   "ticks_per_frame": 4,
    "loop": false,
    "hand": [
-    [
-     32,
-     -32
-    ],
     [
      28,
      -30
@@ -115,12 +111,11 @@
    "weapon_angle": [
     -0.3,
     -0.3,
-    -0.3,
     -0.3
    ],
    "active_frames": [
-    2,
-    2
+    1,
+    1
    ]
   },
   "cross": {
@@ -164,14 +159,10 @@
   },
   "hook": {
    "row": 4,
-   "frames": 7,
-   "ticks_per_frame": 4,
+   "frames": 6,
+   "ticks_per_frame": 3,
    "loop": false,
    "hand": [
-    [
-     20,
-     -30
-    ],
     [
      29,
      -40
@@ -203,12 +194,11 @@
     -0.3,
     -0.3,
     -0.3,
-    -0.3,
     -0.3
    ],
    "active_frames": [
-    4,
-    5
+    3,
+    4
    ]
   },
   "lowkick": {
