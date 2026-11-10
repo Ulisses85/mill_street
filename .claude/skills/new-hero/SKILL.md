@@ -49,6 +49,7 @@ If there's no `art/characters/<id>/character.json`, run the `ideate` skill or wr
 Follow the `character-art` skill. For a hero:
 - **Base character in the fighting stance** (guard), side view, facing right. PixelLab animations start from the base pose; an arms-down base makes idle and walk drop out of the stance.
 - If the base isn't in stance: take the stance frame from idle and pass it as the **start frame** (`get_upload_url` → `custom_start_frame_url`) for walk and any other looping animation.
+- **Knockdown, down, getup:** PixelLab falls *forward* by default, whatever the prompt says (two takes for Del). Build the end pose yourself: rotate the stance frame 90° so the head goes back, rest it on the ground line on the same canvas, and pass it as `end_frame_url`. Then generate getup with that lying frame as the start frame and the stance as the end frame. Getup must fit the game's 20 ticks (6 frames at 20 fps). Import all three with `"align": "canvas"`, so the lying frames line up.
 - Animations: **idle, walk, hurt, block**, plus **one main attack for each combo** in the character's style (Del: a straight punch and a roundhouse; a brawler might be a wild haymaker and a stomp). Optional: jump (otherwise the jump attacks reuse an attack frame). A long or varied attack gives more frames to pick combo hits from.
 - Name the direction of every strike in the prompt ("forward, in the direction he is facing").
 - Show the user the base character before animating it.

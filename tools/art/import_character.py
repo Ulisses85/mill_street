@@ -205,9 +205,10 @@ def scale_frame(im: Image.Image, k: float) -> Image.Image:
     return im.resize((w, h), Image.NEAREST)
 
 
-def place(im: Image.Image) -> Image.Image:
-    """Put the character in a template cell with its feet on ANCHOR."""
-    fx, fy = feet(im)
+def place(im: Image.Image, at: tuple[float, int] | None = None) -> Image.Image:
+    """Put the character in a template cell with its feet on ANCHOR.
+    `at` overrides the feet position (used by "align": "canvas" to keep every frame's offset in its source canvas)."""
+    fx, fy = at if at is not None else feet(im)
     cell = Image.new("RGBA", CELL, (0, 0, 0, 0))
     cell.alpha_composite(im, (round(ANCHOR[0] - fx), ANCHOR[1] - fy)) if _fits(im, fx, fy) else _paste_clipped(cell, im, fx, fy)
     return cell
@@ -429,7 +430,19 @@ def main(spec_path: Path) -> int:
     have: dict[str, dict] = {}
     for name, frames in raw.items():
         a = spec["animations"][name]
-        cells = [place(scale_frame(f, k)) for f in frames]
+        if a.get("align") == "canvas":
+            # keep the motion inside the generator's canvas (falls, get-ups): every frame gets the offset
+            # of the reference idle frame, which shares the canvas size and ground line
+            ref0 = raw[ref_name][0]
+            if any(f.size != ref0.size for f in frames):
+                warnings.append(f"{name}: align canvas needs frames the size of {ref_name}'s ({ref0.size}); "
+                                f"got {sorted({f.size for f in frames})} - placed per frame instead")
+                cells = [place(scale_frame(f, k)) for f in frames]
+            else:
+                at = feet(scale_frame(ref0, k))
+                cells = [place(scale_frame(f, k), at) for f in frames]
+        else:
+            cells = [place(scale_frame(f, k)) for f in frames]
         hs = [(bbox(c)[3] - bbox(c)[1]) if bbox(c) else 0 for c in cells]
         if hs and name in ("idle", "walk", "run") and max(hs) > target_h * 1.25:
             warnings.append(f"{name}: frames up to {max(hs)}px tall (target {target_h}) - check the source scale")

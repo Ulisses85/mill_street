@@ -38,12 +38,18 @@
     "provider": "pixellab",
     "prompt": "beat em up hero, stocky older retired boxer, white sleeveless vest, grey flat cap, grey stubble, hands wrapped in white boxing tape, dark grey tracksuit trousers, black boxing boots, full body",
     "animations_requested": [
-      "idle (boxing guard)",
-      "walk",
-      "punch (straight right)",
-      "kick (roundhouse, 8 frames)",
+      "block",
+      "getup",
       "hurt",
-      "block"
+      "idle (boxing guard)",
+      "jump",
+      "kick (roundhouse, 8 frames)",
+      "knockdown",
+      "lead jab (punch_1)",
+      "overhead swing",
+      "punch (straight right)",
+      "run",
+      "walk"
     ],
     "pixellab_character_id": "0e276232-d3df-4c17-8f66-d420f313f981",
     "base_image": "raw/base/east.png"
@@ -90,13 +96,13 @@
       "note": "raw/block frames 3-4: the generated block rises from the arms-down base pose; only the high guard is kept"
     },
     "punch_1": {
-      "source": "raw/jab",
-      "fps": 15,
+      "source": "raw/jab_lead_slot",
+      "fps": 20,
       "active": [
         1,
-        1
+        2
       ],
-      "note": "raw/punch frames 6-8"
+      "note": "raw/jab_lead frames 2-6: lead-hand (left) jab, generated from the guard start frame"
     },
     "punch_2": {
       "source": "raw/cross",
@@ -124,6 +130,48 @@
         3
       ],
       "note": "raw/kick frames 3,4,5,6,8"
+    },
+    "run": {
+      "source": "raw/run_loop",
+      "fps": 14,
+      "loop": true,
+      "note": "raw/run_guard frames 1-8 (guard start frame)"
+    },
+    "jump": {
+      "source": "raw/jump_air",
+      "fps": 10,
+      "loop": false,
+      "note": "raw/jump frames 3-7: rise, tuck, legs down (the crouch would play in mid-air)"
+    },
+    "knockdown": {
+      "source": "raw/knockdown_fall",
+      "fps": 15,
+      "loop": false,
+      "note": "raw/knockdown_target frames 2-7: falls on his back; generated with raw/targets/lying_back.png as the end frame (two takes without it fell forward: raw/knockdown, raw/knockdown_back)",
+      "align": "canvas"
+    },
+    "down": {
+      "source": "raw/down",
+      "fps": 10,
+      "loop": true,
+      "note": "raw/knockdown_target frame 8 (lying on his back)",
+      "align": "canvas"
+    },
+    "getup": {
+      "source": "raw/getup_rise",
+      "fps": 20,
+      "loop": false,
+      "note": "raw/getup frames 1-6: from the lying frame to the guard (both passed as start and end frames)",
+      "align": "canvas"
+    },
+    "swing": {
+      "source": "raw/swing_slot",
+      "fps": 20,
+      "active": [
+        2,
+        3
+      ],
+      "note": "raw/swing_overhead frames 4,5,6,6,7,8: downswing lands at 0.10 s to fit bat/pipe hit windows (0.10-0.17 s)"
     }
   }
 }
