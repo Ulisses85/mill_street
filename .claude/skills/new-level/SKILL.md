@@ -6,7 +6,7 @@ description: Build a new level or restyle an existing one end to end - concept, 
 # New level
 
 Read `CLAUDE.md` first. Work on a branch off `main` (`git checkout -b level/<id>`).
-The art is drawn by code (`tools/levels/level_kit.py`), so it costs nothing and you can iterate freely.
+The art comes from the level kit (`tools/levels/level_kit.py`): drawn by code (free, iterate freely), or **AI-made** layers from `art/levels/<id>/raw/` (follow the `level-art` skill), or a mix. Ask the user which; the floor is always code-drawn.
 Worked examples: `art/levels/level_01` (Mill Street), `level_02` (Canal Wharf), `level_03` (Market Row).
 
 ## 1. Concept
@@ -36,6 +36,8 @@ Copy a worked example and change it. The keys:
 Pieces: `terrace`, `mill`, `shop` (random trade if no name), `pub`, `warehouse`, `shed`, `billboard` (lines of `text`), `alley`, `grand`, `market_hall`. Put the controls billboard near the start of the first level. Keep landmarks away from the wave bounds where the camera stops, so the player sees them.
 
 To add a new piece: write a `p_<name>(cv, rng, x0, w, o)` function in `level_kit.py` (draw with palette indices 0–6 and `BASE` = 140 as the ground line), add it to `PIECES` and `WIDTHS`, and use it in a spec.
+
+For AI art: follow the `level-art` skill now (style bible, reference image, generation, the `ai` block), then build.
 
 ## 3. Build
 ```

@@ -27,6 +27,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 ROOT = Path(__file__).resolve().parents[2]
 H = 270
 BASE = 140          # where building fronts meet the back pavement
@@ -670,15 +672,60 @@ def build(spec_path: Path) -> dict:
     out_dir = ROOT / "assets/levels" / art
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # AI-made (or hand-drawn) layers, if the spec has them; everything else is drawn by code.
+    ai = spec.get("ai", {})
+    ai_cfg = ai.get("layers", {})
+    ai_layers: dict[str, Image.Image] = {}
+    fronts: dict[str, Image.Image] = {}
+    if ai_cfg:
+        import ai_layers as AI
+        for key in ("sky", "far", "near"):
+            if key in ai_cfg:
+                im = AI.load_layer(spec_path.parent, key, ai_cfg[key], H, BASE)
+                if im is not None:
+                    ai_layers[key] = im
+        if "facade" in ai_cfg:
+            fronts = AI.load_facades(spec_path.parent, ai_cfg["facade"])
+        made = list(ai_layers.values()) + list(fronts.values())
+        if made:
+            if ai.get("palette_mode", "free") == "level":
+                fix = lambda im: AI.snap_to_ramp(im, pal)
+            else:
+                shared = AI.shared_palette(made, int(ai.get("max_colors", 32)))
+                fix = lambda im: AI.apply_palette(im, shared)
+                pal = AI.ramp_from([fix(m) for m in made])     # floor and code-drawn parts match the art
+            ai_layers = {k: fix(v) for k, v in ai_layers.items()}
+            fronts = {k: fix(v) for k, v in fronts.items()}
+
     main = Canvas(world, H, pal)
     rng = random.Random(seed)
-    plan = plan_facade(spec.get("facade", {}), rng, world)
-    for name, x0, w, o in plan:
-        PIECES[name](main, random.Random(seed * 7919 + x0), x0, w, o)
+    if fronts:
+        placed, gaps = AI.plan_facades(fronts, ai_cfg["facade"], world, seed)
+        plan = []
+        for gx, gw in gaps:                                 # gaps too small for any front: code-drawn piece
+            piece = "alley" if gw < 110 else "terrace"
+            PIECES[piece](main, random.Random(seed * 7919 + gx), gx, gw, {})
+            plan.append((piece, gx, gw, {}))
+        signs_at = {m["image"]: m.get("sign") for m in ai_cfg["facade"].get("landmarks", [])}
+        for name, x0 in placed:
+            im = fronts[name]
+            main.im.alpha_composite(im, (x0, BASE - im.height))
+            sg = signs_at.get(name)
+            if sg:                                          # crisp sign text over the AI's lettering
+                tw = ImageFont.truetype(str(FONT_B), 8).getbbox(sg["text"])[2]
+                w = sg.get("width", tw + 12)
+                sign(main, x0 + sg.get("x", (im.width - w) // 2), sg.get("y", 92), w, 11, [sg["text"]], dark=sg.get("dark", True))
+            plan.append(("ai:" + name, x0, im.width, {}))
+        plan.sort(key=lambda t: t[1])
+    else:
+        plan = plan_facade(spec.get("facade", {}), rng, world)
+        for name, x0, w, o in plan:
+            PIECES[name](main, random.Random(seed * 7919 + x0), x0, w, o)
     street(main, random.Random(seed + 1), world)
     frng = random.Random(seed + 2)
     furn = spec.get("furniture", {"lamp": 2, "bollard": 2, "postbox": 1, "drum": 1, "bags": 1})
-    signs = [(x0, x0 + w) for n, x0, w, _ in plan if n == "billboard"]   # keep lamp posts off the signs
+    marks = {m["image"] for m in ai_cfg.get("facade", {}).get("landmarks", [])} if fronts else set()
+    signs = [(x0, x0 + w) for n, x0, w, _ in plan if n == "billboard" or n[3:] in marks]   # keep lamp posts off signs
     px = 60 + frng.randrange(60)
     while px < world - 30:
         kind = frng.choices(list(furn), list(furn.values()))[0]
@@ -692,14 +739,15 @@ def build(spec_path: Path) -> dict:
     sky_spec, far_spec = spec.get("sky", {}), spec.get("skyline", {})
     makers = {"sky": (layer_sky, sky_spec), "far": (layer_far, far_spec), "near": (layer_near, far_spec)}
     for order, (key, (fn, sub)) in enumerate(makers.items()):
-        im = fn(pal, random.Random(seed * 31 + order), sub)
+        im = ai_layers.get(key) or fn(pal, random.Random(seed * 31 + order), sub)
         im.save(out_dir / f"{key}.png")
         layers.append({"layer_id": key, "asset_ref": f"res://assets/levels/{art}/{key}.png", "order": order,
-                       "width": TILE, "height": H, "parallax": float(spec.get("parallax", {}).get(key, LAYERS[key])),
-                       "offset_x": 0, "offset_y": 0, "repeat_x": True, "repeat_y": False})
+                       "width": im.width, "height": H, "parallax": float(spec.get("parallax", {}).get(key, LAYERS[key])),
+                       "offset_x": 0, "offset_y": 0, "repeat_x": True, "repeat_y": False,
+                       "construction": "ai" if key in ai_layers else "code"})
     layers.append({"layer_id": "street", "asset_ref": f"res://assets/levels/{art}/background.png", "order": len(layers),
                    "width": world, "height": H, "parallax": 1.0, "offset_x": 0, "offset_y": 0,
-                   "repeat_x": False, "repeat_y": False})
+                   "repeat_x": False, "repeat_y": False, "construction": "ai+code" if fronts else "code"})
 
     srng = random.Random(seed + 3)
     signposts, fx = [], 340
@@ -708,9 +756,10 @@ def build(spec_path: Path) -> dict:
         fx += 480 + srng.randrange(260)
     layout = {"format": "parallax-background-v2", "world": world, "canvas": {"width": 480, "height": H},
               "layers": layers, "facade": [{"piece": n, "x": x0, "width": w} for n, x0, w, _ in plan],
-              "signposts": signposts}
+              "palette": ["#%02x%02x%02x" % c[:3] for c in pal], "signposts": signposts}
     (out_dir / "layout.json").write_text(json.dumps(layout, indent=1) + "\n")
-    print(f"[{lid}] {world}px street, {len(plan)} building fronts: " + " ".join(n for n, *_ in plan))
+    src = f" (AI: {', '.join(list(ai_layers) + (['facade'] if fronts else []))})" if ai_layers or fronts else ""
+    print(f"[{lid}] {world}px street, {len(plan)} building fronts{src}: " + " ".join(n for n, *_ in plan))
     return layout
 
 
