@@ -6,7 +6,7 @@ idea ──► character.json ──► generate (PixelLab MCP / Retro Diffusion
                                                        make_enemy.py ◄─────────────────┘──► scenes/characters/<id>.tscn ──► make_levels.py ──► bot test
 ```
 
-In Claude Code, the skills in `.claude/skills/` run this whole flow: `/ideate`, `/new-enemy` and `/character-art`.
+In Claude Code, the skills in `.claude/skills/` run this whole flow: `/ideate`, `/new-enemy`, `/new-hero` and `/character-art`.
 
 ## 1. A character spec: `art/characters/<id>/character.json`
 
