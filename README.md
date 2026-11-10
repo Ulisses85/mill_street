@@ -9,6 +9,7 @@ A 2D side-scrolling beat 'em up template in GDScript. It's a reusable base: comb
 | Action | Keyboard | Gamepad |
 |---|---|---|
 | Move | WASD / Arrows | Left stick / D-pad |
+| Run | Double-tap left or right | Double-tap the stick or D-pad |
 | Punch | J / Z | X (Xbox) / Square |
 | Kick | K / X | Y / Triangle |
 | Defend (hold) | I / C / Shift | RB / R1 |

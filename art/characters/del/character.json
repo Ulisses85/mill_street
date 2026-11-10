@@ -84,8 +84,10 @@
       "fps": 10
     },
     "block": {
-      "source": "raw/block",
-      "fps": 12
+      "source": "raw/block_guard",
+      "fps": 20,
+      "loop": false,
+      "note": "raw/block frames 3-4: the generated block rises from the arms-down base pose; only the high guard is kept"
     },
     "punch_1": {
       "source": "raw/jab",
