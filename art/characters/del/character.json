@@ -199,12 +199,12 @@
     },
     "slam": {
       "source": "raw/slam_slot",
-      "fps": 16,
+      "fps": 18,
       "active": [
-        4,
-        5
+        5,
+        6
       ],
-      "note": "raw/slam frames 1-6: reach, grab, yank in. Frames 7-8 were a forward punch, not a throw, so they're dropped"
+      "note": "raw/slam_heave frames 1,2,3,5,6,7,8: reach, crouch and grab, heave both hands over his head. Generated with raw/targets/heave_overhead.png (swing_overhead frame 3) as the end frame; the first take (raw/slam) ended in a forward punch"
     },
     "taunt": {
       "source": "raw/taunt_slot",
