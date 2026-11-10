@@ -83,45 +83,185 @@
     {
       "bound": 700,
       "enemies": [
-        ["thug", 500, 190, true],
-        ["thug", 560, 228, true],
-        ["thug", 760, 200, false]
+        [
+          "thug",
+          500,
+          190,
+          true
+        ],
+        [
+          "thug",
+          560,
+          228,
+          true
+        ],
+        [
+          "thug",
+          760,
+          200,
+          false
+        ]
       ]
     },
     {
       "bound": 1300,
       "enemies": [
-        ["thug", 1040, 186, true],
-        ["thug", 1130, 230, true],
-        ["thug", 1360, 200, false],
-        ["thug", 1400, 222, false]
+        [
+          "thug",
+          1040,
+          186,
+          true
+        ],
+        [
+          "thug",
+          1130,
+          230,
+          true
+        ],
+        [
+          "thug",
+          1360,
+          200,
+          false
+        ],
+        [
+          "thug",
+          1400,
+          222,
+          false
+        ]
       ]
     },
     {
       "bound": 1900,
       "enemies": [
-        ["bouncer", 1640, 200, true],
-        ["thug", 1700, 180, true],
-        ["thug", 1960, 226, false],
-        ["thug", 2000, 196, false]
+        [
+          "bouncer",
+          1640,
+          200,
+          true
+        ],
+        [
+          "thug",
+          1700,
+          180,
+          true
+        ],
+        [
+          "thug",
+          1960,
+          226,
+          false
+        ],
+        [
+          "thug",
+          2000,
+          196,
+          false
+        ]
       ]
     },
     {
       "bound": 2600,
       "enemies": [
-        ["boss_foreman", 2420, 206, true],
-        ["thug", 2300, 184, true],
-        ["thug", 2590, 236, false]
+        [
+          "boss_foreman",
+          2420,
+          206,
+          true
+        ],
+        [
+          "thug",
+          2300,
+          184,
+          true
+        ],
+        [
+          "thug",
+          2590,
+          236,
+          false
+        ]
       ]
     }
   ],
   "pickups": [
-    ["pipe", 990, 214],
-    ["bat", 1560, 196]
+    [
+      "pipe",
+      990,
+      214
+    ],
+    [
+      "bat",
+      1560,
+      196
+    ]
   ],
   "props": [
-    ["crate", 620, 176, "can"],
-    ["barrel", 1460, 236, "chips"],
-    ["crate", 2180, 200, "knife"]
-  ]
+    [
+      "crate",
+      620,
+      176,
+      "can"
+    ],
+    [
+      "barrel",
+      1460,
+      236,
+      "chips"
+    ],
+    [
+      "crate",
+      2180,
+      200,
+      "knife"
+    ]
+  ],
+  "ai": {
+    "_source": "PixelLab create_image_pixflux; style line: 16-bit pixel art, northern English mill town at dusk, red-brown brick, purple and orange sky, warm street-lamp light, muted colours, low contrast, flat front view, no people, clean pixel edges. Facades and skylines use raw/facade/terrace.png as a forced palette. Uncleaned downloads are in raw/originals/.",
+    "palette_mode": "free",
+    "max_colors": 32,
+    "layers": {
+      "sky": {
+        "source": "raw/sky"
+      },
+      "far": {
+        "source": "raw/far",
+        "bottom": 150
+      },
+      "near": {
+        "source": "raw/near",
+        "bottom": 150
+      },
+      "facade": {
+        "source": "raw/facade",
+        "landmarks": [
+          {
+            "image": "pub.png",
+            "x": 640,
+            "sign": {
+              "text": "SPINNERS ARMS",
+              "y": 85
+            }
+          },
+          {
+            "image": "mill.png",
+            "x": 1080,
+            "sign": {
+              "text": "MILL ST. WORKS",
+              "y": 92
+            }
+          },
+          {
+            "image": "exchange.png",
+            "x": 2140,
+            "sign": {
+              "text": "COTTON EXCHANGE",
+              "y": 92
+            }
+          }
+        ]
+      }
+    }
+  }
 }

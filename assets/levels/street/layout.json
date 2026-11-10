@@ -10,40 +10,40 @@
    "layer_id": "sky",
    "asset_ref": "res://assets/levels/street/sky.png",
    "order": 0,
-   "width": 960,
+   "width": 355,
    "height": 270,
    "parallax": 0.05,
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
    "repeat_y": false,
-   "construction": "code"
+   "construction": "ai"
   },
   {
    "layer_id": "far",
    "asset_ref": "res://assets/levels/street/far.png",
    "order": 1,
-   "width": 960,
+   "width": 352,
    "height": 270,
    "parallax": 0.25,
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
    "repeat_y": false,
-   "construction": "code"
+   "construction": "ai"
   },
   {
    "layer_id": "near",
    "asset_ref": "res://assets/levels/street/near.png",
    "order": 2,
-   "width": 960,
+   "width": 352,
    "height": 270,
    "parallax": 0.5,
    "offset_x": 0,
    "offset_y": 0,
    "repeat_x": true,
    "repeat_y": false,
-   "construction": "code"
+   "construction": "ai"
   },
   {
    "layer_id": "street",
@@ -56,119 +56,154 @@
    "offset_y": 0,
    "repeat_x": false,
    "repeat_y": false,
-   "construction": "code"
+   "construction": "ai+code"
   }
  ],
  "facade": [
   {
-   "piece": "billboard",
+   "piece": "ai:terrace.png",
    "x": 0,
-   "width": 220
+   "width": 132
   },
   {
-   "piece": "shop",
-   "x": 220,
-   "width": 154
+   "piece": "ai:shop.png",
+   "x": 132,
+   "width": 72
   },
   {
-   "piece": "terrace",
-   "x": 374,
-   "width": 136
+   "piece": "ai:terrace.png",
+   "x": 204,
+   "width": 132
+  },
+  {
+   "piece": "ai:house.png",
+   "x": 336,
+   "width": 77
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 413,
+   "width": 132
+  },
+  {
+   "piece": "ai:shop.png",
+   "x": 545,
+   "width": 72
   },
   {
    "piece": "alley",
-   "x": 510,
-   "width": 64
+   "x": 617,
+   "width": 23
   },
   {
-   "piece": "alley",
-   "x": 574,
-   "width": 66
-  },
-  {
-   "piece": "pub",
+   "piece": "ai:pub.png",
    "x": 640,
-   "width": 160
+   "width": 155
+  },
+  {
+   "piece": "ai:house.png",
+   "x": 795,
+   "width": 77
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 872,
+   "width": 132
+  },
+  {
+   "piece": "ai:shop.png",
+   "x": 1004,
+   "width": 72
   },
   {
    "piece": "alley",
-   "x": 800,
-   "width": 45
+   "x": 1076,
+   "width": 4
   },
   {
-   "piece": "terrace",
-   "x": 845,
-   "width": 126
-  },
-  {
-   "piece": "alley",
-   "x": 971,
-   "width": 60
-  },
-  {
-   "piece": "alley",
-   "x": 1031,
-   "width": 49
-  },
-  {
-   "piece": "mill",
+   "piece": "ai:mill.png",
    "x": 1080,
-   "width": 280
+   "width": 206
   },
   {
-   "piece": "shop",
-   "x": 1360,
-   "width": 140
+   "piece": "ai:shop.png",
+   "x": 1286,
+   "width": 72
   },
   {
-   "piece": "billboard",
-   "x": 1500,
-   "width": 210
+   "piece": "ai:house.png",
+   "x": 1358,
+   "width": 77
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 1435,
+   "width": 132
+  },
+  {
+   "piece": "ai:house.png",
+   "x": 1567,
+   "width": 77
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 1644,
+   "width": 132
+  },
+  {
+   "piece": "ai:house.png",
+   "x": 1776,
+   "width": 77
+  },
+  {
+   "piece": "ai:shop.png",
+   "x": 1853,
+   "width": 72
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 1925,
+   "width": 132
+  },
+  {
+   "piece": "ai:house.png",
+   "x": 2057,
+   "width": 77
   },
   {
    "piece": "alley",
-   "x": 1710,
-   "width": 57
+   "x": 2134,
+   "width": 6
   },
   {
-   "piece": "warehouse",
-   "x": 1767,
-   "width": 198
-  },
-  {
-   "piece": "terrace",
-   "x": 1965,
-   "width": 175
-  },
-  {
-   "piece": "mill",
+   "piece": "ai:exchange.png",
    "x": 2140,
-   "width": 300
+   "width": 206
+  },
+  {
+   "piece": "ai:house.png",
+   "x": 2346,
+   "width": 77
+  },
+  {
+   "piece": "ai:terrace.png",
+   "x": 2423,
+   "width": 132
   },
   {
    "piece": "alley",
-   "x": 2440,
-   "width": 63
-  },
-  {
-   "piece": "alley",
-   "x": 2503,
-   "width": 47
-  },
-  {
-   "piece": "alley",
-   "x": 2550,
-   "width": 50
+   "x": 2555,
+   "width": 45
   }
  ],
  "palette": [
-  "#2b2a36",
-  "#4a4958",
-  "#6c6b7c",
-  "#8f8ea0",
-  "#b2b1c2",
-  "#d2d1de",
-  "#ecebf3"
+  "#120f21",
+  "#1d1d2a",
+  "#42242f",
+  "#424054",
+  "#6e5c7a",
+  "#8b5f7f",
+  "#af8797"
  ],
  "signposts": [
   340,
