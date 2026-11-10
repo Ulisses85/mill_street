@@ -1,0 +1,235 @@
+{
+ "idle": {
+  "source": "idle",
+  "frames": [
+   0,
+   1,
+   2,
+   3,
+   2,
+   1
+  ]
+ },
+ "walk": {
+  "source": "walk",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ },
+ "run": {
+  "source": "run",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ },
+ "jump": {
+  "source": "jump",
+  "frames": [
+   5,
+   6,
+   7,
+   8
+  ]
+ },
+ "punch": {
+  "source": "punch",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ },
+ "kick": {
+  "source": "kick",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ },
+ "punch_1": {
+  "source": "punch",
+  "frames": [
+   2,
+   3,
+   4,
+   5
+  ]
+ },
+ "punch_2": {
+  "source": "punch",
+  "frames": [
+   6,
+   7,
+   8,
+   8
+  ]
+ },
+ "kick_1": {
+  "source": "kick",
+  "frames": [
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ]
+ },
+ "punch_3": {
+  "source": "uppercut",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ]
+ },
+ "kick_2": {
+  "source": "kick",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ },
+ "slam": {
+  "source": "slam",
+  "frames": [
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ },
+ "flying_kick": {
+  "source": "flying_kick",
+  "frames": [
+   5,
+   6,
+   7
+  ]
+ },
+ "dash_attack": {
+  "source": "dash_attack",
+  "frames": [
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ },
+ "special": {
+  "source": "special",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ]
+ },
+ "super": {
+  "source": "super",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ]
+ },
+ "hurt": {
+  "source": "hurt",
+  "frames": [
+   0,
+   1,
+   2
+  ]
+ },
+ "knockdown": {
+  "source": "knockdown",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ]
+ },
+ "down": {
+  "source": "knockdown",
+  "frames": [
+   8
+  ]
+ },
+ "getup": {
+  "source": "getup",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ]
+ },
+ "win": {
+  "source": "win",
+  "frames": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ }
+}

@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="ComboData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/combat/combo_data.gd" id="2"]
+
+[sub_resource type="Resource" id="kick_1"]
+script = ExtResource("1")
+attack_name = "Knee"
+animation = &"kick_1"
+damage = 7
+reach_to = 34.0
+knockback = 1.6
+duration = 0.3
+active_from = 0.1
+active_to = 0.25
+
+[sub_resource type="Resource" id="kick_2"]
+script = ExtResource("1")
+attack_name = "Kick Finisher"
+animation = &"kick_2"
+damage = 12
+knockdown = true
+reach_to = 38.0
+forward_step = 48.0
+hitstop_frames = 3
+screen_shake = 5.0
+duration = 0.4
+active_from = 0.15
+active_to = 0.3
+
+[resource]
+script = ExtResource("2")
+combo_reset_time = 0.37
+continue_combo_on_hit = true
+attacks = Array[ExtResource("1")]([SubResource("kick_1"), SubResource("kick_2")])

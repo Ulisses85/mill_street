@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="ComboData" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/combat/combo_data.gd" id="2"]
+
+[sub_resource type="Resource" id="punch_1"]
+script = ExtResource("1")
+attack_name = "Palm Strike"
+animation = &"punch_1"
+damage = 5
+reach_to = 30.0
+knockback = 1.2
+duration = 0.2
+active_from = 0.05
+active_to = 0.15
+
+[sub_resource type="Resource" id="punch_2"]
+script = ExtResource("1")
+attack_name = "Lunge Punch"
+animation = &"punch_2"
+damage = 7
+reach_to = 32.0
+knockback = 1.4
+duration = 0.2
+active_from = 0.1
+active_to = 0.2
+
+[sub_resource type="Resource" id="kick_1"]
+script = ExtResource("1")
+attack_name = "Knee"
+animation = &"kick_1"
+damage = 7
+reach_to = 34.0
+knockback = 1.6
+duration = 0.3
+active_from = 0.1
+active_to = 0.25
+
+[sub_resource type="Resource" id="punch_3"]
+script = ExtResource("1")
+attack_name = "Uppercut"
+animation = &"punch_3"
+damage = 12
+knockdown = true
+bowls = true
+knockdown_force = 1.4
+reach_to = 34.0
+forward_step = 48.0
+hitstop_frames = 4
+screen_shake = 5.0
+duration = 0.35
+active_from = 0.15
+active_to = 0.25
+
+[resource]
+script = ExtResource("2")
+combo_reset_time = 0.37
+continue_combo_on_hit = true
+attacks = Array[ExtResource("1")]([SubResource("punch_1"), SubResource("punch_2"), SubResource("kick_1"), SubResource("punch_3")])

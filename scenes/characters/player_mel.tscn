@@ -1,0 +1,64 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/player.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
+[ext_resource type="Resource" path="res://resources/combos/mel_punch_combo.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/combos/mel_kick_combo.tres" id="6"]
+[ext_resource type="Resource" path="res://resources/attacks/jump_punch.tres" id="7"]
+[ext_resource type="Resource" path="res://resources/attacks/jump_kick.tres" id="8"]
+[ext_resource type="Resource" path="res://resources/attacks/grab_knee.tres" id="9"]
+[ext_resource type="Resource" path="res://resources/attacks/grab_knee_finisher.tres" id="10"]
+[ext_resource type="Resource" path="res://resources/attacks/throw.tres" id="11"]
+[ext_resource type="Resource" path="res://resources/attacks/thrown_body.tres" id="12"]
+[ext_resource type="Resource" path="res://resources/attacks/prop_hit.tres" id="13"]
+[ext_resource type="Resource" path="res://resources/attacks/mel_special.tres" id="14"]
+[ext_resource type="Resource" path="res://resources/attacks/mel_super.tres" id="15"]
+[ext_resource type="Resource" path="res://resources/attacks/mel_dash.tres" id="16"]
+[ext_resource type="Resource" path="res://resources/attacks/mel_slam.tres" id="17"]
+[ext_resource type="Resource" path="res://resources/attacks/mel_flying_kick.tres" id="18"]
+[ext_resource type="Resource" path="res://resources/attacks/mel_dive.tres" id="19"]
+[ext_resource type="Texture2D" path="res://assets/characters/mel/portrait.png" id="20"]
+[ext_resource type="Texture2D" path="res://assets/characters/mel/sheet.png" id="21"]
+
+[node name="Player" type="Node2D"]
+script = ExtResource("1")
+team = 0
+unit_name = "Mel"
+portrait = ExtResource("20")
+move_speed = 115.0
+knockdown_floor_time = 0.83
+defence_stops_knockdown_attacks = true
+punch_combo = ExtResource("5")
+kick_combo = ExtResource("6")
+jump_punch = ExtResource("7")
+jump_kick = ExtResource("8")
+grab_knee = ExtResource("9")
+grab_knee_finisher = ExtResource("10")
+throw_attack = ExtResource("11")
+thrown_body_hit = ExtResource("12")
+carry_throw_attack = ExtResource("13")
+special_attack = ExtResource("14")
+super_attack = ExtResource("15")
+dash_attack = ExtResource("16")
+back_finisher = ExtResource("17")
+dash_jump_attack = ExtResource("18")
+dive_attack = ExtResource("19")
+
+[node name="Shadow" type="Node2D" parent="."]
+script = ExtResource("3")
+
+[node name="Body" type="Sprite2D" parent="."]
+texture = ExtResource("21")
+centered = false
+offset = Vector2(-80, -116)
+region_enabled = true
+region_rect = Rect2(0, 0, 160, 128)
+script = ExtResource("2")
+sheet_json = "res://assets/characters/mel/sheet.json"
+
+[node name="HealthSystem" type="Node" parent="."]
+script = ExtResource("4")
+max_hp = 120
+current_hp = 120

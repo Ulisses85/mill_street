@@ -77,7 +77,7 @@ Look at `preview/contact.png` and the GIFs: feet on one line, nothing touching t
 ```
 python3 tools/art/make_player.py art/characters/<id>/character.json
 ```
-This overwrites `scenes/characters/player.tscn` (the hero every level spawns) and writes `resources/combos/<id>_punch_combo.tres` and `<id>_kick_combo.tres`. The previous hero stays in git; `--out` writes somewhere else for a side-by-side test.
+This overwrites `scenes/characters/player.tscn` (the hero every level spawns) and writes `resources/combos/<id>_punch_combo.tres` and `<id>_kick_combo.tres`. The previous hero stays in git; `--out` writes somewhere else for a side-by-side test. To keep a second hero side by side for good, put `"scene": "scenes/characters/player_<id>.tscn"` in its spec: `make_player.py` (and CI's art loop) then always writes that file and leaves `player.tscn` alone.
 
 ## 6. Test
 ```
