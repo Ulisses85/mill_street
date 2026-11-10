@@ -10,16 +10,28 @@ A 2D side-scrolling beat 'em up template in GDScript. It's a reusable base: comb
 |---|---|---|
 | Move | WASD / Arrows | Left stick / D-pad |
 | Run | Double-tap left or right | Double-tap the stick or D-pad |
-| Punch | J / Z | X (Xbox) / Square |
-| Kick | K / X | Y / Triangle |
-| Defend (hold) | I / C / Shift | RB / R1 |
+| Attack (combo) | J / Z | X (Xbox) / Square |
+| Special (costs power) | K / X | Y / Triangle |
+| Super (full power) | K + L together | Y + A |
+| Dodge | I / C / Shift | RB / R1 |
 | Grab | U / V | B / Circle |
 | Jump | L / Space | A / Cross |
+| Taunt (fills power) | T | Back / Select |
 | Pause | P / Esc | Start |
+
+**Moves** (Shredder's Revenge style "brawler" controls, the default):
+- **Attack** x4: a 4-hit combo; the last hit knocks the enemy flying into others. Hold **away** on the last hit to slam it over your shoulder instead.
+- **Run** + Attack: dash attack. **Run** + Jump + Attack: flying kick. In the air, **Down** + Attack: dive kick (bounces off heads).
+- Hit enemies while they're in the air to **juggle** them; bodies knocked flying hit other enemies and bounce off the screen edges.
+- **Power** fills as you hit, get hit or taunt. Special: a spinning attack all round you, invulnerable. Super: hits everyone on screen.
+- **Dodge**: a quick invulnerable dash. Dodge just as an attack lands for a **perfect dodge**: enemies slow down and you gain power.
+- Presses made during the freeze on impact are buffered, so combos don't drop inputs.
+
+Classic controls (punch combo, kick combo, hold to block) are one setting away: `"controls": "classic"` in the hero spec, or clear Special Attack and set Defence Mode to Block in the Inspector.
 
 `scripts/core/game.gd` registers these as defaults. Define the same actions in **Project Settings → Input Map** to override them.
 
-On phones and tablets an on-screen stick and buttons (P K J D G) appear on the first touch. They hide again when a keyboard or gamepad is used.
+On phones and tablets an on-screen stick and buttons (A S J D G) appear on the first touch. They hide again when a keyboard or gamepad is used.
 
 ## Run it
 
@@ -30,9 +42,9 @@ Open the folder in Godot 4.3 or newer and press **F5**. On the very first open, 
 | System | Where | Inspector settings |
 |---|---|---|
 | Unit (base fighter) | `scripts/core/unit.gd` | Name & portrait, random name file, movement (speed, air speed, acceleration, vertical 80%), jump (height, gravity), hit stun, knockdown (height, distance, floor time, bounce), throw (height, distance), defence (rear defence, stops knockdown attacks), hurtbox |
-| Player | `scripts/characters/player.gd` | Punch & kick `ComboData`, jump punch/kick, change direction while defending, grab (range, position, duration, knee, finisher, throw damage, thrown-body damage), lives |
+| Player | `scripts/characters/player.gd` | Attack `ComboData` with back finisher, dash / flying / dive attacks, special and super on a power meter (cost, gain per damage, taunt), dodge with perfect-dodge slow-mo or block, run, jump punch/kick, grab (range, position, duration, knee, finisher, throw damage, thrown-body damage), lives |
 | Enemy AI | `scripts/characters/enemy.gd` | Attack, windup telegraph, cooldowns, max simultaneous attackers, wait distance, defend chance (0–100) & duration, can be grabbed, **field of view** (distance, angle, eye offset, look-around, alert delay, debug cone) |
-| Attacks & combos | `scripts/combat/attack_data.gd`, `combo_data.gd`, `resources/` | Damage, knockdown, animation, timing (duration / hit window), reach, depth & height range, knockback, forward step, hit-stop, shake. Combos: reset time, *continue combo on hit*, ordered list |
+| Attacks & combos | `scripts/combat/attack_data.gd`, `combo_data.gd`, `resources/` | Damage, knockdown, animation, timing (duration / hit window), reach, depth & height range, knockback, forward step, hit-stop, shake. Special properties: invulnerable, launch height (juggles), throw behind, bowls (body hits others), hits whole screen, power gain. Combos: reset time, *continue combo on hit*, ordered list |
 | Health | `scripts/systems/health_system.gd` | Max/current HP, invulnerable, small bar, hit flash, shake, SFX |
 | Waves | `scripts/systems/wave_manager.gd`, `wave.gd`, `level_bound.gd` | `WaveManager/Wave1..N`, each holding enemies and a `LevelBound` (yellow line in the editor). The camera stops at the bound until the wave is cleared. Option to end the level some other way |
 | Camera | `scripts/systems/beat_camera.gd` | Targets (default: player group), damping, Y offset, view area, backtracking + margin, keep targets on screen + border margin |

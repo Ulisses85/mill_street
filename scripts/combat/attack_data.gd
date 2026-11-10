@@ -41,6 +41,20 @@ extends Resource
 @export var screen_shake := 2.0
 @export var hit_sfx: AudioStream
 
+@export_group("Special Properties")
+## The attacker can't be hit while this attack plays (specials, supers).
+@export var invulnerable := false
+## Launches the target straight up for a juggle (pixels high). 0 = normal knockdown arc.
+@export var launch_height := 0.0
+## Throws the target over the attacker's shoulder to the other side (directional finishers).
+@export var throw_behind := false
+## A knocked-down target flies into other enemies and knocks them down too.
+@export var bowls := false
+## Hits every enemy on screen, wherever they are (supers).
+@export var hits_whole_screen := false
+## Power gained by the attacker per hit (0 = from damage).
+@export var power_gain := 0.0
+
 
 func ticks(seconds: float) -> int:
 	return int(round(seconds * 60.0))

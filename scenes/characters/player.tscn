@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/player.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
@@ -13,14 +13,20 @@
 [ext_resource type="Resource" path="res://resources/attacks/throw.tres" id="11"]
 [ext_resource type="Resource" path="res://resources/attacks/thrown_body.tres" id="12"]
 [ext_resource type="Resource" path="res://resources/attacks/prop_hit.tres" id="13"]
-[ext_resource type="Texture2D" path="res://assets/characters/del/portrait.png" id="14"]
-[ext_resource type="Texture2D" path="res://assets/characters/del/sheet.png" id="15"]
+[ext_resource type="Resource" path="res://resources/attacks/del_special.tres" id="14"]
+[ext_resource type="Resource" path="res://resources/attacks/del_super.tres" id="15"]
+[ext_resource type="Resource" path="res://resources/attacks/del_dash.tres" id="16"]
+[ext_resource type="Resource" path="res://resources/attacks/del_slam.tres" id="17"]
+[ext_resource type="Resource" path="res://resources/attacks/del_flying_kick.tres" id="18"]
+[ext_resource type="Resource" path="res://resources/attacks/del_dive.tres" id="19"]
+[ext_resource type="Texture2D" path="res://assets/characters/del/portrait.png" id="20"]
+[ext_resource type="Texture2D" path="res://assets/characters/del/sheet.png" id="21"]
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1")
 team = 0
 unit_name = "Del"
-portrait = ExtResource("14")
+portrait = ExtResource("20")
 move_speed = 118.0
 knockdown_floor_time = 0.83
 defence_stops_knockdown_attacks = true
@@ -33,12 +39,18 @@ grab_knee_finisher = ExtResource("10")
 throw_attack = ExtResource("11")
 thrown_body_hit = ExtResource("12")
 carry_throw_attack = ExtResource("13")
+special_attack = ExtResource("14")
+super_attack = ExtResource("15")
+dash_attack = ExtResource("16")
+back_finisher = ExtResource("17")
+dash_jump_attack = ExtResource("18")
+dive_attack = ExtResource("19")
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")
 
 [node name="Body" type="Sprite2D" parent="."]
-texture = ExtResource("15")
+texture = ExtResource("21")
 centered = false
 offset = Vector2(-80, -116)
 region_enabled = true

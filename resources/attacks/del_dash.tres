@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+attack_name = "Dash Attack"
+animation = &"kick_2"
+damage = 10
+knockdown = true
+bowls = true
+knockdown_force = 1.5
+reach_to = 40.0
+forward_step = 170.0
+hitstop_frames = 3
+screen_shake = 5.0
+duration = 0.35
+active_from = 0.15
+active_to = 0.3

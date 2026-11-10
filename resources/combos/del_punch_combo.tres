@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ComboData" load_steps=6 format=3]
+[gd_resource type="Resource" script_class="ComboData" load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/combat/combo_data.gd" id="2"]
@@ -20,9 +20,20 @@ attack_name = "Cross"
 animation = &"punch_2"
 damage = 7
 reach_to = 32.0
-knockback = 1.6
+knockback = 1.4
 duration = 0.25
 active_from = 0.15
+active_to = 0.2
+
+[sub_resource type="Resource" id="kick_1"]
+script = ExtResource("1")
+attack_name = "Low Kick"
+animation = &"kick_1"
+damage = 7
+reach_to = 34.0
+knockback = 1.6
+duration = 0.25
+active_from = 0.1
 active_to = 0.2
 
 [sub_resource type="Resource" id="punch_3"]
@@ -31,10 +42,12 @@ attack_name = "Hook"
 animation = &"punch_3"
 damage = 11
 knockdown = true
+bowls = true
+knockdown_force = 1.4
 reach_to = 34.0
 forward_step = 48.0
-hitstop_frames = 3
-screen_shake = 4.0
+hitstop_frames = 4
+screen_shake = 5.0
 duration = 0.3
 active_from = 0.15
 active_to = 0.25
@@ -43,4 +56,4 @@ active_to = 0.25
 script = ExtResource("2")
 combo_reset_time = 0.37
 continue_combo_on_hit = true
-attacks = Array[ExtResource("1")]([SubResource("punch_1"), SubResource("punch_2"), SubResource("punch_3")])
+attacks = Array[ExtResource("1")]([SubResource("punch_1"), SubResource("punch_2"), SubResource("kick_1"), SubResource("punch_3")])

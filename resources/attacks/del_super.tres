@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+attack_name = "Super"
+animation = &"punch_3"
+damage = 30
+knockdown = true
+hits_whole_screen = true
+invulnerable = true
+launch_height = 56.0
+hitstop_frames = 8
+screen_shake = 9.0
+duration = 0.6
+active_from = 0.15
+active_to = 0.25

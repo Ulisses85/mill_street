@@ -12,8 +12,8 @@ extends CanvasLayer
 const INK := Color("#1e1c28")
 const BUTTONS := [
 	# action, label, position from bottom-right, radius scale
-	[&"punch", "P", Vector2(-34, -34), 1.25],
-	[&"kick", "K", Vector2(-80, -26), 1.0],
+	[&"punch", "A", Vector2(-34, -34), 1.25],      # Attack
+	[&"kick", "S", Vector2(-80, -26), 1.0],        # Special (Kick in classic controls)
 	[&"jump", "J", Vector2(-58, -70), 1.0],
 	[&"defend", "D", Vector2(-108, -62), 0.85],
 	[&"grab", "G", Vector2(-24, -84), 0.85],

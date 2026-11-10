@@ -78,6 +78,24 @@ func _bar(pos: Vector2, w: int, pct: float, col: Color) -> void:
 	draw_rect(Rect2(pos, Vector2(fw, 1)), Color(1, 1, 1, 0.4))
 
 
+## Power meter under the health bar, split into specials; flashes gold when a super is ready.
+func _power_meter(pos: Vector2, w: int) -> void:
+	if player.get("special_attack") == null and player.get("super_attack") == null:
+		return
+	var mx: float = player.max_power
+	var pct: float = player.power / maxf(mx, 1.0)
+	draw_rect(Rect2(pos - Vector2.ONE, Vector2(w + 2, 5)), INK)
+	draw_rect(Rect2(pos, Vector2(w, 3)), Color("#4a4958"))
+	var full := pct >= 1.0
+	var col := Color("#ffd23a") if full and (tick / 6) % 2 == 0 else Color("#7fd4ff")
+	draw_rect(Rect2(pos, Vector2(roundf(w * pct), 3)), col)
+	var seg: float = player.special_cost
+	var x := seg
+	while x < mx - 0.5:
+		draw_rect(Rect2(pos + Vector2(roundf(w * x / mx), 0), Vector2(1, 3)), INK)
+		x += seg
+
+
 func _portrait(pos: Vector2, tex: Texture2D) -> void:
 	draw_rect(Rect2(pos, Vector2(22, 22)), INK)
 	draw_rect(Rect2(pos + Vector2.ONE, Vector2(20, 20)), PANEL)
@@ -94,15 +112,16 @@ func _draw() -> void:
 		_text(player.display_name, Vector2(34, 13), 8, INK, true)
 		var low := h.current_hp <= h.max_hp * 0.25 and (tick / 8) % 2 == 0
 		_bar(Vector2(34, 16), player_bar_width, float(h.current_hp) / h.max_hp, Color("#ff8a2a") if low else RED)
+		_power_meter(Vector2(34, 24), player_bar_width)
 		var lives: int = player.get("lives") if player.get("lives") != null else 0
 		for i in lives:
 			var c := Vector2(152 + i * 9, 18)
 			draw_circle(c, 3.5, INK)
 			draw_circle(c, 2.5, PANEL)
-		_text("%06d" % Game.score, Vector2(34, 32), 8, Color("#4a4958"))
+		_text("%06d" % Game.score, Vector2(34, 36), 8, Color("#4a4958"))
 		var w: WeaponData = player.get("held_weapon")
 		if w:
-			_text("%s x%d" % [w.weapon_name, player.weapon_uses], Vector2(80, 32), 8, Color("#4a4958"))
+			_text("%s x%d" % [w.weapon_name, player.weapon_uses], Vector2(80, 36), 8, Color("#4a4958"))
 	var boss: Unit = null
 	for e in get_tree().get_nodes_in_group(&"enemies"):
 		if e.get("is_boss") and e.state != &"wait" and e.state != &"dead" and e.is_alive():

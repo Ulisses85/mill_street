@@ -1,36 +1,53 @@
 extends Node
-## Animation feel check: scripted moves in level 1, saved as a contact sheet of frames.
+## Animation and move-set check: scripted moves in level 1, captured as frames.
 ##   xvfb-run godot --path . --rendering-driver opengl3 --resolution 480x270 --fixed-fps 60 res://tests/feel.tscn
-## Writes user://feel_<n>.png for each captured frame (God mode on, so nothing interrupts).
+## Writes user://feel_<frame>.png (God mode on, so nothing interrupts) and prints what each move did.
 var level
 var frame := 0
-var plan := {}          # frame -> action
-var capture: Array = []
+var holds := {}      # action -> [from, to] frames held
+var taps := {}       # frame -> [actions] pressed for one frame
+var shots: Array = []
+
+func _hold(a: StringName, f0: int, f1: int) -> void:
+	holds[a] = holds.get(a, []) + [[f0, f1]]
+
+func _tap(f: int, actions: Array) -> void:
+	taps[f] = actions
 
 func _ready() -> void:
 	Game.god_mode = true
 	level = load("res://scenes/levels/level_01.tscn").instantiate()
 	add_child(level)
-	# walk, then double-tap to run, stop, pick up a bat (F8 gives one), swing it, then a punch combo
-	for f in [20, 21, 22]: plan[f] = "tap_right"
-	capture = [40, 46, 52, 140, 146, 152, 158]
+	_hold(&"move_right", 1, 4); _hold(&"move_right", 8, 125)   # double-tap and run towards the first thugs
+	_hold(&"move_right", 126, 128); _tap(126, [&"punch"])                               # dash attack into them
+	for f in [175, 187, 199, 211]: _tap(f, [&"punch"])  # 4-hit combo
+	for f in [235, 243, 251]: _tap(f, [&"punch"])       # juggle the airborne thug
+	_tap(280, [&"kick"])                                # special (power given below)
+	_tap(320, [&"defend"])                              # dodge back
+	_tap(350, [&"jump"]); _hold(&"move_right", 350, 370); _hold(&"move_down", 356, 360); _tap(358, [&"punch"])   # dive kick
+	for f in [400, 412, 424]: _tap(f, [&"punch"])
+	_hold(&"move_left", 434, 440); _tap(436, [&"punch"])  # over-the-shoulder finisher
+	_tap(480, [&"taunt"])
+	_hold(&"kick", 540, 546); _tap(541, [&"jump"])       # super
+	for f in range(100, 600, 4): shots.append(f)
 
 func _physics_process(_d: float) -> void:
 	frame += 1
 	var p = Game.player
-	for a in [&"move_right", &"punch", &"kick"]:
-		Input.action_release(a)
-	if frame < 60: Input.action_press(&"move_right")                     # walk
-	elif frame in [100, 104]: Input.action_release(&"move_right")       # double-tap
-	elif frame >= 100 and frame < 200 and frame != 103: Input.action_press(&"move_right")   # run
-	if frame in [50, 150] and p: print("frame %d running=%s vx=%.0f anim=%s" % [frame, p.running, p.vx, p.anim])
-	if frame == 230 and p:
-		p.equip(load("res://resources/weapons/bat.tres"), 9)
-	if frame in [240, 290]: Input.action_press(&"punch")                 # bat swings
-	if frame in [340, 352, 364]: Input.action_press(&"punch")            # punch combo
-	if frame in [400, 412]: Input.action_press(&"kick")
-	if (frame >= 236 and frame <= 270 and frame % 3 == 0) or (frame >= 336 and frame <= 440 and frame % 4 == 0) or frame in [40, 46, 52, 140, 146, 152]:
+	if frame == 275 and p: p.add_power(100.0)
+	if frame == 530 and p: p.add_power(100.0)
+	for a in [&"move_right", &"move_left", &"move_down", &"punch", &"kick", &"jump", &"defend", &"taunt"]:
+		var on := false
+		for r in holds.get(a, []):
+			if frame >= r[0] and frame <= r[1]: on = true
+		if on: Input.action_press(a)
+		else: Input.action_release(a)
+	for a in taps.get(frame, []):
+		Input.action_press(a)
+	if p and frame % 4 == 0 and frame >= 100:
+		print("f%d state=%s anim=%s run=%s power=%d" % [frame, p.state, p.anim, p.running, int(p.power)])
+	if frame in shots:
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png("user://feel_%04d.png" % frame)
-	if frame > 450:
+	if frame > 600:
 		get_tree().quit()
