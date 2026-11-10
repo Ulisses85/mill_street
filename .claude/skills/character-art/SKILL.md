@@ -19,6 +19,8 @@ Setup (user, once): `claude mcp add pixellab https://api.pixellab.ai/mcp -t http
 1. `get_balance` to check credits. Tell the user before large jobs.
 2. `create_character` with the spec's `generator.prompt`. Use a side view, and 4 directions is enough. Jobs return an ID; poll the matching `get_*` tool until the job is done (30 s – 5 min).
 3. `animate_character` with the character ID, once per animation: idle, walk, the attack (e.g. a punch, or an overhead smash for brutes) and hurt. For a boss or hero, also block and knockdown if available.
+   - Generate the base character in its fighting stance (e.g. guard), or pass the stance frame as the start frame for every animation, because PixelLab animations start from the base pose. For the start frame, upload the PNG with `get_upload_url` and pass the returned `upload:<id>` as `custom_start_frame_url`. Otherwise idle and walk spend their first frames moving from the base pose into the stance, and a looping animation keeps dropping out of it.
+   - Name the direction of every strike in the prompt ("forward, in the direction he is facing"). Without it, swings sometimes go out behind the character.
 4. Download the results. Keep only the **east (right-facing)** direction. Save each animation as `raw/<anim>/` frames, or as the sheet or GIF PixelLab exports.
 5. If a frame set is off, regenerate that one animation rather than the whole character.
 6. Tool names and parameters may change. List the server's tools if a call fails.

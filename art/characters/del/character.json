@@ -1,0 +1,118 @@
+{
+  "id": "del",
+  "display_name": "Del",
+  "role": "player",
+  "concept": "Retired boxer who ran the Mill Street gym for thirty years. Heavy hands, steady pace: punch combo hits harder, slightly slower and tougher than the built-in hero.",
+  "target_height": 58,
+  "source_facing": "right",
+  "background": "none",
+  "palette": {
+    "max_colors": 20
+  },
+  "stats": {
+    "max_hp": 110,
+    "move_speed": 118.0
+  },
+  "attacks": {
+    "jab": {
+      "damage": 6
+    },
+    "cross": {
+      "damage": 7
+    },
+    "hook": {
+      "damage": 11,
+      "reach_to": 34.0
+    }
+  },
+  "generator": {
+    "provider": "pixellab",
+    "prompt": "beat em up hero, stocky older retired boxer, white sleeveless vest, grey flat cap, grey stubble, hands wrapped in white boxing tape, dark grey tracksuit trousers, black boxing boots, full body",
+    "animations_requested": [
+      "idle (boxing guard)",
+      "walk",
+      "punch (straight right)",
+      "kick (roundhouse, 8 frames)",
+      "hurt",
+      "block"
+    ],
+    "pixellab_character_id": "0e276232-d3df-4c17-8f66-d420f313f981",
+    "base_image": "raw/base/east.png"
+  },
+  "animations": {
+    "idle": {
+      "source": "raw/idle_guard",
+      "fps": 6,
+      "loop": true,
+      "note": "raw/idle frames 6,7,8,7 (guard only; 0-5 rise from the arms-down base pose)"
+    },
+    "walk": {
+      "source": "raw/walk_loop",
+      "fps": 12,
+      "loop": true,
+      "note": "raw/walk_guard frames 1-8 (generated from idle frame 7 as the start frame; frame 0 is that start frame)"
+    },
+    "punch": {
+      "source": "raw/punch_trim",
+      "fps": 18,
+      "active": [
+        5,
+        6
+      ],
+      "note": "raw/punch frames 2-8"
+    },
+    "kick": {
+      "source": "raw/kick_trim",
+      "fps": 18,
+      "active": [
+        3,
+        5
+      ],
+      "note": "raw/kick frames 2-8"
+    },
+    "hurt": {
+      "source": "raw/hurt",
+      "fps": 10
+    },
+    "block": {
+      "source": "raw/block",
+      "fps": 12
+    },
+    "jab": {
+      "source": "raw/jab",
+      "fps": 18,
+      "active": [
+        2,
+        2
+      ],
+      "note": "raw/punch frames 5-8"
+    },
+    "cross": {
+      "source": "raw/cross",
+      "fps": 18,
+      "active": [
+        3,
+        3
+      ],
+      "note": "raw/punch frames 4-8"
+    },
+    "hook": {
+      "source": "raw/hook",
+      "fps": 16,
+      "active": [
+        4,
+        5
+      ],
+      "note": "raw/punch frames 3-8, full extension held"
+    },
+    "lowkick": {
+      "source": "raw/lowkick",
+      "fps": 18,
+      "active": [
+        2,
+        3
+      ],
+      "note": "raw/kick frames 3,4,5,6,8"
+    }
+  }
+}

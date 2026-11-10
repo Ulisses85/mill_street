@@ -4,24 +4,24 @@
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
-[ext_resource type="Resource" path="res://resources/combos/punch_combo.tres" id="5"]
-[ext_resource type="Resource" path="res://resources/combos/kick_combo.tres" id="6"]
+[ext_resource type="Resource" path="res://resources/combos/del_punch_combo.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/combos/del_kick_combo.tres" id="6"]
 [ext_resource type="Resource" path="res://resources/attacks/jump_punch.tres" id="7"]
 [ext_resource type="Resource" path="res://resources/attacks/jump_kick.tres" id="8"]
 [ext_resource type="Resource" path="res://resources/attacks/grab_knee.tres" id="9"]
 [ext_resource type="Resource" path="res://resources/attacks/grab_knee_finisher.tres" id="10"]
 [ext_resource type="Resource" path="res://resources/attacks/throw.tres" id="11"]
 [ext_resource type="Resource" path="res://resources/attacks/thrown_body.tres" id="12"]
-[ext_resource type="Texture2D" path="res://assets/characters/player/portrait.png" id="13"]
-[ext_resource type="Texture2D" path="res://assets/characters/player/sheet.png" id="14"]
-[ext_resource type="Resource" path="res://resources/attacks/prop_hit.tres" id="15"]
+[ext_resource type="Resource" path="res://resources/attacks/prop_hit.tres" id="13"]
+[ext_resource type="Texture2D" path="res://assets/characters/del/portrait.png" id="14"]
+[ext_resource type="Texture2D" path="res://assets/characters/del/sheet.png" id="15"]
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1")
 team = 0
-unit_name = "Max"
-portrait = ExtResource("13")
-move_speed = 126.0
+unit_name = "Del"
+portrait = ExtResource("14")
+move_speed = 118.0
 knockdown_floor_time = 0.83
 defence_stops_knockdown_attacks = true
 punch_combo = ExtResource("5")
@@ -32,19 +32,21 @@ grab_knee = ExtResource("9")
 grab_knee_finisher = ExtResource("10")
 throw_attack = ExtResource("11")
 thrown_body_hit = ExtResource("12")
-carry_throw_attack = ExtResource("15")
+carry_throw_attack = ExtResource("13")
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")
 
 [node name="Body" type="Sprite2D" parent="."]
-texture = ExtResource("14")
+texture = ExtResource("15")
 centered = false
 offset = Vector2(-80, -116)
 region_enabled = true
 region_rect = Rect2(0, 0, 160, 128)
 script = ExtResource("2")
-sheet_json = "res://assets/characters/player/sheet.json"
+sheet_json = "res://assets/characters/del/sheet.json"
 
 [node name="HealthSystem" type="Node" parent="."]
 script = ExtResource("4")
+max_hp = 110
+current_hp = 110
