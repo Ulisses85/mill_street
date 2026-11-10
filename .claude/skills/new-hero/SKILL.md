@@ -1,12 +1,27 @@
 ---
 name: new-hero
-description: Build a new player hero end to end - spec, AI-generated art in a fighting stance, frame-picked combos, import, make_player.py, bot balance against the built-in hero, screenshots. Use when the user wants a new or replacement player character.
+description: Build a new player hero end to end - any fighting style (boxer, brawler, kicker, armed) - spec, AI art in a stance, combos picked from generated attacks, make_player.py, bot balance against the built-in hero. Use when the user wants a new or replacement player character.
 ---
 
 # New hero
 
 Read `CLAUDE.md` and `tools/art/README.md` first. Work on a branch off `main` (`git checkout -b hero/<id>`).
-Reference hero: `art/characters/del/character.json` (Del, the retired boxer).
+Worked example: `art/characters/del/character.json` (Del, a boxer). Copy the method, not the moves.
+
+## The hero's move slots
+The game has fixed slots; their names are internal IDs, and the art in them can be anything that fits the character's style.
+
+| Slot (animation name) | Role | Del (boxer) | Other ideas |
+|---|---|---|---|
+| `jab` | punch combo hit 1: light, fast | jab | elbow, backhand, quick slash |
+| `cross` | punch combo hit 2: light | straight right | headbutt, second slash |
+| `hook` | punch combo finisher: heavy, knocks down | hook | uppercut, overhead smash, spin slash |
+| `lowkick` | kick combo hit 1 | low kick | knee, shin kick, shoulder barge |
+| `kick` | kick combo finisher, knocks down | roundhouse | flying kick, dropkick, shield bash |
+| `punch`, `idle`, `walk`, `hurt`, `block` | source art and basics | | |
+| `jump`, `jump punch/kick`, grab, throw, carry | optional; synthesized if missing | | |
+
+Pick the slot moves from the concept in step 1 and write them into the spec (`concept` and `generator.animations_requested`).
 
 ## 1. Spec
 If there's no `art/characters/<id>/character.json`, run the `ideate` skill or write one with the user.
@@ -18,25 +33,28 @@ If there's no `art/characters/<id>/character.json`, run the `ideate` skill or wr
 Follow the `character-art` skill. For a hero:
 - **Base character in the fighting stance** (guard), side view, facing right. PixelLab animations start from the base pose; an arms-down base makes idle and walk drop out of the stance.
 - If the base isn't in stance: take the stance frame from idle and pass it as the **start frame** (`get_upload_url` → `custom_start_frame_url`) for walk and any other looping animation.
-- Animations: **idle, walk, punch, kick, hurt, block**. Optional: jump (otherwise the jump attacks reuse a punch/kick frame).
+- Animations: **idle, walk, hurt, block**, plus **one main attack for each combo** in the character's style (Del: a straight punch and a roundhouse; a brawler might be a wild haymaker and a stomp). Optional: jump (otherwise the jump attacks reuse an attack frame). A long or varied attack gives more frames to pick combo hits from.
 - Name the direction of every strike in the prompt ("forward, in the direction he is facing").
 - Show the user the base character before animating it.
 - Typical cost (PixelLab, right-facing only): base 2 + 2 per 8-frame animation ≈ 14 generations.
 
-## 3. Build the combo from frame picks (free)
-One generated punch gives the whole jab > cross > hook combo; one kick gives low kick > roundhouse. Copy frame ranges into `raw/jab`, `raw/cross`, `raw/hook`, `raw/lowkick` and add them to `animations` with `fps` and `active`:
-- jab: the last few frames of the punch (fast, hits ~0.07 s)
-- cross: from mid-punch (hits ~0.10 s)
-- hook: from mid-punch with full extension held (hits ~0.15 s; later than ~0.2 s and enemies interrupt the combo)
-- idle: loop only the frames that are fully in guard (e.g. 6,7,8,7)
-Record the source frames in each animation's `note`.
+## 3. Fill the combo slots from frame picks (free)
+One generated attack can fill a whole combo: start each hit at a different point of the same animation, so later hits have more wind-up. Copy frame ranges into `raw/<slot>/` and add each slot to `animations` with `fps` and `active`. Generate a separate attack only when a slot needs a visibly different move.
+
+Hit timing targets (time from the start of the slot to the first active frame), whatever the move is:
+- hit 1: ~0.07 s (start near the end of the attack)
+- hit 2: ~0.10 s
+- finisher: ~0.15 s, extension held a little longer. Later than ~0.2 s and enemies interrupt the combo.
+- kick slots: the same pattern.
+- idle: loop only the frames that are fully in the stance (Del: 6,7,8,7).
+Record the source frames in each animation's `note`. An armed hero keeps the weapon in every frame; the template's pickup weapons still attach to the `hand` the importer estimates.
 
 ## 4. Import and review
 ```
 pip install -r tools/art/requirements.txt
 python3 tools/art/import_character.py art/characters/<id>/character.json
 ```
-Look at `preview/contact.png` and the GIFs: feet on one line, nothing touching the cell edge, guard held through idle and walk. The importer prints each attack's timing; check the hit times above.
+Look at `preview/contact.png` and the GIFs: feet on one line, nothing touching the cell edge, stance held through idle and walk. The importer prints each attack's timing; check the hit times above.
 
 ## 5. Make it the hero
 ```
@@ -52,11 +70,11 @@ GODOT=godot tests/run_bot.sh                                                # ba
 ```
 - **Balance target:** total hits taken across the 9 runs within ~15% of Max's (48). More than that usually means late hit frames; retime by frame picks before touching stats.
 - Run the CI art loop locally; there must be no drift (`git diff --exit-code` on assets/characters, scenes/characters, resources/attacks, resources/combos).
-- Screenshots (`xvfb-run ... res://tests/sim.tscn -- level_01 shots=600,1200 quiet`): HUD name and portrait, guard while walking, hit sparks, combo counter. Look at them.
+- Screenshots (`xvfb-run ... res://tests/sim.tscn -- level_01 shots=600,1200 quiet`): HUD name and portrait, stance held while walking, hit sparks, combo counter. Look at them.
 
 ## 7. Hand over
 Commit (spec, raw art, previews, sheet, scene, combos) and open a PR into `main`. Tell the user:
 - generations used and left
 - what was generated, frame-picked and synthesized
 - the balance numbers against Max
-- what to playtest by hand: hook weight, block, throws and knees (they reuse punch/kick frames), jump attacks
+- what to playtest by hand: finisher weight, block, grab knee and throws (they reuse attack frames), jump attacks

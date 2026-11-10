@@ -45,7 +45,7 @@ Screenshots for visual checks: `xvfb-run godot --path . --rendering-driver openg
 Use the skills in `.claude/skills/`:
 - `ideate`: brainstorm a character or level.
 - `new-enemy`: idea → art → playable enemy in a level.
-- `new-hero`: idea → art in a fighting stance → frame-picked combos → `make_player.py` → balance against Max.
+- `new-hero`: idea (any fighting style) → art in a stance → combo slots picked from generated attacks → `make_player.py` → balance against Max.
 - `character-art`: provider specifics for PixelLab (MCP) and Retro Diffusion (`tools/art/retrodiffusion.py`).
 
 API keys come from the environment (`PIXELLAB_API_KEY`, `RD_API_KEY`). Never commit them.
