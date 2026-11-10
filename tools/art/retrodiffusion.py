@@ -19,6 +19,7 @@ import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -31,9 +32,21 @@ def b64(path: str) -> str:
 
 def call(method: str, url: str, key: str, body: dict | None = None) -> dict:
     data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(url, data=data, method=method, headers={"X-RD-Token": key, "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=120) as r:
-        return json.loads(r.read().decode())
+    req = urllib.request.Request(url, data=data, method=method, headers={
+        "X-RD-Token": key, "Content-Type": "application/json", "User-Agent": "mill-street-art-pipeline/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            return json.loads(r.read().decode())
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode(errors="replace")[:500]
+        hint = {401: "the key was rejected: check RD_API_KEY is your real key (starts with rdpk-), not a placeholder",
+                402: "not enough credits: top up on the Retro Diffusion site",
+                403: "access refused: check the key, and that your account has API access",
+                422: "the request was refused: check --style, --size and the other options for that style",
+                429: "too many requests: wait a moment and try again"}.get(e.code, "")
+        sys.exit(f"Retro Diffusion error {e.code} {e.reason}" + (f": {hint}" if hint else "") + (f"\n{detail}" if detail else ""))
+    except urllib.error.URLError as e:
+        sys.exit(f"could not reach Retro Diffusion ({e.reason}): check your internet connection")
 
 
 def find_images(obj) -> list[str]:
