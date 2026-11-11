@@ -33,9 +33,9 @@
         "width": 220,
         "text": [
           "MILL ST.",
-          "J PUNCH  K KICK",
-          "L JUMP  U GRAB",
-          "I DEFEND"
+          "J ATTACK  K SPECIAL",
+          "L JUMP  I DODGE",
+          "K+L SUPER  T TAUNT"
         ]
       },
       {
@@ -242,9 +242,9 @@
             "width": 220,
             "text": [
               "MILL ST.",
-              "J PUNCH  K KICK",
-              "L JUMP  U GRAB",
-              "I DEFEND"
+              "J ATTACK  K SPECIAL",
+              "L JUMP  I DODGE",
+              "K+L SUPER  T TAUNT"
             ]
           },
           {

@@ -125,6 +125,8 @@ var level_list: LevelList
 var current_level := -1
 var unlocked := 1
 var best_scores := {}
+## Index into level_list.heroes of the hero the player picked.
+var hero := 0
 
 
 func _load_progress() -> void:
@@ -133,12 +135,14 @@ func _load_progress() -> void:
 	if cfg.load(SAVE_PATH) == OK:
 		unlocked = int(cfg.get_value("progress", "unlocked", 1))
 		best_scores = cfg.get_value("progress", "best", {})
+		hero = clampi(int(cfg.get_value("progress", "hero", 0)), 0, maxi(0, level_list.heroes.size() - 1))
 
 
 func save_progress() -> void:
 	var cfg := ConfigFile.new()
 	cfg.set_value("progress", "unlocked", unlocked)
 	cfg.set_value("progress", "best", best_scores)
+	cfg.set_value("progress", "hero", hero)
 	cfg.save(SAVE_PATH)
 
 
@@ -169,6 +173,27 @@ func go_to_main_menu() -> void:
 	player = null
 	get_tree().paused = false
 	get_tree().change_scene_to_file(level_list.main_menu_scene)
+
+
+## Scene path of the chosen hero (empty = keep the hero the level was built with).
+func hero_scene() -> String:
+	if level_list == null or level_list.heroes.is_empty():
+		return ""
+	return level_list.heroes[clampi(hero, 0, level_list.heroes.size() - 1)]
+
+
+## Hero select, then `then` (e.g. start level 1, or the level select).
+var after_hero_select: Callable
+
+
+func go_to_hero_select(then: Callable) -> void:
+	if level_list.heroes.size() < 2:
+		then.call()
+		return
+	after_hero_select = then
+	player = null
+	get_tree().paused = false
+	get_tree().change_scene_to_file(level_list.hero_select_scene)
 
 
 func go_to_level_select() -> void:

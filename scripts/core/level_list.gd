@@ -6,3 +6,7 @@ extends Resource
 @export var levels: Array[LevelInfo] = []
 @export_file("*.tscn") var main_menu_scene := "res://scenes/ui/main_menu.tscn"
 @export_file("*.tscn") var level_select_scene := "res://scenes/ui/level_select.tscn"
+@export_file("*.tscn") var hero_select_scene := "res://scenes/ui/hero_select.tscn"
+## Playable heroes, in the order the hero select shows them. The first one is the default.
+## Levels are built with scenes/characters/player.tscn; the chosen hero replaces it when a level starts.
+@export_file("*.tscn") var heroes: Array[String] = ["res://scenes/characters/player.tscn"]

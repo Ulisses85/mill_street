@@ -77,9 +77,11 @@ Look at `preview/contact.png` and the GIFs: feet on one line, nothing touching t
 ```
 python3 tools/art/make_player.py art/characters/<id>/character.json
 ```
-This overwrites `scenes/characters/player.tscn` (the hero every level spawns) and writes `resources/combos/<id>_punch_combo.tres` and `<id>_kick_combo.tres`. The previous hero stays in git; `--out` writes somewhere else for a side-by-side test. To keep a second hero side by side for good, put `"scene": "scenes/characters/player_<id>.tscn"` in its spec: `make_player.py` (and CI's art loop) then always writes that file and leaves `player.tscn` alone.
+This overwrites `scenes/characters/player.tscn` (the hero every level spawns) and writes `resources/combos/<id>_punch_combo.tres` and `<id>_kick_combo.tres`. The previous hero stays in git; `--out` writes somewhere else for a side-by-side test. To keep a second hero side by side for good, put `"scene": "scenes/characters/player_<id>.tscn"` in its spec: `make_player.py` (and CI's art loop) then always writes that file and leaves `player.tscn` alone. Then add that scene to `heroes` in `resources/level_list.tres` so it appears on the hero select screen (levels are built with `player.tscn`; the chosen hero takes its place when a level starts). Give the hero a `win` animation for the level-clear pose.
 
 ## 6. Test
+The god-mode gate runs every hero in `heroes`; the balance report runs the first (`HEROES="1" tests/run_bot.sh` for another, or `-- level_01 hero=<id>` for one run).
+
 ```
 godot --headless --path . --import && godot --headless --path . --import    # no SCRIPT ERROR
 GODOT=godot tests/run_bot.sh god                                            # must pass

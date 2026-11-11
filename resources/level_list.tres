@@ -27,3 +27,4 @@ palette = PackedColorArray(0.2, 0.168627, 0.172549, 1, 0.329412, 0.290196, 0.290
 [resource]
 script = ExtResource("2")
 levels = Array[ExtResource("1")]([SubResource("L0"), SubResource("L1"), SubResource("L2")])
+heroes = Array[String](["res://scenes/characters/player.tscn", "res://scenes/characters/player_mel.tscn"])
