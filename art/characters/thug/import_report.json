@@ -1,0 +1,35 @@
+{
+ "id": "thug",
+ "animations": [
+  "idle",
+  "walk",
+  "run",
+  "windup",
+  "hurt",
+  "defend",
+  "grabbed",
+  "knockdown",
+  "down",
+  "getup",
+  "lurk",
+  "punch",
+  "swing",
+  "pickup",
+  "windup_armed"
+ ],
+ "synthesized": [
+  "windup: punch frames 0-1 (lead-in before the hit; trimmed from punch)",
+  "defend: held first frame of idle",
+  "grabbed: copy of hurt",
+  "lurk: copy of idle",
+  "pickup: idle squashed into a crouch",
+  "windup_armed: copy of windup"
+ ],
+ "warnings": [],
+ "missing": [],
+ "colors": 19,
+ "timing": {
+  "punch": 0.35,
+  "swing": 0.4
+ }
+}

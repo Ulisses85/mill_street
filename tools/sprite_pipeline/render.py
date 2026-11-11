@@ -46,6 +46,9 @@ async def main() -> None:
         for f in ("rig.js", "render.js"):
             await page.add_script_tag(path=str(HERE / f))
         for name, d in chars["characters"].items():
+            if (ROOT / "art/characters" / name / "character.json").exists():
+                print("character", name, "skipped: built from art/characters by tools/art/import_character.py")
+                continue
             out = ROOT / "assets/characters" / name
             res = await page.evaluate("([d, c, a]) => Pipeline.buildSheet(d, c, a)", [d, chars["cell"], chars["anchor"]])
             save_png(res["png"], out / "sheet.png")
