@@ -209,9 +209,9 @@
     },
     "hurt": {
       "source": "raw/slots/hurt.png",
-      "frames": 3,
-      "fps": 10,
-      "note": "raw/hurt.png frames 0,1,2 (placeholder: the generated hurt steps forward instead of recoiling)"
+      "frames": 4,
+      "fps": 12,
+      "note": "raw/frames/hurt_recoil frames 1,2,3,3 (PixelLab, from the stance, stays in profile) leaned back 4,7,5,2 px at the head for a readable recoil; see raw/slots/picks.json"
     },
     "knockdown": {
       "source": "raw/slots/knockdown.png",
