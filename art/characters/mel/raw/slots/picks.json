@@ -183,12 +183,20 @@
   ]
  },
  "hurt": {
-  "source": "hurt",
+  "source": "hurt_recoil",
   "frames": [
-   0,
    1,
+   2,
+   3,
+   3
+  ],
+  "lean_px": [
+   4,
+   7,
+   5,
    2
-  ]
+  ],
+  "lean": "rows above y=92 shifted left, linearly up to lean_px at the top (y=17); whole-pixel shifts, no resampling"
  },
  "knockdown": {
   "source": "knockdown",
