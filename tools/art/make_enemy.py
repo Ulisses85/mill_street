@@ -9,7 +9,8 @@ Run tools/art/import_character.py first. Writes:
 
 Stats start from a preset (thug / brute / boss) and can be overridden in the spec's "stats" block:
   max_hp, move_speed, defend_chance, attack_damage, attack_reach, attack_knockdown, windup_time,
-  attack_cooldown_min, attack_cooldown_max, score_value, can_pick_up_weapons, drop_health_chance
+  attack_cooldown_min, attack_cooldown_max, score_value, can_pick_up_weapons, drop_health_chance,
+  attack_knockback, attack_hitstop
 To place it in a level, add ("<id>", x, y, fov) to a wave in tools/make_levels.py and re-run that.
 """
 import json
@@ -84,7 +85,8 @@ def main(spec_path: Path) -> int:
         f"duration = {duration}", f"active_from = {act_from}", f"active_to = {act_to}",
         f"reach_to = {float(stats['attack_reach'])}",
         f"screen_shake = {5.0 if stats['attack_knockdown'] else 2.0}",
-        f"hitstop_frames = {4 if role == 'boss' else 3}", ""]))
+        f"hitstop_frames = {int(stats.get('attack_hitstop', 4 if role == 'boss' else 3))}"]
+        + ([f"knockback = {float(stats['attack_knockback'])}"] if "attack_knockback" in stats else []) + [""]))
 
     ext = [("Script", "res://scripts/characters/enemy.gd"), ("Script", "res://scripts/core/sprite_animator.gd"),
            ("Script", "res://scripts/core/unit_shadow.gd"), ("Script", "res://scripts/systems/health_system.gd"),

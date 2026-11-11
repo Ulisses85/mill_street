@@ -4,21 +4,29 @@
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
-[ext_resource type="Resource" path="res://resources/attacks/thug_punch.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/attacks/thug_attack.tres" id="5"]
 [ext_resource type="Texture2D" path="res://assets/characters/thug/portrait.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/characters/thug/sheet.png" id="7"]
 [ext_resource type="Texture2D" path="res://assets/items/can.png" id="8"]
 
 [node name="Thug" type="Node2D"]
 script = ExtResource("1")
+unit_name = "Thug"
 portrait = ExtResource("6")
 start_direction = -1
 attack = ExtResource("5")
-unit_name = "Thug"
 random_name_file = "res://resources/enemy_names.txt"
 move_speed = 63.0
 hit_stun_time = 0.27
 knockdown_floor_time = 0.67
+body_half_width = 9.0
+body_height = 58.0
+windup_time = 0.37
+attack_cooldown_min = 0.85
+attack_cooldown_max = 1.5
+defend_chance = 18
+wait_distance = 70.0
+score_value = 200
 can_pick_up_weapons = true
 drop_health_chance = 0.25
 drop_health_amount = 15
@@ -26,6 +34,7 @@ drop_health_texture = ExtResource("8")
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")
+radius = Vector2(14, 3.5)
 
 [node name="Body" type="Sprite2D" parent="."]
 texture = ExtResource("7")
