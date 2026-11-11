@@ -134,6 +134,19 @@ func _ready() -> void:
 	add_to_group(&"player")
 	Game.player = self
 	Game.player_spawned.emit(self)
+	Game.level_finished.connect(_on_level_finished)
+
+
+## Level cleared: stop, face the camera's way and play the win pose (idle if the sheet has none).
+func _on_level_finished() -> void:
+	if health.is_dead() or state in [&"dead", &"knockdown", &"down"]:
+		return
+	drop_carried()
+	running = false
+	vx = 0.0
+	vy = 0.0
+	invulnerable_ticks = 999999
+	set_state(&"win", &"win" if body.has_animation(&"win") else &"idle")
 
 
 ## Double-tap detection: a second press in the same direction within double_tap_window starts a run;
@@ -173,6 +186,9 @@ func _tick() -> void:
 			_state_attack()
 		&"jump":
 			_state_jump()
+		&"win":
+			if z > 0.0:
+				air_step()
 		&"dodge":
 			_state_dodge()
 		&"taunt":

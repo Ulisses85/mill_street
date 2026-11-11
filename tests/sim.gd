@@ -31,6 +31,7 @@ var done := false
 
 func _ready() -> void:
 	var rng_seed := 7
+	var hero := 0          # the default hero unless hero= says otherwise (ignores the saved choice)
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("level_"):
 			level_name = a
@@ -41,6 +42,12 @@ func _ready() -> void:
 			DebugTools.show_panel = true
 		elif a == "quiet":
 			quiet = true
+		elif a.begins_with("hero="):
+			# hero=1 (index in level_list.heroes) or hero=mel (scene file player_mel.tscn / mel.tscn)
+			var want := a.substr(5)
+			for i in Game.level_list.heroes.size():
+				if want == str(i) or Game.level_list.heroes[i].get_file().get_basename() in ["player_" + want, want]:
+					hero = i
 		elif a.begins_with("seed="):
 			rng_seed = int(a.substr(5))
 		elif a.begins_with("timeout="):
@@ -49,6 +56,7 @@ func _ready() -> void:
 			for f in a.substr(6).split(","):
 				shots.append(int(f))
 	seed(rng_seed)
+	Game.hero = hero
 	var path := "res://scenes/levels/%s.tscn" % level_name
 	if not ResourceLoader.exists(path):
 		_finish(3, "missing scene " + path)

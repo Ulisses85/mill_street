@@ -18,7 +18,7 @@ func _ready() -> void:
 	bg.centered = false
 	bg.position = Vector2(-120, 0)
 	add_child(bg)
-	for spec in [["res://assets/characters/player/sheet.json", Vector2(200, 228), 1, &"idle"], ["res://assets/characters/thug/sheet.json", Vector2(290, 222), -1, &"idle"], ["res://assets/characters/brute/sheet.json", Vector2(340, 236), -1, &"idle"]]:
+	for spec in [[_hero_sheet(), Vector2(200, 228), 1, &"idle"], ["res://assets/characters/thug/sheet.json", Vector2(290, 222), -1, &"idle"], ["res://assets/characters/brute/sheet.json", Vector2(340, 236), -1, &"idle"]]:
 		var s := SpriteAnimator.new()
 		s.sheet_json = spec[0]
 		s.position = spec[1]
@@ -30,7 +30,8 @@ func _ready() -> void:
 	add_child(layer)
 	var panel := MenuPanel.new()
 	layer.add_child(panel)
-	var opts := [["START", func(): Game.start_level(0)], ["LEVEL SELECT", Game.go_to_level_select]]
+	var opts := [["START", func(): Game.go_to_hero_select(func(): Game.start_level(0))],
+		["LEVEL SELECT", func(): Game.go_to_hero_select(Game.go_to_level_select)]]
 	if not OS.has_feature("web") and not OS.has_feature("mobile"):
 		opts.append(["QUIT", func(): get_tree().quit()])
 	panel.open("", "", opts, Color.WHITE, false)
@@ -44,6 +45,19 @@ func _ready() -> void:
 	header.add_child(UITheme.label(subtitle, 8, Color("#4a4958")))
 	header.theme = UITheme.get_theme()
 	layer.add_child(header)
+
+
+## The chosen hero's sprite sheet, for the title screen.
+func _hero_sheet() -> String:
+	var path := Game.hero_scene()
+	if path != "" and ResourceLoader.exists(path):
+		var h: Node = load(path).instantiate()
+		var body := h.get_node_or_null("Body")
+		var sheet: String = body.get("sheet_json") if body else ""
+		h.free()
+		if sheet != "":
+			return sheet
+	return "res://assets/characters/player/sheet.json"
 
 
 func _physics_process(_d: float) -> void:

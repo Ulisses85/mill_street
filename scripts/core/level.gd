@@ -29,6 +29,24 @@ static var current: Level = null
 func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
 		current = self
+		_swap_hero()
+
+
+## Levels are built with the default hero; put the chosen one in its place (same spot, same name).
+func _swap_hero() -> void:
+	var old := get_node_or_null("World/Player")
+	var path := Game.hero_scene()
+	if old == null or path == "" or old.scene_file_path == path or not ResourceLoader.exists(path):
+		return
+	var hero: Node2D = load(path).instantiate()
+	hero.name = old.name
+	hero.position = old.position
+	var parent := old.get_parent()
+	var idx := old.get_index()
+	parent.remove_child(old)
+	old.free()
+	parent.add_child(hero)
+	parent.move_child(hero, idx)
 
 
 func _exit_tree() -> void:

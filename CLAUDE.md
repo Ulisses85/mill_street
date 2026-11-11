@@ -16,7 +16,7 @@ A 2D side-scrolling beat 'em up template plus a demo game: three levels with bos
 ## Commands
 ```
 godot --headless --path . --import            # run twice on a fresh clone (first pass builds the cache)
-GODOT=godot tests/run_bot.sh god              # gate: every level finishable, no script errors
+GODOT=godot tests/run_bot.sh god              # gate: every level finishable with every hero, no script errors
 GODOT=godot tests/run_bot.sh                  # balance report (3 seeds, normal damage)
 godot --headless --path . --fixed-fps 60 --disable-vsync res://tests/sim.tscn -- level_02 seed=3   # one bot run
 pip install -r tools/art/requirements.txt    # before importing art (pins Pillow so local output matches CI)
