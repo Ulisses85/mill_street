@@ -11,7 +11,7 @@ Stats start from a preset (thug / brute / boss) and can be overridden in the spe
   max_hp, move_speed, defend_chance, attack_damage, attack_reach, attack_knockdown, windup_time,
   attack_cooldown_min, attack_cooldown_max, score_value, can_pick_up_weapons, drop_health_chance,
   attack_knockback, attack_hitstop
-To place it in a level, add ("<id>", x, y, fov) to a wave in tools/make_levels.py and re-run that.
+To place it in a level, add ["<id>", x, y, fov] to a wave in art/levels/<id>/level.json and run tools/make_levels.py.
 """
 import json
 import sys
@@ -38,7 +38,8 @@ PRESETS = {
 # Unit/Enemy properties copied from the stats into the scene when present
 SCENE_PROPS = ["move_speed", "hit_stun_time", "knockdown_floor_time", "knockdown_height", "knockdown_distance", "body_half_width",
                "body_height", "windup_time", "attack_cooldown_min", "attack_cooldown_max", "defend_chance", "wait_distance",
-               "score_value", "can_pick_up_weapons", "drop_health_chance", "drop_health_amount", "is_boss", "super_armor", "alert_delay"]
+               "score_value", "can_pick_up_weapons", "drop_health_chance", "drop_health_amount", "is_boss", "super_armor", "alert_delay",
+               "dodge_chance", "grab_chance", "grab_hold_time", "special_cooldown", "rage_at"]
 
 
 def gd(v):
@@ -119,7 +120,7 @@ def main(spec_path: Path) -> int:
     scene.write_text("\n".join(lines))
     print(f"[{cid}] wrote {scene.relative_to(ROOT)} ({preset} preset, {hp} HP) and {atk_path.relative_to(ROOT)}")
     print(f"  attack '{anim}': duration {duration}s, hits {act_from}-{act_to}s, reach {stats['attack_reach']}px, damage {stats['attack_damage']}")
-    print(f'  place it: add ("{cid}", x, y, True) to a wave in tools/make_levels.py, then python3 tools/make_levels.py')
+    print(f'  place it: add ["{cid}", x, y, true] to a wave in art/levels/<id>/level.json, then python3 tools/make_levels.py')
     return 0
 
 

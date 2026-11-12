@@ -2,6 +2,8 @@ class_name Enemy
 extends Unit
 ## AI fighter. Waits until it spots the player (field of view) or its wave starts, then closes in,
 ## takes turns attacking (only a few enemies attack at once), defends sometimes, and can be grabbed.
+## Optional moves (any enemy, typically bosses): dodge the player's attacks, charge across the screen,
+## throw knives, grab and slam the player, and rage at low health.
 
 @export_group("Attack")
 @export var attack: AttackData
@@ -39,6 +41,30 @@ extends Unit
 @export_group("Grab ")
 @export var can_be_grabbed := true
 
+@export_group("Special Moves")
+## Chance (0-100) to backstep out of the way when the player starts an attack in front of it.
+@export_range(0, 100) var dodge_chance := 0
+## Charge: runs across the screen at the player, knocking down whatever it hits.
+@export var charge_attack: AttackData
+@export_range(0, 100) var charge_chance := 0
+@export var charge_speed := 230.0
+## Only charges from at least this far away.
+@export var charge_min_distance := 90.0
+## Throw: throws this weapon's projectile (e.g. a knife) from range. Doesn't use up a held weapon.
+@export var throw_weapon: WeaponData
+@export_range(0, 100) var throw_chance := 0
+@export var throw_min_distance := 80.0
+## Grab: grabs the player at close range, holds, then slams. The player escapes by mashing buttons.
+## The slam uses grab_attack, or the normal attack if empty.
+@export_range(0, 100) var grab_chance := 0
+@export var grab_attack: AttackData
+@export_range(0.2, 3.0, 0.05, "suffix:s") var grab_hold_time := 0.8
+## Seconds between special moves.
+@export_range(0.0, 10.0, 0.1, "suffix:s") var special_cooldown := 2.5
+## Below this share of health, rage: faster, shorter wind-ups and cooldowns (0 = never).
+@export_range(0.0, 1.0, 0.05) var rage_at := 0.0
+@export_range(1.0, 2.0, 0.05) var rage_speed_scale := 1.15
+
 @export_group("Field of View")
 ## If off, the enemy always knows where the player is once its wave is active.
 @export var enable_fov := true
@@ -64,6 +90,10 @@ var grabber: Unit = null
 var weapon_goal: Pickup = null
 ## Spreads waiting enemies around the player (seeded, so bot runs replay exactly).
 var spacing_slot := 0
+var special_cd := 0
+var raged := false
+var _seen_player_attack := false
+var held_player: Unit = null
 
 
 func _ready() -> void:
@@ -87,6 +117,9 @@ func _physics_process(delta: float) -> void:
 func _tick() -> void:
 	if cooldown > 0:
 		cooldown -= 1
+	if special_cd > 0:
+		special_cd -= 1
+	_check_rage()
 	if state != &"wait":
 		var cam := get_viewport().get_camera_2d() as BeatCamera
 		if cam and cam.level_bound < INF and wave != null and wave.get("active") == true:
@@ -96,7 +129,33 @@ func _tick() -> void:
 		&"wait":
 			_state_wait(p)
 		&"idle", &"approach":
-			_state_chase(p)
+			if not _maybe_dodge(p):
+				_state_chase(p)
+		&"evade":
+			position.x -= face * 170.0 * Game.TICK * (1.0 - float(t) / 16.0)
+			if t % 2 == 0:
+				Effects.ghost(self, Color(1.0, 0.5, 0.45, 0.55))
+			if t >= 14:
+				cooldown = mini(cooldown, 10)
+				set_state(&"idle", &"idle")
+		&"charge_windup":
+			if t % 6 == 0:
+				Effects.puff(get_parent(), position + Vector2(-face * 8, 0), 3.0)
+			if t >= int(windup_time * 60.0 * 1.6):
+				begin_attack(charge_attack)
+				state = &"charge"
+		&"charge":
+			_state_charge(p)
+		&"throw_windup":
+			if t >= int(windup_time * 60.0):
+				_throw_projectile()
+				set_state(&"throw", _anim_or(&"throw", attack.animation if attack else &"idle"))
+		&"throw":
+			if t >= 16:
+				cooldown = int(randf_range(attack_cooldown_min, attack_cooldown_max) * 60.0)
+				set_state(&"idle", &"idle")
+		&"grab_hold":
+			_state_grab_hold()
 		&"windup":
 			if t >= int(windup_time * 60.0):
 				begin_attack(_current_attack())
@@ -217,7 +276,7 @@ func _on_screen(margin: float, at_x := INF) -> bool:
 	var cam := get_viewport().get_camera_2d()
 	if cam == null:
 		return true
-	var left := cam.get_screen_center_position().x - 240.0
+	var left := (Level.view_center_x() if Level.current else cam.get_screen_center_position().x) - 240.0
 	return x > left - margin and x < left + 480.0 + margin
 
 
@@ -228,7 +287,7 @@ func _state_chase(p: Unit) -> void:
 		return
 	if _seek_weapon():
 		return
-	var p_busy: bool = p.state in [&"knockdown", &"getup", &"dead"] or p.invulnerable_ticks > 60
+	var p_busy: bool = p.state in [&"knockdown", &"getup", &"dead", &"held"] or p.invulnerable_ticks > 60
 	var attackers := 0
 	for u in get_tree().get_nodes_in_group(&"enemies"):
 		if u != self and (u.state == &"windup" or u.state == &"attack"):
@@ -252,8 +311,127 @@ func _state_chase(p: Unit) -> void:
 		state = new_state
 	play_anim(&"walk" if moving else &"idle", false)
 	var adx := absf(p.position.x - position.x)
+	if not hang and cooldown <= 0 and _try_special(p, adx, absf(p.position.y - position.y)):
+		return
 	if not hang and cooldown <= 0 and cur and adx <= reach - 2.0 and adx >= 6.0 and absf(p.position.y - position.y) < 8.0 and p.z < 20.0:
 		set_state(&"windup", &"windup_armed" if held_weapon and body.has_animation(&"windup_armed") else &"windup")
+
+
+# ---------- special moves ----------
+func _anim_or(a: StringName, fallback: StringName) -> StringName:
+	return a if body.has_animation(a) else fallback
+
+
+## Picks a special move when one fits the distance; returns true if it started one.
+func _try_special(p: Unit, adx: float, ady: float) -> bool:
+	if special_cd > 0 or p.z > 20.0 or not p.can_be_hit():
+		return false
+	var cur := _current_attack()
+	var grab_reach := maxf(26.0, cur.reach_to if cur else 26.0)
+	var can_charge := charge_attack != null and charge_chance > 0 and adx >= charge_min_distance and ady < 14.0
+	var can_throw := throw_weapon != null and throw_weapon.projectile_attack != null and throw_chance > 0 and adx >= throw_min_distance and ady < 8.0
+	var can_grab := grab_chance > 0 and adx <= grab_reach and adx >= 6.0 and ady < 7.0 and p.has_method(&"grabbed_by_enemy") and p.state in [&"idle", &"walk", &"attack", &"defend"]
+	if not (can_charge or can_throw or can_grab):
+		return false
+	# One roll per chance (not one per tick): if it fails, wait a moment before rolling again.
+	var roll := randf() * 100.0
+	special_cd = int(0.7 * 60.0)
+	if can_charge and roll < charge_chance:
+		special_cd = int(special_cooldown * 60.0)
+		set_state(&"charge_windup", _anim_or(&"charge_windup", &"windup"))
+		Effects.float_text(get_parent(), position + Vector2(0, -body_height - 10), "!!", Color("#ff3a2a"))
+		return true
+	if can_throw and roll < throw_chance:
+		special_cd = int(special_cooldown * 60.0)
+		set_state(&"throw_windup", _anim_or(&"throw_windup", &"windup"))
+		return true
+	if can_grab and roll < grab_chance:
+		special_cd = int(special_cooldown * 60.0)
+		held_player = p
+		p.call(&"grabbed_by_enemy", self)
+		set_state(&"grab_hold", _anim_or(&"grab", &"windup"))
+		return true
+	return false
+
+
+func _state_charge(p: Unit) -> void:
+	position.x += face * charge_speed * Game.TICK
+	if t % 3 == 0:
+		Effects.ghost(self, Color(1.0, 0.5, 0.45, 0.5))
+		Effects.puff(get_parent(), position + Vector2(-face * 10, 0), 3.0)
+	play_anim(_anim_or(&"charge", &"walk"), false)
+	anim_rate = 2.0
+	process_attack_hits(charge_attack, mini(t, charge_attack.ticks(charge_attack.active_from)))
+	var passed := p != null and (position.x - p.position.x) * face > 70.0
+	var edge := not _on_screen(-20.0)
+	if t > 75 or passed or edge:
+		cooldown = int(attack_cooldown_max * 60.0)
+		set_state(&"idle", &"idle")
+
+
+func _throw_projectile() -> void:
+	var w := throw_weapon
+	var tex := w.texture
+	Projectile.launch(get_parent(), position + Vector2(face * 14, 0), tex, -w.grip, team, w.projectile_attack, face * w.projectile_speed, w.projectile_height)
+	Sfx.play(&"swish")
+
+
+func _state_grab_hold() -> void:
+	var p := held_player
+	if p == null or not is_instance_valid(p) or p.state != &"held":
+		held_player = null
+		cooldown = 30
+		set_state(&"idle", &"idle")
+		return
+	p.position = position + Vector2(face * 18, 0)
+	p.face = -face
+	if t >= int(grab_hold_time * 60.0):
+		var a := grab_attack if grab_attack else attack
+		held_player = null
+		p.call(&"release_from_enemy")
+		begin_attack(a)
+		hit_this_attack.append(p)
+		p.receive_hit(self, a)
+		Game.request_shake(6.0)
+
+
+## The player is starting an attack right in front: sometimes step back out of reach.
+func _maybe_dodge(p: Unit) -> bool:
+	if p == null or dodge_chance <= 0:
+		return false
+	var attacking := p.state == &"attack" and p.t <= 2
+	if not attacking:
+		_seen_player_attack = false
+		return false
+	if _seen_player_attack:
+		return false
+	_seen_player_attack = true
+	var dx := position.x - p.position.x
+	if signf(dx) != float(p.face) or absf(dx) > 56.0 or absf(position.y - p.position.y) > 10.0:
+		return false
+	if randf() * 100.0 >= dodge_chance:
+		return false
+	face = 1 if p.position.x >= position.x else -1
+	invulnerable_ticks = maxi(invulnerable_ticks, 14)
+	set_state(&"evade", _anim_or(&"dodge", &"walk"))
+	return true
+
+
+## At low health: faster, shorter wind-ups and cooldowns, and a red tint.
+func _check_rage() -> void:
+	if raged or rage_at <= 0.0 or health.max_hp <= 0 or float(health.current_hp) / health.max_hp > rage_at or not is_alive():
+		return
+	raged = true
+	move_speed *= rage_speed_scale
+	charge_speed *= rage_speed_scale
+	windup_time *= 0.85
+	attack_cooldown_min *= 0.8
+	attack_cooldown_max *= 0.8
+	special_cooldown *= 0.75
+	body.modulate = Color(1.0, 0.72, 0.72)
+	Effects.flash_screen(self, Color(1.0, 0.25, 0.2, 0.25), 10)
+	Effects.float_text(get_parent(), position + Vector2(0, -body_height - 12), "RAGE!", Color("#ff3a2a"))
+	Game.request_shake(5.0)
 
 
 # ---------- damage ----------
@@ -271,9 +449,21 @@ func receive_hit(attacker: Node2D, a: AttackData) -> bool:
 
 
 func hurt(dir: float, push: float) -> void:
-	if super_armor and state in [&"windup", &"attack"]:
+	if super_armor and state in [&"windup", &"attack", &"charge", &"charge_windup", &"throw_windup"]:
 		return
+	_drop_held_player()
 	super.hurt(dir, push)
+
+
+func knockdown(dir: float, force := 1.0) -> void:
+	_drop_held_player()
+	super.knockdown(dir, force)
+
+
+func _drop_held_player() -> void:
+	if held_player and is_instance_valid(held_player) and held_player.state == &"held":
+		held_player.call(&"release_from_enemy")
+	held_player = null
 
 
 func _on_hit(_attacker: Node2D, _a: AttackData) -> void:

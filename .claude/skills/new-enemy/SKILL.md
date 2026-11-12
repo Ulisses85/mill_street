@@ -50,3 +50,7 @@ Commit (scene, attack, sheet, spec, raw art, previews). Tell the user:
 - where the enemy appears
 - the balance numbers
 - anything to playtest by hand (F7 shows hitboxes; F3 skips a wave)
+
+## Special moves (optional)
+Any enemy can get these through its spec's `stats` (copied into the scene by `make_enemy.py`): `dodge_chance` (0–100, backsteps out of the player's attacks), `grab_chance` (grabs and slams; the player mashes to escape; `grab_hold_time`), `special_cooldown`, `rage_at` (share of health where it speeds up). Charges (`charge_attack`) and throws (`throw_weapon`) need a resource, so set them on the scene in the Inspector (see the three bosses). Generate `charge`, `throw` or `grab` animations to give them their own art; until then they borrow `walk`, the attack and `windup`. Run the balance report after adding any of these.
+

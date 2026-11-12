@@ -19,7 +19,8 @@
     "attack_reach": 34,
     "windup_time": 0.3,
     "score_value": 450,
-    "can_pick_up_weapons": false
+    "can_pick_up_weapons": false,
+    "dodge_chance": 25
   },
   "generator": {
     "provider": "pixellab",
