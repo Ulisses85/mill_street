@@ -1,0 +1,92 @@
+{
+  "id": "brute",
+  "display_name": "Brute",
+  "role": "enemy",
+  "preset": "brute",
+  "concept": "Big Manchester heavy: shaved head, stubble, dark red donkey jacket with a black leather yoke, grey work trousers, steel-toe boots. Slow, wide and hits like a lorry; a long telegraphed haymaker that knocks you down. Same stats and placements as the old mannequin brute.",
+  "target_height": 58,
+  "source_facing": "right",
+  "attack_animation": "heavy_punch",
+  "background": "none",
+  "palette": {
+    "max_colors": 20
+  },
+  "stats": {
+    "windup_time": 0.56,
+    "body_height": 58.0,
+    "attack_hitstop": 2,
+    "attack_screen_shake": 4.0
+  },
+  "generator": {
+    "provider": "pixellab",
+    "mode": "v3, 64px canvas, side view, native size (58px, scale 1.0)",
+    "prompt": "big heavy-set Manchester bruiser, wide and bulky, shaved head, stubble, thick neck, broad shoulders, dark red donkey jacket with a black leather shoulder yoke, dark red jumper underneath, dark grey work trousers, black steel-toe boots, standing in a fighting stance with both big fists raised, full body, detailed pixel art, clean dark outline",
+    "animations_requested": [
+      "idle",
+      "walk",
+      "run",
+      "heavy_punch",
+      "hurt",
+      "knockdown",
+      "getup"
+    ],
+    "base_image": "raw/base/east.png",
+    "pixellab_character_id": "3a54a91f-7183-4505-8c09-8195507cbbe4",
+    "generations_used": 12
+  },
+  "animations": {
+    "idle": {
+      "source": "raw/idle",
+      "fps": 7,
+      "loop": true,
+      "note": "raw/pixellab/idle frames 0-7 (8 returns to 0)"
+    },
+    "walk": {
+      "source": "raw/walk",
+      "fps": 10,
+      "loop": true,
+      "note": "raw/pixellab/walk frames 1-8 (0 is the stance start frame)"
+    },
+    "run": {
+      "source": "raw/run",
+      "fps": 14,
+      "loop": true,
+      "note": "raw/pixellab/run frames 1-8"
+    },
+    "heavy_punch": {
+      "source": "raw/heavy_punch",
+      "fps": 12,
+      "active": [
+        7,
+        7
+      ],
+      "note": "raw/pixellab/heavy_punch frames 0-8, then 6 and 2 as the recovery (the take ends at full extension). The lead-in (1-6) becomes the windup"
+    },
+    "hurt": {
+      "source": "raw/hurt",
+      "fps": 14,
+      "note": "raw/pixellab/hurt frames 1-6 (second take; the first threw a jab)"
+    },
+    "knockdown": {
+      "source": "raw/knockdown",
+      "fps": 15,
+      "loop": false,
+      "align": "canvas",
+      "note": "raw/pixellab/knockdown frames 1-9 (second take; the first fell forward onto his face)"
+    },
+    "down": {
+      "source": "raw/down",
+      "fps": 10,
+      "loop": true,
+      "align": "canvas",
+      "note": "raw/pixellab/knockdown frame 10"
+    },
+    "getup": {
+      "source": "raw/getup",
+      "fps": 15,
+      "loop": false,
+      "align": "canvas",
+      "note": "raw/pixellab/getup frames 1-10; generated from knockdown frame 10 to the idle stance, 88x84 cropped 2px each side back to the shared 84x84 canvas"
+    }
+  }
+}
