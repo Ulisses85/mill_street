@@ -25,7 +25,7 @@ func _init() -> void:
 
 
 ## options: Array of [label: String, callback: Callable]
-func open(title: String, subtitle: String, options: Array, title_color := Color.WHITE, dim := true) -> void:
+func open(title: String, subtitle: String, options: Array, title_color := Color.WHITE, dim := true, focus := 0) -> void:
 	for c in _box.get_children():
 		c.queue_free()
 	_dim.visible = dim
@@ -48,7 +48,7 @@ func open(title: String, subtitle: String, options: Array, title_color := Color.
 		var row := CenterContainer.new()
 		row.add_child(b)
 		_box.add_child(row)
-		if first == null:
+		if first == null or options.find(o) == focus:
 			first = b
 	visible = true
 	if first:

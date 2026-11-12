@@ -90,7 +90,7 @@ func _draw() -> void:
 	var p := Game.player as Unit
 	if p and p.get("held_weapon") == null and in_reach(p) and (t / 16) % 2 == 0:
 		var s := "PUNCH: PICK UP"
-		var f := Effects.FONT
+		var f := Effects.font()
 		var w := f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
 		draw_string(f, Vector2(-w / 2 + 1, -13), s, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Effects.INK)
 		draw_string(f, Vector2(-w / 2, -14), s, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#ffd23a"))

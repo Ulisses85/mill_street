@@ -5,8 +5,9 @@ extends Control
 const INK := Color("#1e1c28")
 const RED := Color("#d8261e")
 const PANEL := Color("#ecebf3")
-const FONT := preload("res://assets/fonts/Silkscreen-Regular.ttf")
-const FONT_B := preload("res://assets/fonts/Silkscreen-Bold.ttf")
+# Loaded at runtime, not preloaded: a preload fails on a fresh clone before Godot has imported the fonts.
+var FONT: Font = load("res://assets/fonts/Silkscreen-Regular.ttf")
+var FONT_B: Font = load("res://assets/fonts/Silkscreen-Bold.ttf")
 
 @export var player_bar_width := 110
 @export var enemy_bar_width := 110

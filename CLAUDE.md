@@ -15,7 +15,7 @@ A 2D side-scrolling beat 'em up template plus a demo game: three levels with bos
 
 ## Commands
 ```
-godot --headless --path . --import            # run twice on a fresh clone (first pass builds the cache)
+godot --headless --path . --import            # imports assets (fonts are loaded at runtime, so a fresh clone imports cleanly)
 GODOT=godot tests/run_bot.sh god              # gate: every level finishable with every hero, no script errors
 GODOT=godot tests/run_bot.sh                  # balance report (3 seeds, normal damage)
 godot --headless --path . --fixed-fps 60 --disable-vsync res://tests/sim.tscn -- level_02 seed=3   # one bot run
@@ -39,7 +39,7 @@ Screenshots for visual checks: `xvfb-run godot --path . --rendering-driver openg
 - Every animation in `sheet.json` has `hand` + `weapon_angle` per frame (the weapon bone) and `active_frames` for attacks.
 
 ## Before committing
-1. Import twice. There must be no `SCRIPT ERROR`.
+1. Import. There must be no `SCRIPT ERROR`. Don't `preload()` assets from autoloads or `const`s: on a fresh clone they aren't imported yet; `load()` them at runtime.
 2. `tests/run_bot.sh god` passes.
 3. For visual changes, take a screenshot and look at it.
 4. Work on a feature branch. CI (`.github/workflows/bot-playthrough.yml`) runs the same checks.

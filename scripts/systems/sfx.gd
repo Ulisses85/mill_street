@@ -67,6 +67,7 @@ static func music(name: StringName) -> void:
 		return
 	if _music == null or not is_instance_valid(_music):
 		_music = AudioStreamPlayer.new()
+		_music.bus = &"Music"
 		_music.process_mode = Node.PROCESS_MODE_ALWAYS
 		tree.root.add_child.call_deferred(_music)
 	if name == _music_name and _music.playing:
@@ -96,6 +97,7 @@ static func _player() -> AudioStreamPlayer:
 		_pool.clear()
 		for i in POOL_SIZE:
 			var p := AudioStreamPlayer.new()
+			p.bus = &"SFX"
 			p.process_mode = Node.PROCESS_MODE_ALWAYS
 			tree.root.add_child.call_deferred(p)
 			_pool.append(p)
