@@ -399,6 +399,9 @@ def main(spec_path: Path) -> int:
     spec = json.loads(spec_path.read_text())
     base = spec_path.parent
     cid = spec["id"]
+    if spec.get("status") == "planned":
+        print(f"[{cid}] planned (no art yet) - skipped; remove \"status\" once its art is in raw/")
+        return 0
     target_h = int(spec.get("target_height", 58))
     pal_cfg = spec.get("palette", {})
     bg_setting = spec.get("background", "auto")

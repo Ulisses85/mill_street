@@ -1,0 +1,56 @@
+{
+  "id": "boss_landlord",
+  "display_name": "The Landlord",
+  "role": "boss",
+  "preset": "boss",
+  "status": "planned",
+  "concept": "The man who owns Mill Street: enormous, bald and bearded, red velvet smoking jacket over a straining white vest, heavy gold chains and sovereign rings, cigar, black trousers and shiny shoes. Grabs you by the collar and slams you over his shoulder; swats with huge backhands. The final boss.",
+  "target_height": 90,
+  "source_facing": "right",
+  "attack_animation": "slam",
+  "background": "none",
+  "palette": {
+    "max_colors": 32
+  },
+  "stats": {
+    "move_speed": 45.0,
+    "body_height": 90.0,
+    "body_half_width": 14.0,
+    "windup_time": 0.4,
+    "attack_cooldown_min": 0.67,
+    "attack_cooldown_max": 1.17,
+    "defend_chance": 30,
+    "score_value": 6000,
+    "grab_chance": 35,
+    "grab_hold_time": 0.9,
+    "special_cooldown": 2.4,
+    "rage_at": 0.5,
+    "attack_damage": 20,
+    "attack_reach": 52.0,
+    "max_hp": 260
+  },
+  "moves": {
+    "grab_attack": "res://resources/attacks/landlord_grab_slam.tres"
+  },
+  "generator": {
+    "provider": "pixellab",
+    "mode": "PixelLab v3, 96px canvas, side view, facing right, native size (set target_height to the base's real height, scale 1.0). Generate the base in the fighting stance and use it as the start frame for every animation.",
+    "prompt": "enormous bald bearded crime landlord, red velvet smoking jacket over a straining white vest, heavy gold chains, gold sovereign rings, cigar in his mouth, black trousers, shiny black shoes, menacing fighting stance with huge hands open, full body, detailed 32-bit pixel art, clean dark outline",
+    "animations_requested": [
+      "idle",
+      "walk",
+      "run",
+      "slam",
+      "hurt",
+      "knockdown",
+      "getup",
+      "grab"
+    ],
+    "animation_notes": {
+      "slam": "huge two-handed overhead smash forward",
+      "grab": "lunges forward and grabs with both hands at chest height"
+    }
+  },
+  "animations": {},
+  "_todo": "Generate the base, get it approved, animate, fill 'animations' like art/characters/brute/character.json, set target_height to the native height, then delete 'status'."
+}
