@@ -3,9 +3,8 @@
   "display_name": "The Bookie",
   "role": "boss",
   "preset": "boss",
-  "status": "planned",
   "concept": "Back-street bookmaker: wiry, quick and flash. Slicked-back hair, thin moustache, trilby hat, red pinstripe three-piece suit, gold chain and rings, pencil behind his ear, two-tone brogues. Keeps his distance and flicks throwing knives, side-steps your attacks, then snaps in with a high kick.",
-  "target_height": 76,
+  "target_height": 90,
   "source_facing": "right",
   "attack_animation": "kick",
   "background": "none",
@@ -14,7 +13,7 @@
   },
   "stats": {
     "move_speed": 63.0,
-    "body_height": 76.0,
+    "body_height": 90.0,
     "body_half_width": 12.0,
     "windup_time": 0.33,
     "attack_cooldown_min": 0.67,
@@ -27,7 +26,13 @@
     "rage_at": 0.5,
     "attack_damage": 14,
     "attack_reach": 44.0,
-    "max_hp": 210
+    "max_hp": 210,
+    "attack_hitstop": 2,
+    "attack_forward_step": 60.0,
+    "shadow": [
+      18,
+      4.5
+    ]
   },
   "moves": {
     "throw_weapon": "res://resources/weapons/knife.tres"
@@ -51,8 +56,88 @@
       "kick": "fast high front kick, forward",
       "throw": "flicks a throwing knife forward from shoulder height",
       "dodge": "quick backstep away, light and nimble"
-    }
+    },
+    "base_image": "raw/base/east.png",
+    "pixellab_character_id": "84d11ed4-a95c-429e-ba35-e75092de30ba",
+    "generations_used": 23
   },
-  "animations": {},
-  "_todo": "Generate the base, get it approved, animate, fill 'animations' like art/characters/brute/character.json, set target_height to the native height, then delete 'status'."
+  "animations": {
+    "idle": {
+      "source": "raw/idle",
+      "fps": 8,
+      "loop": true,
+      "note": "raw/pixellab/idle frames 0-7 (8 returns to 0)"
+    },
+    "walk": {
+      "source": "raw/walk",
+      "fps": 12,
+      "loop": true,
+      "note": "raw/pixellab/walk frames 1-8 (0 is the stance start frame)"
+    },
+    "run": {
+      "source": "raw/run",
+      "fps": 16,
+      "loop": true,
+      "note": "raw/pixellab/run frames 1-8"
+    },
+    "windup": {
+      "source": "raw/windup",
+      "fps": 6,
+      "loop": false,
+      "note": "raw/pixellab/kick frames 1-2: the start of the knee chamber, held over the 0.33 s windup_time (given here so the importer doesn't trim it from the kick)"
+    },
+    "kick": {
+      "source": "raw/kick",
+      "fps": 14,
+      "active": [
+        2,
+        2
+      ],
+      "note": "raw/pixellab/kick frames 3-8: chamber, snap out (frame 5 hits), recover. 0.4 s with the hit at 0.13-0.2 s, the old kick's timing"
+    },
+    "hurt": {
+      "source": "raw/hurt",
+      "fps": 14,
+      "note": "raw/pixellab/knockdown frames 1-2-3-2-1: the backward stagger before the fall (the v3 hurt crouched instead of recoiling)"
+    },
+    "knockdown": {
+      "source": "raw/knockdown",
+      "fps": 15,
+      "loop": false,
+      "align": "canvas",
+      "note": "raw/pixellab/knockdown frames 1-9"
+    },
+    "down": {
+      "source": "raw/down",
+      "fps": 10,
+      "loop": true,
+      "align": "canvas",
+      "note": "raw/pixellab/knockdown frame 10"
+    },
+    "getup": {
+      "source": "raw/getup",
+      "fps": 15,
+      "loop": false,
+      "align": "canvas",
+      "note": "raw/pixellab/getup frames 1-10; generated from knockdown frame 10 to the stance, 132x128 cropped 2 px each side back to the shared 128x128 canvas"
+    },
+    "throw_windup": {
+      "source": "raw/throw_windup",
+      "fps": 15,
+      "loop": false,
+      "note": "raw/pixellab/throw frames 1-5: draws the knife back to his shoulder (0.33 s, the throw windup)"
+    },
+    "throw": {
+      "source": "raw/throw",
+      "fps": 11,
+      "loop": false,
+      "note": "raw/pixellab/throw frames 6-8: the release and follow-through after the knife leaves (0.27 s)"
+    },
+    "dodge": {
+      "source": "raw/dodge",
+      "fps": 20,
+      "loop": false,
+      "note": "raw/pixellab/dodge frames 1-5: the backstep (the game slides him back 0.23 s)"
+    }
+  }
 }

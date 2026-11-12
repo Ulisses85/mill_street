@@ -1,0 +1,31 @@
+{
+ "id": "boss_bookie",
+ "animations": [
+  "idle",
+  "walk",
+  "run",
+  "windup",
+  "hurt",
+  "defend",
+  "grabbed",
+  "knockdown",
+  "down",
+  "getup",
+  "lurk",
+  "kick",
+  "throw_windup",
+  "throw",
+  "dodge"
+ ],
+ "synthesized": [
+  "defend: held first frame of idle",
+  "grabbed: copy of hurt",
+  "lurk: copy of idle"
+ ],
+ "warnings": [],
+ "missing": [],
+ "colors": 32,
+ "timing": {
+  "kick": 0.4
+ }
+}
