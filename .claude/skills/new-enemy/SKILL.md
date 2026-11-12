@@ -54,3 +54,10 @@ Commit (scene, attack, sheet, spec, raw art, previews). Tell the user:
 ## Special moves (optional)
 Any enemy can get these through its spec's `stats` (copied into the scene by `make_enemy.py`): `dodge_chance` (0–100, backsteps out of the player's attacks), `grab_chance` (grabs and slams; the player mashes to escape; `grab_hold_time`), `special_cooldown`, `rage_at` (share of health where it speeds up). Charges (`charge_attack`) and throws (`throw_weapon`) need a resource, so set them on the scene in the Inspector (see the three bosses). Generate `charge`, `throw` or `grab` animations to give them their own art; until then they borrow `walk`, the attack and `windup`. Run the balance report after adding any of these.
 
+## Planned specs and bosses
+A spec with `"status": "planned"` has its look, prompts and stats written but no art yet: the importer, `make_enemy.py` and CI skip it. The three bosses (`art/characters/boss_*`) start like this. To make one real:
+1. Generate on PixelLab's 96px canvas (bosses are 76-90 px tall) from the spec's `generator.prompt`, base first in the fighting stance, then every animation in `animations_requested` from the stance start frame (`animation_notes` says what each move is). About 20 generations a boss.
+2. Fill `animations` like `art/characters/brute/character.json`, set `target_height` to the base's real height, delete `status`.
+3. `import_character.py` then `make_enemy.py`: the scene keeps its special moves through the spec's `moves` block (charge, knife throw, grab slam) and its stats.
+4. Bot tests (`tests/run_bot.sh` too, bosses decide the balance) and screenshots.
+

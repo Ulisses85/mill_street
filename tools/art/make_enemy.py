@@ -39,7 +39,11 @@ PRESETS = {
 SCENE_PROPS = ["move_speed", "hit_stun_time", "knockdown_floor_time", "knockdown_height", "knockdown_distance", "body_half_width",
                "body_height", "windup_time", "attack_cooldown_min", "attack_cooldown_max", "defend_chance", "wait_distance",
                "score_value", "can_pick_up_weapons", "drop_health_chance", "drop_health_amount", "is_boss", "super_armor", "alert_delay",
-               "dodge_chance", "grab_chance", "grab_hold_time", "special_cooldown", "rage_at"]
+               "dodge_chance", "grab_chance", "grab_hold_time", "special_cooldown", "rage_at", "rage_speed_scale",
+               "charge_chance", "charge_speed", "charge_min_distance", "throw_chance", "throw_min_distance"]
+# Special moves that need a resource: the spec's "moves" maps these properties to res:// paths,
+# e.g. "moves": {"charge_attack": "res://resources/attacks/foreman_charge.tres"}.
+MOVE_PROPS = ["charge_attack", "throw_weapon", "grab_attack"]
 
 
 def gd(v):
@@ -56,6 +60,9 @@ def main(spec_path: Path) -> int:
     spec = json.loads(spec_path.read_text())
     cid = spec["id"]
     role = spec.get("role", "enemy")
+    if spec.get("status") == "planned":
+        print(f"[{cid}] planned (no art yet) - skipped; remove \"status\" once its art is in raw/")
+        return 0
     if role == "player":
         raise SystemExit("make_enemy.py builds enemies and bosses; use the player tools for heroes")
     preset = spec.get("preset", "boss" if role == "boss" else "thug")
@@ -93,8 +100,16 @@ def main(spec_path: Path) -> int:
            ("Script", "res://scripts/core/unit_shadow.gd"), ("Script", "res://scripts/systems/health_system.gd"),
            ("Resource", f"res://resources/attacks/{cid}_attack.tres"), ("Texture2D", f"res://assets/characters/{cid}/portrait.png"),
            ("Texture2D", f"res://assets/characters/{cid}/sheet.png")]
-    if stats.get("drop") and stats.get("drop_health_chance", 0) > 0:
+    has_drop = bool(stats.get("drop")) and stats.get("drop_health_chance", 0) > 0
+    if has_drop:
         ext.append(("Texture2D", f"res://assets/items/{stats['drop']}.png"))
+    moves = {k: v for k, v in spec.get("moves", {}).items() if k in MOVE_PROPS}
+    move_ids = {}
+    for k, path in moves.items():
+        if not (ROOT / path.replace("res://", "")).exists():
+            raise SystemExit(f"moves.{k}: {path} not found")
+        ext.append(("Resource", path))
+        move_ids[k] = len(ext)
     lines = [f"[gd_scene load_steps={len(ext) + 1} format=3]", ""]
     lines += [f'[ext_resource type="{t}" path="{p}" id="{i}"]' for i, (t, p) in enumerate(ext, 1)]
     node = "".join(w.title() for w in cid.split("_"))
@@ -104,10 +119,12 @@ def main(spec_path: Path) -> int:
     if role != "boss" and preset != "boss" and spec.get("random_names", True):
         lines.append('random_name_file = "res://resources/enemy_names.txt"')
     for k in SCENE_PROPS:
-        if k in stats and k not in ("drop_health_amount",) or (k == "drop_health_amount" and len(ext) == 8):
+        if k in stats and k not in ("drop_health_amount",) or (k == "drop_health_amount" and has_drop):
             lines.append(f"{k} = {gd(stats[k])}")
-    if len(ext) == 8:
+    if has_drop:
         lines.append('drop_health_texture = ExtResource("8")')
+    for k, i in move_ids.items():
+        lines.append(f'{k} = ExtResource("{i}")')
     sx, sy = stats["shadow"]
     hp = int(stats["max_hp"])
     lines += ["", '[node name="Shadow" type="Node2D" parent="."]', 'script = ExtResource("3")', f"radius = Vector2({sx}, {sy})",

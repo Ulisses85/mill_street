@@ -1,0 +1,58 @@
+{
+  "id": "boss_foreman",
+  "display_name": "The Foreman",
+  "role": "boss",
+  "preset": "boss",
+  "status": "planned",
+  "concept": "Mill-floor foreman gone bad: huge barrel-chested man in his fifties, grey walrus moustache, yellow hard hat, red boiler suit with the sleeves torn off, hi-vis vest, big leather work gloves, steel-toe boots, a heavy spanner hanging from his belt. Slow, super-armoured, charges across the screen like a bull; overhead double-fist slam.",
+  "target_height": 84,
+  "source_facing": "right",
+  "attack_animation": "slam",
+  "background": "none",
+  "palette": {
+    "max_colors": 32
+  },
+  "stats": {
+    "move_speed": 48.0,
+    "body_height": 84.0,
+    "body_half_width": 13.0,
+    "windup_time": 0.47,
+    "attack_cooldown_min": 0.75,
+    "attack_cooldown_max": 1.25,
+    "defend_chance": 30,
+    "score_value": 3000,
+    "charge_chance": 35,
+    "charge_speed": 240.0,
+    "special_cooldown": 2.6,
+    "rage_at": 0.4,
+    "attack_damage": 18,
+    "attack_reach": 48.0,
+    "max_hp": 180
+  },
+  "moves": {
+    "charge_attack": "res://resources/attacks/foreman_charge.tres"
+  },
+  "generator": {
+    "provider": "pixellab",
+    "mode": "PixelLab v3, 96px canvas, side view, facing right, native size (set target_height to the base's real height, scale 1.0). Generate the base in the fighting stance and use it as the start frame for every animation.",
+    "prompt": "huge barrel-chested mill foreman in his fifties, grey walrus moustache, yellow hard hat, red boiler suit with torn-off sleeves, orange hi-vis vest, big leather work gloves, steel-toe boots, heavy spanner on his belt, standing in a wide fighting stance with fists up, full body, detailed 32-bit pixel art, clean dark outline",
+    "animations_requested": [
+      "idle",
+      "walk",
+      "run",
+      "slam",
+      "hurt",
+      "knockdown",
+      "getup",
+      "charge",
+      "charge_windup"
+    ],
+    "animation_notes": {
+      "slam": "overhead double-fist slam down in front of him, forward",
+      "charge": "head-down bull charge, leaning far forward, running forward",
+      "charge_windup": "scrapes his boot and lowers his head before charging"
+    }
+  },
+  "animations": {},
+  "_todo": "Generate the base, get it approved, animate, fill 'animations' like art/characters/brute/character.json, set target_height to the native height, then delete 'status'."
+}

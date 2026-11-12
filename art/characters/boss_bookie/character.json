@@ -1,0 +1,58 @@
+{
+  "id": "boss_bookie",
+  "display_name": "The Bookie",
+  "role": "boss",
+  "preset": "boss",
+  "status": "planned",
+  "concept": "Back-street bookmaker: wiry, quick and flash. Slicked-back hair, thin moustache, trilby hat, red pinstripe three-piece suit, gold chain and rings, pencil behind his ear, two-tone brogues. Keeps his distance and flicks throwing knives, side-steps your attacks, then snaps in with a high kick.",
+  "target_height": 76,
+  "source_facing": "right",
+  "attack_animation": "kick",
+  "background": "none",
+  "palette": {
+    "max_colors": 32
+  },
+  "stats": {
+    "move_speed": 63.0,
+    "body_height": 76.0,
+    "body_half_width": 12.0,
+    "windup_time": 0.33,
+    "attack_cooldown_min": 0.67,
+    "attack_cooldown_max": 1.08,
+    "defend_chance": 40,
+    "score_value": 4000,
+    "throw_chance": 55,
+    "dodge_chance": 25,
+    "special_cooldown": 2.0,
+    "rage_at": 0.5,
+    "attack_damage": 14,
+    "attack_reach": 44.0,
+    "max_hp": 210
+  },
+  "moves": {
+    "throw_weapon": "res://resources/weapons/knife.tres"
+  },
+  "generator": {
+    "provider": "pixellab",
+    "mode": "PixelLab v3, 96px canvas, side view, facing right, native size (set target_height to the base's real height, scale 1.0). Generate the base in the fighting stance and use it as the start frame for every animation.",
+    "prompt": "wiry flash back-street bookmaker, slicked-back hair, thin moustache, black trilby hat, red pinstripe three-piece suit, gold watch chain and rings, pencil behind his ear, two-tone brogues, light on his feet in a fighting stance, full body, detailed 32-bit pixel art, clean dark outline",
+    "animations_requested": [
+      "idle",
+      "walk",
+      "run",
+      "kick",
+      "hurt",
+      "knockdown",
+      "getup",
+      "throw",
+      "dodge"
+    ],
+    "animation_notes": {
+      "kick": "fast high front kick, forward",
+      "throw": "flicks a throwing knife forward from shoulder height",
+      "dodge": "quick backstep away, light and nimble"
+    }
+  },
+  "animations": {},
+  "_todo": "Generate the base, get it approved, animate, fill 'animations' like art/characters/brute/character.json, set target_height to the native height, then delete 'status'."
+}
