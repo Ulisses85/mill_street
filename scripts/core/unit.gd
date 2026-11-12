@@ -94,6 +94,8 @@ var slide := 0.0
 var thrown_by: Unit = null
 var thrown_hits: Array = []
 var juggles := 0
+## Ticks since this unit last got up (enemies give a player who just got up some room).
+var _since_getup := 9999
 var invulnerable_ticks := 0
 var squash := 0
 var current_attack: AttackData = null
@@ -140,6 +142,7 @@ func _physics_process(_delta: float) -> void:
 	if Game.slowmo > 0 and team == Team.ENEMY and Engine.get_physics_frames() % 2 == 1:
 		return
 	t += 1
+	_since_getup += 1
 	_anim_acc += anim_rate
 	while _anim_acc >= 1.0:
 		_anim_acc -= 1.0
@@ -546,7 +549,7 @@ func knockdown_step() -> bool:
 func _screen_edge_bounce() -> void:
 	if not bounce_off_screen_edges or absf(vx) < 90.0 or Level.current == null or Level.current.camera == null:
 		return
-	var cx := Level.current.camera.get_screen_center_position().x
+	var cx := Level.view_center_x()
 	var half := get_viewport_rect().size.x * 0.5 - 10.0
 	if (vx > 0.0 and position.x > cx + half) or (vx < 0.0 and position.x < cx - half):
 		vx = -vx * 0.5
@@ -574,6 +577,7 @@ func _default_body_hit() -> AttackData:
 
 
 func start_getup() -> void:
+	_since_getup = 0
 	invulnerable_ticks = int(getup_invulnerable_time * 60.0)
 	set_state(&"getup", &"getup")
 

@@ -14,7 +14,8 @@
   "stats": {
     "windup_time": 0.37,
     "attack_knockback": 2.0,
-    "attack_hitstop": 2
+    "attack_hitstop": 2,
+    "dodge_chance": 10
   },
   "generator": {
     "provider": "pixellab",

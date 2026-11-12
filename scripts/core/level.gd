@@ -26,6 +26,14 @@ static var current: Level = null
 @onready var camera: Camera2D = get_node_or_null("BeatCamera")
 
 
+## Centre of the view along the street, without camera shake. Gameplay uses this (not
+## Camera2D.get_screen_center_position, which includes the random shake offset) so runs replay exactly.
+static func view_center_x() -> float:
+	if current == null or current.camera == null:
+		return 0.0
+	return current.camera.global_position.x
+
+
 func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
 		current = self

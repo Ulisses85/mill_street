@@ -33,6 +33,8 @@ can_pick_up_weapons = false
 drop_health_chance = 1.0
 drop_health_amount = 35
 drop_health_texture = ExtResource("8")
+grab_chance = 20
+special_cooldown = 3.5
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")

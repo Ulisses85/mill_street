@@ -113,6 +113,10 @@ func _physics_process(_d: float) -> void:
 		return
 	for act in [&"move_left", &"move_right", &"move_up", &"move_down"]:
 		Input.action_release(act)
+	if p.state == &"held":       # grabbed by an enemy: mash like a player would (about 6 presses a second)
+		if frame % 10 == 0:
+			_press(&"punch")
+		return
 	# stuck detection: walk around whatever is in the way
 	if p.state == &"walk" and p.position.distance_to(last_pos) < 0.2:
 		stuck_frames += 1

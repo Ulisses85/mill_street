@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/enemy.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Resource" path="res://resources/attacks/landlord_slam.tres" id="5"]
 [ext_resource type="Texture2D" path="res://assets/characters/boss_landlord/portrait.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/characters/boss_landlord/sheet.png" id="7"]
+[ext_resource type="Resource" path="res://resources/attacks/landlord_grab_slam.tres" id="8"]
 
 [node name="Landlord" type="Node2D"]
 script = ExtResource("1")
@@ -30,6 +31,11 @@ score_value = 6000
 is_boss = true
 super_armor = true
 alert_delay = 0.3
+grab_attack = ExtResource("8")
+grab_chance = 35
+grab_hold_time = 0.9
+special_cooldown = 2.4
+rage_at = 0.5
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")

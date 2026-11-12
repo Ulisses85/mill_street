@@ -102,6 +102,10 @@ var dash_jumping := false
 var dodge_vel := Vector2.ZERO
 var perfect_done := false
 var _special_buffer := 0
+var held_by: Node2D = null
+var mash := 0
+## Button presses needed to break free when an enemy grabs you.
+@export var grab_escape_presses := 6
 
 signal combo_changed(count: int)
 signal power_changed(value: float, max_value: float)
@@ -186,6 +190,14 @@ func _tick() -> void:
 			_state_attack()
 		&"jump":
 			_state_jump()
+		&"held":
+			if held_by == null or not is_instance_valid(held_by) or held_by.get("held_player") != self:
+				release_from_enemy()
+			elif _jp(&"punch") or _jp(&"kick") or _jp(&"jump") or _jp(&"defend"):
+				mash += 1
+				squash = 3
+				if mash >= grab_escape_presses:
+					_escape_grab()
 		&"win":
 			if z > 0.0:
 				air_step()
@@ -466,7 +478,7 @@ func _start_super() -> void:
 func _whole_screen_hits(a: AttackData) -> int:
 	if not a.is_active(t) or Level.current == null or Level.current.camera == null:
 		return 0
-	var cx := Level.current.camera.get_screen_center_position().x
+	var cx := Level.view_center_x()
 	var half := get_viewport_rect().size.x * 0.5
 	var n := 0
 	for u in get_tree().get_nodes_in_group(&"enemies"):
@@ -516,6 +528,35 @@ func _attack_incoming() -> bool:
 
 func _on_hit(_attacker: Node2D, a: AttackData) -> void:
 	add_power(a.damage * power_per_damage_taken)
+
+
+# ---------- grabbed by an enemy ----------
+func grabbed_by_enemy(e: Node2D) -> void:
+	drop_carried()
+	running = false
+	vx = 0.0
+	held_by = e
+	mash = 0
+	set_state(&"held", &"grabbed" if body.has_animation(&"grabbed") else &"hurt")
+	Effects.float_text(get_parent(), position + Vector2(0, -body_height - 8), "MASH!", Color("#ffd23a"))
+
+
+func release_from_enemy() -> void:
+	held_by = null
+	if state == &"held":
+		set_state(&"idle", &"idle")
+
+
+## Mashed free: shove the grabber back and get a moment of safety.
+func _escape_grab() -> void:
+	var e := held_by as Unit
+	release_from_enemy()
+	invulnerable_ticks = maxi(invulnerable_ticks, 30)
+	if e and is_instance_valid(e):
+		e.set("held_player", null)
+		e.hurt(signf(e.position.x - position.x), 2.0)
+	Effects.puff(get_parent(), position, 4.0)
+	Sfx.play(&"hit")
 
 
 # ---------- grab ----------
