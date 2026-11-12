@@ -10,7 +10,7 @@ Run tools/art/import_character.py first. Writes:
 Stats start from a preset (thug / brute / boss) and can be overridden in the spec's "stats" block:
   max_hp, move_speed, defend_chance, attack_damage, attack_reach, attack_knockdown, windup_time,
   attack_cooldown_min, attack_cooldown_max, score_value, can_pick_up_weapons, drop_health_chance,
-  attack_knockback, attack_hitstop
+  attack_knockback, attack_hitstop, attack_screen_shake
 To place it in a level, add ["<id>", x, y, fov] to a wave in art/levels/<id>/level.json and run tools/make_levels.py.
 """
 import json

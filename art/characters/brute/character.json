@@ -15,7 +15,9 @@
     "windup_time": 0.56,
     "body_height": 58.0,
     "attack_hitstop": 2,
-    "attack_screen_shake": 4.0
+    "attack_screen_shake": 4.0,
+    "grab_chance": 20,
+    "special_cooldown": 3.5
   },
   "generator": {
     "provider": "pixellab",
