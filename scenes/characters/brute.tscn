@@ -4,36 +4,37 @@
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
-[ext_resource type="Resource" path="res://resources/attacks/brute_smash.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/attacks/brute_attack.tres" id="5"]
 [ext_resource type="Texture2D" path="res://assets/characters/brute/portrait.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/characters/brute/sheet.png" id="7"]
 [ext_resource type="Texture2D" path="res://assets/items/chips.png" id="8"]
 
 [node name="Brute" type="Node2D"]
 script = ExtResource("1")
+unit_name = "Brute"
 portrait = ExtResource("6")
 start_direction = -1
 attack = ExtResource("5")
-unit_name = "Brute"
 random_name_file = "res://resources/enemy_names.txt"
 move_speed = 39.0
 hit_stun_time = 0.27
+knockdown_floor_time = 0.75
 knockdown_height = 14.0
 knockdown_distance = 40.0
-knockdown_floor_time = 0.75
 body_half_width = 11.0
-body_height = 72.0
-windup_time = 0.43
+body_height = 58.0
+windup_time = 0.56
 attack_cooldown_min = 1.17
 attack_cooldown_max = 1.83
 defend_chance = 30
 wait_distance = 80.0
 score_value = 500
+can_pick_up_weapons = false
 drop_health_chance = 1.0
 drop_health_amount = 35
-drop_health_texture = ExtResource("8")
 grab_chance = 20
 special_cooldown = 3.5
+drop_health_texture = ExtResource("8")
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")
