@@ -1,0 +1,31 @@
+{
+ "id": "boss_foreman",
+ "animations": [
+  "idle",
+  "walk",
+  "run",
+  "windup",
+  "hurt",
+  "defend",
+  "grabbed",
+  "knockdown",
+  "down",
+  "getup",
+  "lurk",
+  "slam",
+  "charge_windup",
+  "charge"
+ ],
+ "synthesized": [
+  "windup: slam frames 1-4 (lead-in before the hit; trimmed from slam)",
+  "defend: held first frame of idle",
+  "grabbed: copy of hurt",
+  "lurk: copy of idle"
+ ],
+ "warnings": [],
+ "missing": [],
+ "colors": 32,
+ "timing": {
+  "slam": 0.4
+ }
+}

@@ -4,38 +4,40 @@
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
-[ext_resource type="Resource" path="res://resources/attacks/foreman_slam.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/attacks/boss_foreman_attack.tres" id="5"]
 [ext_resource type="Texture2D" path="res://assets/characters/boss_foreman/portrait.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/characters/boss_foreman/sheet.png" id="7"]
 [ext_resource type="Resource" path="res://resources/attacks/foreman_charge.tres" id="8"]
 
-[node name="Foreman" type="Node2D"]
+[node name="BossForeman" type="Node2D"]
 script = ExtResource("1")
+unit_name = "The Foreman"
 portrait = ExtResource("6")
 start_direction = -1
 attack = ExtResource("5")
-unit_name = "The Foreman"
 move_speed = 48.0
 hit_stun_time = 0.22
+knockdown_floor_time = 0.9
 knockdown_height = 12.0
 knockdown_distance = 34.0
-knockdown_floor_time = 0.9
 body_half_width = 13.0
-body_height = 84.0
+body_height = 89.0
 windup_time = 0.47
 attack_cooldown_min = 0.75
 attack_cooldown_max = 1.25
 defend_chance = 30
 wait_distance = 90.0
 score_value = 3000
+can_pick_up_weapons = false
+drop_health_chance = 0.0
 is_boss = true
 super_armor = true
 alert_delay = 0.3
-charge_attack = ExtResource("8")
-charge_chance = 35
-charge_speed = 240.0
 special_cooldown = 2.6
 rage_at = 0.4
+charge_chance = 35
+charge_speed = 240.0
+charge_attack = ExtResource("8")
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")
