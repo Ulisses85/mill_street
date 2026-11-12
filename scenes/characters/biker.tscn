@@ -30,6 +30,7 @@ score_value = 450
 can_pick_up_weapons = false
 drop_health_chance = 0.25
 drop_health_amount = 15
+dodge_chance = 25
 drop_health_texture = ExtResource("8")
 
 [node name="Shadow" type="Node2D" parent="."]

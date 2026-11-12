@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/enemy.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Resource" path="res://resources/attacks/bookie_kick.tres" id="5"]
 [ext_resource type="Texture2D" path="res://assets/characters/boss_bookie/portrait.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/characters/boss_bookie/sheet.png" id="7"]
+[ext_resource type="Resource" path="res://resources/weapons/knife.tres" id="8"]
 
 [node name="Bookie" type="Node2D"]
 script = ExtResource("1")
@@ -30,6 +31,11 @@ score_value = 4000
 is_boss = true
 super_armor = true
 alert_delay = 0.3
+throw_weapon = ExtResource("8")
+throw_chance = 55
+dodge_chance = 25
+special_cooldown = 2.0
+rage_at = 0.5
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")
