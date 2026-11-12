@@ -48,8 +48,9 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_register_input()
 	_load_progress()
+	apply_settings()
 	# crisp pixel text everywhere
-	for f in [preload("res://assets/fonts/Silkscreen-Regular.ttf"), preload("res://assets/fonts/Silkscreen-Bold.ttf")]:
+	for f: Font in [load("res://assets/fonts/Silkscreen-Regular.ttf"), load("res://assets/fonts/Silkscreen-Bold.ttf")]:
 		f.antialiasing = TextServer.FONT_ANTIALIASING_NONE
 		f.hinting = TextServer.HINTING_NONE
 		f.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
@@ -98,7 +99,27 @@ func request_hitstop(frames: int) -> void:
 
 
 func request_shake(strength: float) -> void:
+	if not settings.shake:
+		return
 	shake = maxf(shake, strength)
+
+
+## Music and SFX volume (0-10) on their own audio buses, and fullscreen.
+func apply_settings() -> void:
+	for bus in ["Music", "SFX"]:
+		if AudioServer.get_bus_index(bus) == -1:
+			AudioServer.add_bus()
+			AudioServer.set_bus_name(AudioServer.bus_count - 1, bus)
+			AudioServer.set_bus_send(AudioServer.bus_count - 1, &"Master")
+	for pair in [["Music", int(settings.music)], ["SFX", int(settings.sfx)]]:
+		var i := AudioServer.get_bus_index(pair[0])
+		var v: int = pair[1]
+		AudioServer.set_bus_mute(i, v <= 0)
+		AudioServer.set_bus_volume_db(i, linear_to_db(maxf(v / 10.0, 0.001)))
+	if not OS.has_feature("web") and not OS.has_feature("mobile") and DisplayServer.get_name() != "headless":
+		var want := DisplayServer.WINDOW_MODE_FULLSCREEN if settings.fullscreen else DisplayServer.WINDOW_MODE_WINDOWED
+		if DisplayServer.window_get_mode() != want:
+			DisplayServer.window_set_mode(want)
 
 
 func message(text: String, duration := 1.8, important := false) -> void:
@@ -127,6 +148,8 @@ var unlocked := 1
 var best_scores := {}
 ## Index into level_list.heroes of the hero the player picked.
 var hero := 0
+## Player settings (Options menu), saved with the progress.
+var settings := {"music": 7, "sfx": 8, "fullscreen": false, "shake": true}
 
 
 func _load_progress() -> void:
@@ -135,6 +158,8 @@ func _load_progress() -> void:
 	if cfg.load(SAVE_PATH) == OK:
 		unlocked = int(cfg.get_value("progress", "unlocked", 1))
 		best_scores = cfg.get_value("progress", "best", {})
+		for k in settings:
+			settings[k] = cfg.get_value("settings", k, settings[k])
 		hero = clampi(int(cfg.get_value("progress", "hero", 0)), 0, maxi(0, level_list.heroes.size() - 1))
 
 
@@ -143,6 +168,8 @@ func save_progress() -> void:
 	cfg.set_value("progress", "unlocked", unlocked)
 	cfg.set_value("progress", "best", best_scores)
 	cfg.set_value("progress", "hero", hero)
+	for k in settings:
+		cfg.set_value("settings", k, settings[k])
 	cfg.save(SAVE_PATH)
 
 

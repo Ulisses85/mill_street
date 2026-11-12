@@ -30,12 +30,8 @@ func _ready() -> void:
 	add_child(layer)
 	var panel := MenuPanel.new()
 	layer.add_child(panel)
-	var opts := [["START", func(): Game.go_to_hero_select(func(): Game.start_level(0))],
-		["LEVEL SELECT", func(): Game.go_to_hero_select(Game.go_to_level_select)]]
-	if not OS.has_feature("web") and not OS.has_feature("mobile"):
-		opts.append(["QUIT", func(): get_tree().quit()])
-	panel.open("", "", opts, Color.WHITE, false)
-	panel.get_child(1).offset_top = 84
+	_panel = panel
+	_open_main()
 	var header := VBoxContainer.new()
 	header.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	header.offset_top = 22
@@ -45,6 +41,29 @@ func _ready() -> void:
 	header.add_child(UITheme.label(subtitle, 8, Color("#4a4958")))
 	header.theme = UITheme.get_theme()
 	layer.add_child(header)
+	_header = header
+
+
+var _panel: MenuPanel
+var _header: Control
+
+
+func _open_main(focus := 0) -> void:
+	if _header:
+		_header.visible = true
+	var opts := [["START", func(): Game.go_to_hero_select(func(): Game.start_level(0))],
+		["LEVEL SELECT", func(): Game.go_to_hero_select(Game.go_to_level_select)],
+		["OPTIONS", _open_options]]
+	if not OS.has_feature("web") and not OS.has_feature("mobile"):
+		opts.append(["QUIT", func(): get_tree().quit()])
+	_panel.open("", "", opts, Color.WHITE, false, focus)
+	_panel.get_child(1).offset_top = 84
+
+
+func _open_options() -> void:
+	_header.visible = false
+	_panel.get_child(1).offset_top = 0
+	OptionsMenu.open(_panel, func(): _open_main(2))
 
 
 ## The chosen hero's sprite sheet, for the title screen.

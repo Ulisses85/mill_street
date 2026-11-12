@@ -6,7 +6,14 @@ extends Node2D
 enum Kind { BURST, SHIELD, PUFF, TEXT, CHUNK, SWOOSH, STREAK }
 
 const INK := Color("#1e1c28")
-const FONT := preload("res://assets/fonts/Silkscreen-Regular.ttf")
+static var _font: Font
+
+
+## The pixel font, loaded on first use (a preload fails on a fresh clone before the font is imported).
+static func font() -> Font:
+	if _font == null:
+		_font = load("res://assets/fonts/Silkscreen-Regular.ttf")
+	return _font
 
 var kind := Kind.BURST
 var life := 7
@@ -184,9 +191,9 @@ func _draw() -> void:
 			draw_circle(Vector2(0, 1), r + 1.0, Color("#8f8ea0"))
 			draw_circle(Vector2.ZERO, r, Color.WHITE)
 		Kind.TEXT:
-			var w := FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
-			draw_string(FONT, Vector2(-w / 2 + 1, 1), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, INK)
-			draw_string(FONT, Vector2(-w / 2, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, color)
+			var w := font().get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
+			draw_string(font(), Vector2(-w / 2 + 1, 1), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, INK)
+			draw_string(font(), Vector2(-w / 2, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, color)
 		Kind.SWOOSH:
 			# drawn facing right, mirrored for the left; the arc's leading edge sweeps from arc_from to arc_to
 			var f := float(life) / max_life

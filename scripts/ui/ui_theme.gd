@@ -13,7 +13,7 @@ static func get_theme() -> Theme:
 	if _theme:
 		return _theme
 	var t := Theme.new()
-	t.default_font = preload("res://assets/fonts/Silkscreen-Bold.ttf")
+	t.default_font = load("res://assets/fonts/Silkscreen-Bold.ttf")
 	t.default_font_size = 8
 	var normal := _box(PAPER, INK)
 	var focus := _box(ACCENT, INK)

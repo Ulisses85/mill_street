@@ -24,7 +24,12 @@ func _toggle_pause() -> void:
 		_resume()
 		return
 	get_tree().paused = true
-	panel.open("PAUSED", "", [["RESUME", _resume], ["RESTART", Game.restart_level], ["LEVEL SELECT", Game.go_to_level_select], ["MAIN MENU", Game.go_to_main_menu]])
+	_open_pause()
+
+
+func _open_pause(focus := 0) -> void:
+	panel.open("PAUSED", "", [["RESUME", _resume], ["OPTIONS", func(): OptionsMenu.open(panel, func(): _open_pause(1))],
+		["RESTART", Game.restart_level], ["LEVEL SELECT", Game.go_to_level_select], ["MAIN MENU", Game.go_to_main_menu]], Color.WHITE, true, focus)
 
 
 func _resume() -> void:

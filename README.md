@@ -35,7 +35,7 @@ On phones and tablets an on-screen stick and buttons (A S J D G) appear on the f
 
 ## Run it
 
-Open the folder in Godot 4.3 or newer and press **F5**. On the very first open, Godot imports all the assets. While it does, it may print a burst of `Could not preload resource` errors. They go away once the import finishes; if any remain, use **Project → Reload Current Project**. The game starts on the main menu (`scenes/ui/main_menu.tscn`). To play one level straight away, open it in `scenes/levels/` and press **F6**.
+Open the folder in Godot 4.3 or newer and press **F5**. The game starts on the main menu (`scenes/ui/main_menu.tscn`). To play one level straight away, open it in `scenes/levels/` and press **F6**.
 
 ## What's in it
 
@@ -56,7 +56,7 @@ Open the folder in Godot 4.3 or newer and press **F5**. On the very first open, 
 | Projectiles | `scripts/systems/projectile.gd` | Knives fly flat; thrown crates arc, spin and smash on impact |
 | Bosses | `enemy.gd` → Boss group | *Is boss* (big HUD bar, name banner, can't be grabbed), *super armor* (light hits don't interrupt its attacks). `scenes/characters/boss_*.tscn` |
 | Enemy drops | `enemy.gd` → Drops group | Chance, heal amount and sprite of a health item dropped on defeat |
-| Menus & flow | `scripts/ui/`, `resources/level_list.tres` | Main menu, hero select (`heroes` list; the pick is saved and replaces the level's default hero at start; heroes play their `win` animation on level clear), level select (levels unlock in order, best scores), pause, level complete, all levels complete, game over. Progress is saved to `user://save.cfg` |
+| Menus & flow | `scripts/ui/`, `resources/level_list.tres` | Main menu, options (music and sound volume on their own audio buses, screen shake, fullscreen; saved), hero select (`heroes` list; the pick is saved and replaces the level's default hero at start; heroes play their `win` animation on level clear), level select (levels unlock in order, best scores), pause, level complete, all levels complete, game over. Progress is saved to `user://save.cfg` |
 | Touch controls | `scripts/ui/touch_controls.gd` | Virtual stick + five buttons; they press the same input actions, so gameplay code doesn't change |
 | Audio controller | `scripts/systems/sfx.gd`, `audio_item.gd`, `resources/audio/audio_library.tres` | `AudioItem`: name, clip list (picks one at random), volume, random volume, min time between calls, random pitch, loop. `Sfx.play(&"hit")`, `Sfx.music(&"music_street")` |
 | Effects | `scripts/systems/effects.gd` | Hit bursts, block shields, dust, debris chunks, floating text |

@@ -111,7 +111,7 @@ func _draw_controls() -> void:
 	root.draw_circle(c, stick_radius, Color(0.93, 0.92, 0.95, 0.35 * a))
 	root.draw_circle(c + stick_vec * stick_radius, 13, Color(INK, a))
 	root.draw_circle(c + stick_vec * stick_radius, 11, Color(0.93, 0.92, 0.95, a))
-	var f: Font = preload("res://assets/fonts/Silkscreen-Bold.ttf")
+	var f: Font = load("res://assets/fonts/Silkscreen-Bold.ttf")
 	for spec in BUTTONS:
 		var p := _button_pos(spec)
 		var r: float = button_radius * spec[3]
