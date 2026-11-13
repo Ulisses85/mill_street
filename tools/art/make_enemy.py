@@ -79,6 +79,7 @@ def main(spec_path: Path) -> int:
     tpf = a["ticks_per_frame"]
     a0, a1 = a.get("active_frames", [a["frames"] // 3, (2 * a["frames"]) // 3])
     duration = round(a["frames"] * tpf / 60, 2)
+    duration = float(stats.get("attack_duration", duration))  # optional: keep an old attack's exact length
     act_from, act_to = round(a0 * tpf / 60, 2), round((a1 + 1) * tpf / 60, 2)
 
     atk_path = ROOT / "resources/attacks" / f"{cid}_attack.tres"
@@ -95,7 +96,8 @@ def main(spec_path: Path) -> int:
         f"screen_shake = {float(stats.get('attack_screen_shake', 5.0 if stats['attack_knockdown'] else 2.0))}",
         f"hitstop_frames = {int(stats.get('attack_hitstop', 4 if role == 'boss' else 3))}"]
         + ([f"knockback = {float(stats['attack_knockback'])}"] if "attack_knockback" in stats else [])
-        + ([f"forward_step = {float(stats['attack_forward_step'])}"] if "attack_forward_step" in stats else []) + [""]))
+        + ([f"forward_step = {float(stats['attack_forward_step'])}"] if "attack_forward_step" in stats else [])
+        + ([f"depth_range = {float(stats['attack_depth_range'])}"] if "attack_depth_range" in stats else []) + [""]))
 
     ext = [("Script", "res://scripts/characters/enemy.gd"), ("Script", "res://scripts/core/sprite_animator.gd"),
            ("Script", "res://scripts/core/unit_shadow.gd"), ("Script", "res://scripts/systems/health_system.gd"),

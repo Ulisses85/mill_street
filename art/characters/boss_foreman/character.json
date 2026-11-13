@@ -3,9 +3,8 @@
   "display_name": "The Foreman",
   "role": "boss",
   "preset": "boss",
-  "status": "planned",
   "concept": "Mill-floor foreman gone bad: huge barrel-chested man in his fifties, grey walrus moustache, yellow hard hat, red boiler suit with the sleeves torn off, hi-vis vest, big leather work gloves, steel-toe boots, a heavy spanner hanging from his belt. Slow, super-armoured, charges across the screen like a bull; overhead double-fist slam.",
-  "target_height": 84,
+  "target_height": 89,
   "source_facing": "right",
   "attack_animation": "slam",
   "background": "none",
@@ -14,7 +13,7 @@
   },
   "stats": {
     "move_speed": 48.0,
-    "body_height": 84.0,
+    "body_height": 89.0,
     "body_half_width": 13.0,
     "windup_time": 0.47,
     "attack_cooldown_min": 0.75,
@@ -27,7 +26,8 @@
     "rage_at": 0.4,
     "attack_damage": 18,
     "attack_reach": 48.0,
-    "max_hp": 180
+    "max_hp": 180,
+    "attack_screen_shake": 6.0
   },
   "moves": {
     "charge_attack": "res://resources/attacks/foreman_charge.tres"
@@ -51,8 +51,76 @@
       "slam": "overhead double-fist slam down in front of him, forward",
       "charge": "head-down bull charge, leaning far forward, running forward",
       "charge_windup": "scrapes his boot and lowers his head before charging"
-    }
+    },
+    "base_image": "raw/base/east.png",
+    "pixellab_character_id": "07de4d0d-07a7-4c23-8fba-5558116d86d0",
+    "generations_used": 28
   },
-  "animations": {},
-  "_todo": "Generate the base, get it approved, animate, fill 'animations' like art/characters/brute/character.json, set target_height to the native height, then delete 'status'."
+  "animations": {
+    "idle": {
+      "source": "raw/idle",
+      "fps": 7,
+      "loop": true,
+      "note": "raw/pixellab/idle frames 0-4-1 ping-pong (second take; later frames turn toward the camera, as all of the first take did)"
+    },
+    "walk": {
+      "source": "raw/walk",
+      "fps": 10,
+      "loop": true,
+      "note": "raw/pixellab/walk frames 1-8 (0 is the stance start frame)"
+    },
+    "run": {
+      "source": "raw/run",
+      "fps": 14,
+      "loop": true,
+      "note": "raw/pixellab/run frames 1-8"
+    },
+    "slam": {
+      "source": "raw/slam",
+      "fps": 10,
+      "active": [
+        5,
+        5
+      ],
+      "note": "raw/pixellab/slam frames 0-7, then 4 as the recovery (second take; the first punched forward). The overhead raise (1-4) becomes the windup"
+    },
+    "hurt": {
+      "source": "raw/hurt",
+      "fps": 14,
+      "note": "raw/pixellab/knockdown frames 1-2-3-2-1: the backward stagger before the fall (v3 hurt turned to camera; the taking-punch template came out smaller on a 96px canvas)"
+    },
+    "knockdown": {
+      "source": "raw/knockdown",
+      "fps": 15,
+      "loop": false,
+      "align": "canvas",
+      "note": "raw/pixellab/knockdown frames 1-9"
+    },
+    "down": {
+      "source": "raw/down",
+      "fps": 10,
+      "loop": true,
+      "align": "canvas",
+      "note": "raw/pixellab/knockdown frame 10"
+    },
+    "getup": {
+      "source": "raw/getup",
+      "fps": 15,
+      "loop": false,
+      "align": "canvas",
+      "note": "raw/pixellab/getup frames 1-10; generated from knockdown frame 10 to the stance, 140x132 cropped (6,2) back to the shared 128x128 canvas"
+    },
+    "charge_windup": {
+      "source": "raw/charge_windup",
+      "fps": 8,
+      "loop": false,
+      "note": "raw/pixellab/charge_windup frames 1-6: lowers his head and leans in"
+    },
+    "charge": {
+      "source": "raw/charge",
+      "fps": 10,
+      "loop": true,
+      "note": "raw/pixellab/charge frames 1-8; the game plays it at double speed"
+    }
+  }
 }

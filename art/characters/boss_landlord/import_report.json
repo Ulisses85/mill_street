@@ -1,0 +1,29 @@
+{
+ "id": "boss_landlord",
+ "animations": [
+  "idle",
+  "walk",
+  "run",
+  "windup",
+  "hurt",
+  "defend",
+  "grabbed",
+  "knockdown",
+  "down",
+  "getup",
+  "lurk",
+  "slam",
+  "grab"
+ ],
+ "synthesized": [
+  "defend: held first frame of idle",
+  "grabbed: copy of hurt",
+  "lurk: copy of idle"
+ ],
+ "warnings": [],
+ "missing": [],
+ "colors": 31,
+ "timing": {
+  "slam": 0.58
+ }
+}
