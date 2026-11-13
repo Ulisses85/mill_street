@@ -29,6 +29,9 @@ from PIL import Image, ImageSequence
 ROOT = Path(__file__).resolve().parents[2]
 CELL = (160, 128)
 ANCHOR = (80, 116)
+# A spec's "headroom" (px) makes its cells that much taller, above the feet, for moves that reach high
+# (overhead raises). The game reads the cell and anchor from sheet.json, so other characters are unaffected.
+DEFAULT_CELL, DEFAULT_ANCHOR = CELL, ANCHOR
 
 # The hero's move slots. punch_N / kick_N are the hits of the punch and kick combos (the last one is the finisher);
 # their names are slot IDs, the art in them can be any move (a jab, a slash, a headbutt...).
@@ -399,6 +402,10 @@ def main(spec_path: Path) -> int:
     spec = json.loads(spec_path.read_text())
     base = spec_path.parent
     cid = spec["id"]
+    global CELL, ANCHOR
+    headroom = int(spec.get("headroom", 0))
+    CELL = (DEFAULT_CELL[0], DEFAULT_CELL[1] + headroom)
+    ANCHOR = (DEFAULT_ANCHOR[0], DEFAULT_ANCHOR[1] + headroom)
     if spec.get("status") == "planned":
         print(f"[{cid}] planned (no art yet) - skipped; remove \"status\" once its art is in raw/")
         return 0

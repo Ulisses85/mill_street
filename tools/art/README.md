@@ -20,6 +20,7 @@ In Claude Code, the skills in `.claude/skills/` run this whole flow: `/ideate`, 
   "target_height": 70,                   // standing height in game pixels (thug 58, brute 72, boss 84-92)
   "source_facing": "right",              // which way the raw art faces (left gets mirrored)
   "attack_animation": "smash",           // the enemy's attack animation name
+  "headroom": 0,                         // optional: px added to the 128 px cell above the feet (overhead moves)
   "background": "auto",                  // auto (detect solid colour) | none (art already transparent) | "#00ff00"
   "palette": { "max_colors": 20, "outline": "#300408", "lock": ["#ff3a2a"] },   // outline/lock optional
   "stats": { "max_hp": 90, "defend_chance": 45, "attack_damage": 15 },           // overrides the preset

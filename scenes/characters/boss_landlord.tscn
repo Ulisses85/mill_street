@@ -4,38 +4,40 @@
 [ext_resource type="Script" path="res://scripts/core/sprite_animator.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/core/unit_shadow.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/systems/health_system.gd" id="4"]
-[ext_resource type="Resource" path="res://resources/attacks/landlord_slam.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/attacks/boss_landlord_attack.tres" id="5"]
 [ext_resource type="Texture2D" path="res://assets/characters/boss_landlord/portrait.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/characters/boss_landlord/sheet.png" id="7"]
 [ext_resource type="Resource" path="res://resources/attacks/landlord_grab_slam.tres" id="8"]
 
-[node name="Landlord" type="Node2D"]
+[node name="BossLandlord" type="Node2D"]
 script = ExtResource("1")
+unit_name = "The Landlord"
 portrait = ExtResource("6")
 start_direction = -1
 attack = ExtResource("5")
-unit_name = "The Landlord"
 move_speed = 45.0
 hit_stun_time = 0.22
+knockdown_floor_time = 0.9
 knockdown_height = 12.0
 knockdown_distance = 34.0
-knockdown_floor_time = 0.9
 body_half_width = 14.0
-body_height = 90.0
+body_height = 86.0
 windup_time = 0.4
 attack_cooldown_min = 0.67
 attack_cooldown_max = 1.17
 defend_chance = 30
 wait_distance = 90.0
 score_value = 6000
+can_pick_up_weapons = false
+drop_health_chance = 0.0
 is_boss = true
 super_armor = true
 alert_delay = 0.3
-grab_attack = ExtResource("8")
 grab_chance = 35
 grab_hold_time = 0.9
 special_cooldown = 2.4
 rage_at = 0.5
+grab_attack = ExtResource("8")
 
 [node name="Shadow" type="Node2D" parent="."]
 script = ExtResource("3")
@@ -44,9 +46,9 @@ radius = Vector2(22, 5)
 [node name="Body" type="Sprite2D" parent="."]
 texture = ExtResource("7")
 centered = false
-offset = Vector2(-80, -116)
+offset = Vector2(-80, -132)
 region_enabled = true
-region_rect = Rect2(0, 0, 160, 128)
+region_rect = Rect2(0, 0, 160, 144)
 script = ExtResource("2")
 sheet_json = "res://assets/characters/boss_landlord/sheet.json"
 
