@@ -4,13 +4,14 @@
 
 [resource]
 script = ExtResource("1")
-attack_name = "Bookie Kick"
+attack_name = "The Bookie Attack"
 damage = 14
 knockdown = true
 animation = &"kick"
-duration = 0.43
+duration = 0.4
 active_from = 0.13
 active_to = 0.2
 reach_to = 44.0
-forward_step = 60.0
 screen_shake = 5.0
+hitstop_frames = 2
+forward_step = 60.0
