@@ -1,0 +1,52 @@
+{
+  "id": "example_fake",
+  "display_name": "Example (fake provider)",
+  "role": "enemy",
+  "preset": "brute",
+  "concept": "Test-only stand-in made by tools/art/examples/fake_provider.py: the procedural brute in a purple bomber, upscaled onto green, in four file formats. Not a game character.",
+  "target_height": 70,
+  "source_facing": "right",
+  "attack_animation": "smash",
+  "background": "auto",
+  "palette": {
+    "max_colors": 20
+  },
+  "stats": {
+    "max_hp": 90,
+    "move_speed": 42,
+    "defend_chance": 45,
+    "attack_damage": 15,
+    "windup_time": 0.4,
+    "score_value": 700,
+    "grab_chance": 35,
+    "special_cooldown": 3.0
+  },
+  "generator": {
+    "provider": "fake_provider.py"
+  },
+  "animations": {
+    "idle": {
+      "source": "raw/idle",
+      "fps": 8.5,
+      "loop": true
+    },
+    "walk": {
+      "source": "raw/walk_strip.png",
+      "frames": 8,
+      "fps": 20,
+      "loop": true
+    },
+    "smash": {
+      "source": "raw/attack.gif",
+      "fps": 30,
+      "active": [
+        4,
+        6
+      ]
+    },
+    "hurt": {
+      "source": "raw/hurt.png",
+      "fps": 8
+    }
+  }
+}

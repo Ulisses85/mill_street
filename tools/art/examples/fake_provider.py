@@ -4,7 +4,10 @@ Renders a character with the procedural rig, then deliberately makes it look lik
 output: 3x upscaled, solid green background, jittered position, and a different file format per
 animation (frame folder, horizontal strip, GIF, single PNG).
 
-    python3 tools/art/examples/fake_provider.py   ->  art/characters/bouncer/raw/
+    python3 tools/art/examples/fake_provider.py   ->  tools/art/examples/fake_enemy/raw/
+
+The output belongs to the example id "example_fake" (tools/art/examples/fake_enemy/character.json), never
+to a real character, so it can't overwrite generated art. Its game output is gitignored.
 """
 import asyncio, base64, io, json, random, pathlib
 from PIL import Image
@@ -12,7 +15,7 @@ from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 PIPE = ROOT / "tools/sprite_pipeline"
-OUT = ROOT / "art/characters/bouncer/raw"
+OUT = pathlib.Path(__file__).resolve().parent / "fake_enemy/raw"
 DEF = {"kind": "enemy", "type": "brute", "scale": 1.2,
        "palette": {"main": "#7b3fb8", "shade": "#4a1f78", "hi": "#c79cf0", "outline": [30, 8, 46], "acc": "shades"},
        "anims": ["idle", "walk", "smash", "hurt"]}

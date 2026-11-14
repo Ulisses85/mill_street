@@ -113,8 +113,8 @@ Use the side view. Keep only the east-facing (right) direction, then save the fr
 
 ## Test without an API key
 
-`python3 tools/art/examples/fake_provider.py` writes stand-in "AI output" for the Bouncer:
+`python3 tools/art/examples/fake_provider.py` writes stand-in "AI output" into `tools/art/examples/fake_enemy/raw/`, for its own example id `example_fake` (never a real character):
 - 3× scale on a green background
 - a different file format per animation
 
-Then run the import and make_enemy steps on `art/characters/bouncer/character.json`.
+Then run the import and make_enemy steps on `tools/art/examples/fake_enemy/character.json`. The example lives outside `art/characters/`, so CI doesn't rebuild it, and its output (`example_fake` sheet, scene and attack) is gitignored.
