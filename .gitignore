@@ -9,3 +9,10 @@ __pycache__/
 test-logs/
 .mcp.json
 .env
+# fake_provider.py example (tools/art/examples/fake_enemy): test output only
+tools/art/examples/fake_enemy/raw/
+tools/art/examples/fake_enemy/preview/
+tools/art/examples/fake_enemy/import_report.json
+assets/characters/example_fake/
+scenes/characters/example_fake.tscn
+resources/attacks/example_fake_attack.tres
