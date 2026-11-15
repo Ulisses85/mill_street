@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 attack_name = "Special"
-animation = &"special"
+animation = &"kick_2"
 damage = 14
 knockdown = true
 hits_both_sides = true

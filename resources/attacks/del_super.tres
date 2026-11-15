@@ -14,5 +14,5 @@ launch_height = 56.0
 hitstop_frames = 8
 screen_shake = 9.0
 duration = 0.6
-active_from = 0.15
-active_to = 0.25
+active_from = 0.07
+active_to = 0.2
