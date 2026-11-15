@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+attack_name = "Enemy Nailed Bat"
+damage = 11
+knockdown = true
+animation = &"swing"
+duration = 0.42
+active_from = 0.13
+active_to = 0.19
+reach_to = 46.0
+screen_shake = 4.0
+blood = 1.8

@@ -11,3 +11,4 @@ animation = &"knockdown"
 knockdown_force = 0.8
 depth_range = 10.0
 screen_shake = 3.0
+blood = 2.0

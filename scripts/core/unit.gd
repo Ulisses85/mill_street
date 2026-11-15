@@ -341,6 +341,14 @@ func equip(w: WeaponData, uses: int) -> void:
 func use_weapon() -> void:
 	weapon_uses -= 1
 	if weapon_uses <= 0:
+		if held_weapon.breaks_into:
+			held_weapon = held_weapon.breaks_into
+			weapon_uses = held_weapon.uses if team == Team.PLAYER else held_weapon.enemy_uses
+			Effects.float_text(get_parent(), position + Vector2(0, -body_height - 6), "SMASH!", Color("#c5ccd3"))
+			for i in 7:      # glass
+				Effects.chunk(get_parent(), position + Vector2(face * 22, -z - body_height * 0.6), Color("#82c896"),
+					Vector2(Game.fx_rng.randf_range(-1.5, 2.5) * face, Game.fx_rng.randf_range(-3.0, -1.0)), position.y, Vector2(2, 2))
+			return
 		Effects.float_text(get_parent(), position + Vector2(0, -body_height - 6), held_weapon.weapon_name + " BROKE", Color("#c5ccd3"))
 		held_weapon = null
 
@@ -448,6 +456,7 @@ func _hit_feedback(a: AttackData, dir: float) -> void:
 	Game.request_hitstop(a.hitstop_frames + mini(3, a.damage / 5) + (3 if a.knockdown else 0))
 	Game.request_shake(a.screen_shake + (1.5 if a.knockdown else 0.0))
 	Effects.impact(get_parent(), position + Vector2(-dir * 4, -z - body_height * 0.55), dir, float(a.damage), a.knockdown)
+	Gore.spray(position, z + body_height * 0.62, dir, int((3 + a.damage / 2) * a.blood * (1.5 if a.knockdown else 1.0)), 1.0 + a.damage * 0.03)
 	if a.knockdown:
 		Effects.puff(get_parent(), position + Vector2(-dir * 6, 0), 4.0)
 
@@ -527,6 +536,7 @@ func knockdown_step() -> bool:
 				slide = vx * 1.1 * Game.TICK
 				vx = 0.0
 				squash = 4
+				Gore.splat(position, 4.0 if health.is_dead() else 2.0)
 				thrown_by = null
 				juggles = 0
 				t = 0
@@ -539,6 +549,7 @@ func knockdown_step() -> bool:
 			Effects.puff(get_parent(), position + Vector2(-signf(slide) * 8, 0), 3.0 + absf(slide))
 	if health.is_dead():
 		if t > 24:
+			Gore.pool(position + Vector2(-face * 6, 1), 9.0 + body_height * 0.06)
 			set_state(&"dead")
 			defeated.emit()
 		return false

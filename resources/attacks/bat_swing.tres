@@ -14,3 +14,4 @@ active_to = 0.17
 reach_to = 48.0
 hitstop_frames = 3
 screen_shake = 4.0
+blood = 1.3

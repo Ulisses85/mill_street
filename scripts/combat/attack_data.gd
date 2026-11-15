@@ -52,6 +52,8 @@ extends Resource
 @export var bowls := false
 ## Hits every enemy on screen, wherever they are (supers).
 @export var hits_whole_screen := false
+## How much blood a hit draws (1 = normal; blades and nails 2 or more). Options > Gore turns blood off.
+@export var blood := 1.0
 ## Power gained by the attacker per hit (0 = from damage).
 @export var power_gain := 0.0
 

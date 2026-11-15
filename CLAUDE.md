@@ -6,7 +6,7 @@ A 2D side-scrolling beat 'em up template plus a demo game: three levels with bos
 - `scripts/core/`: `unit.gd` is the base fighter (2.5D floor: node position = feet, `z` = height). Also `game.gd` (autoload: input, hit-stop, levels, save, `god_mode`, `fx_rng`), `level.gd`, and `sprite_animator.gd` (reads `sheet.json`).
 - `scripts/characters/`: `player.gd`, `enemy.gd` (AI, field of view, bosses, weapons).
 - `scripts/combat/`: `AttackData`, `ComboData`, `WeaponData` resources.
-- `scripts/systems/`: waves, camera, health, pickups, breakables, projectiles, effects, `sfx.gd` (audio controller).
+- `scripts/systems/`: waves, camera, health, pickups, breakables, projectiles, effects, `sfx.gd` (audio controller), `gore.gd` + `gore_piece.gd` (blood, stains, severed pieces; all behind the Gore option).
 - `scripts/ui/`: HUD, menus, touch controls. `scripts/debug/`: F1–F9 debug tools (debug builds only).
 - `scenes/`: characters, props, levels (generated), ui. `resources/`: attacks, combos, weapons, audio library, level list.
 - `assets/`: sprite sheets, items, level art, sfx, fonts. **Generated, do not hand-edit:** `assets/characters/*/sheet.*`, `assets/levels/*` and `scenes/levels/*`.
@@ -36,6 +36,7 @@ Screenshots for visual checks: `xvfb-run godot --path . --rendering-driver openg
 - Gameplay is tick-based at 60 Hz (`t` counts ticks in the current state). Times in resources are in seconds and converted with `* 60`.
 - Gameplay randomness uses the global RNG, seeded by the bot for reproducible runs. Cosmetic randomness (sound, debris, shake) uses `Game.fx_rng`, so it doesn't change gameplay.
 - Levels come from `art/levels/<id>/level.json`. Edit the spec and re-run the level kit and `make_levels.py`, not the `.tscn` files, unless you stop using the generator.
+- Gore is cosmetic and optional: call `Gore.spray/splat/pool/piece` (they do nothing when the option is off) and use `Game.fx_rng` there. Finishers: an enemy at or below `daze_at` health is dazed once; a player hit then kills it (blade weapon = decapitation, otherwise skull crush; a knockout with gore off). `AttackData.blood` scales the spray; `WeaponData.blade` and `breaks_into` describe weapons.
 - Every animation in `sheet.json` has `hand` + `weapon_angle` per frame (the weapon bone) and `active_frames` for attacks.
 
 ## Before committing

@@ -66,6 +66,7 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	_place_signposts()
+	Gore.setup(self)
 	Sfx.music(music)
 	if Game.current_level < 0:
 		Game.current_level = Game._index_of_current_scene()

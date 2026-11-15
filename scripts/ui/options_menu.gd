@@ -8,9 +8,10 @@ static func open(panel: MenuPanel, back: Callable, focus := 0) -> void:
 		["MUSIC  %s" % _bar(s.music), func(): _step(panel, back, 0, &"music")],
 		["SOUND  %s" % _bar(s.sfx), func(): _step(panel, back, 1, &"sfx")],
 		["SHAKE  %s" % ("ON" if s.shake else "OFF"), func(): _toggle(panel, back, 2, &"shake")],
+		["GORE  %s" % ("ON" if s.gore else "OFF"), func(): _toggle(panel, back, 3, &"gore")],
 	]
 	if not OS.has_feature("web") and not OS.has_feature("mobile"):
-		rows.append(["FULLSCREEN  %s" % ("ON" if s.fullscreen else "OFF"), func(): _toggle(panel, back, 3, &"fullscreen")])
+		rows.append(["FULLSCREEN  %s" % ("ON" if s.fullscreen else "OFF"), func(): _toggle(panel, back, 4, &"fullscreen")])
 	rows.append(["BACK", back])
 	panel.open("OPTIONS", "PRESS TO CHANGE", rows, Color.WHITE, true, focus)
 

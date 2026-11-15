@@ -149,7 +149,7 @@ var best_scores := {}
 ## Index into level_list.heroes of the hero the player picked.
 var hero := 0
 ## Player settings (Options menu), saved with the progress.
-var settings := {"music": 7, "sfx": 8, "fullscreen": false, "shake": true}
+var settings := {"music": 7, "sfx": 8, "fullscreen": false, "shake": true, "gore": true}
 
 
 func _load_progress() -> void:

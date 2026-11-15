@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/weapon_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/items/bottle.png" id="2"]
+[ext_resource type="Resource" path="res://resources/attacks/bottle_smash.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/attacks/enemy_bottle_smash.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/weapons/broken_bottle.tres" id="5"]
+
+[resource]
+script = ExtResource("1")
+texture = ExtResource("2")
+weapon_name = "BOTTLE"
+uses = 1
+enemy_uses = 1
+attack = ExtResource("3")
+enemy_attack = ExtResource("4")
+breaks_into = ExtResource("5")
