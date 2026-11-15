@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 attack_name = "Dash Attack"
-animation = &"dash_attack"
+animation = &"kick_2"
 damage = 10
 knockdown = true
 bowls = true

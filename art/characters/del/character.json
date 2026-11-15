@@ -2,12 +2,12 @@
   "id": "del",
   "display_name": "Del",
   "role": "player",
-  "concept": "Retired boxer who ran the Mill Street gym for thirty years. Heavy hands, steady pace: punch combo hits harder, slightly slower and tougher than the built-in hero.",
-  "target_height": 58,
+  "concept": "Del, the retired boxer, v4 look: shaved head, grey stubble, navy tracksuit with white stripes, white trainers, red boxing gloves. Art made with ChatGPT (art/characters/del/raw/v4_original_sheet.png), then corrected by tools/art/examples/fix_del_v4_sheet.py: floor poses rescaled, ghosted frames dropped, background removed. He has no kick art, so the kick slots are punches (he's a boxer).",
+  "target_height": 62,
   "source_facing": "right",
   "background": "none",
   "palette": {
-    "max_colors": 20
+    "max_colors": 48
   },
   "stats": {
     "max_hp": 110,
@@ -16,201 +16,189 @@
   "attacks": {
     "punch_1": {
       "attack_name": "Jab",
-      "damage": 6
+      "damage": 6,
+      "duration": 0.25,
+      "active_from": 0.05,
+      "active_to": 0.15
     },
     "punch_2": {
       "attack_name": "Cross",
-      "damage": 7
-    },
-    "punch_3": {
-      "attack_name": "Hook",
-      "damage": 11,
-      "reach_to": 34.0
+      "damage": 7,
+      "duration": 0.25,
+      "active_from": 0.15,
+      "active_to": 0.2
     },
     "kick_1": {
-      "attack_name": "Low Kick"
+      "attack_name": "Body Shot",
+      "duration": 0.25,
+      "active_from": 0.1,
+      "active_to": 0.2
+    },
+    "punch_3": {
+      "attack_name": "Haymaker",
+      "damage": 11,
+      "reach_to": 34.0,
+      "duration": 0.3,
+      "active_from": 0.15,
+      "active_to": 0.25
     },
     "kick_2": {
-      "attack_name": "Roundhouse"
+      "attack_name": "Haymaker"
+    },
+    "special": {
+      "duration": 0.4,
+      "active_from": 0.25,
+      "active_to": 0.4
+    },
+    "dash": {
+      "duration": 0.4,
+      "active_from": 0.1,
+      "active_to": 0.25
     }
   },
   "generator": {
-    "provider": "pixellab",
-    "prompt": "beat em up hero, stocky older retired boxer, white sleeveless vest, grey flat cap, grey stubble, hands wrapped in white boxing tape, dark grey tracksuit trousers, black boxing boots, full body",
-    "animations_requested": [
+    "provider": "chatgpt",
+    "source_sheet": "raw/v4_original_sheet.png",
+    "corrected_by": "tools/art/examples/fix_del_v4_sheet.py",
+    "missing": [
+      "8-frame idle/walk/run loops",
+      "kicks",
+      "special",
+      "dodge",
+      "dash_attack",
+      "slam",
       "block",
-      "getup",
-      "hurt",
-      "idle (boxing guard)",
-      "jump",
-      "kick (roundhouse, 8 frames)",
-      "knockdown",
-      "lead jab (punch_1)",
-      "overhead swing",
-      "punch (straight right)",
-      "run",
-      "walk"
-    ],
-    "pixellab_character_id": "0e276232-d3df-4c17-8f66-d420f313f981",
-    "base_image": "raw/base/east.png"
+      "taunt",
+      "win"
+    ]
   },
   "animations": {
     "idle": {
-      "source": "raw/idle_guard",
-      "fps": 6,
+      "source": "raw/v4/idle.png",
+      "frames": 5,
+      "fps": 7,
       "loop": true,
-      "note": "raw/idle frames 6,7,8,7 (guard only; 0-5 rise from the arms-down base pose)"
+      "align": "canvas"
     },
     "walk": {
-      "source": "raw/walk_loop",
+      "source": "raw/v4/walk.png",
+      "frames": 5,
+      "fps": 9,
+      "loop": true,
+      "align": "canvas"
+    },
+    "run": {
+      "source": "raw/v4/run.png",
+      "frames": 5,
       "fps": 12,
       "loop": true,
-      "note": "raw/walk_guard frames 1-8 (generated from idle frame 7 as the start frame; frame 0 is that start frame)"
+      "align": "canvas"
     },
     "punch": {
-      "source": "raw/punch_trim",
-      "fps": 18,
-      "active": [
-        5,
-        6
-      ],
-      "note": "raw/punch frames 2-8"
-    },
-    "kick": {
-      "source": "raw/kick_trim",
-      "fps": 18,
-      "active": [
-        3,
-        5
-      ],
-      "note": "raw/kick frames 2-8"
-    },
-    "hurt": {
-      "source": "raw/hurt",
-      "fps": 10
-    },
-    "block": {
-      "source": "raw/block_guard",
+      "source": "raw/v4/punch_2.png",
+      "frames": 5,
       "fps": 20,
       "loop": false,
-      "note": "raw/block frames 3-4: the generated block rises from the arms-down base pose; only the high guard is kept"
+      "align": "canvas",
+      "active": [
+        2,
+        3
+      ],
+      "note": "source for the synthesized moves"
     },
     "punch_1": {
-      "source": "raw/jab_lead_slot",
+      "source": "raw/v4/punch_1.png",
+      "frames": 5,
+      "fps": 18,
+      "loop": false,
+      "align": "canvas",
+      "active": [
+        2,
+        3
+      ]
+    },
+    "punch_2": {
+      "source": "raw/v4/punch_2.png",
+      "frames": 5,
       "fps": 20,
+      "loop": false,
+      "align": "canvas",
+      "active": [
+        2,
+        3
+      ]
+    },
+    "kick_1": {
+      "source": "raw/v4/punch_3_light.png",
+      "frames": 5,
+      "fps": 20,
+      "loop": false,
+      "align": "canvas",
+      "active": [
+        2,
+        3
+      ],
+      "note": "no kick art: the combo's third hit is a short body shot"
+    },
+    "punch_3": {
+      "source": "raw/v4/punch_3.png",
+      "frames": 4,
+      "fps": 15,
+      "loop": false,
+      "align": "canvas",
       "active": [
         1,
         2
       ],
-      "note": "raw/jab_lead frames 2-6: lead-hand (left) jab, generated from the guard start frame"
+      "note": "the heavy punch (lunge) as the finisher"
     },
-    "punch_2": {
-      "source": "raw/cross",
-      "fps": 18,
-      "active": [
-        3,
-        3
-      ],
-      "note": "raw/punch frames 4-8"
-    },
-    "punch_3": {
-      "source": "raw/hook",
-      "fps": 20,
-      "active": [
-        3,
-        4
-      ],
-      "note": "raw/punch frames 4-8, full extension held"
-    },
-    "kick_1": {
-      "source": "raw/lowkick",
-      "fps": 18,
-      "active": [
-        2,
-        3
-      ],
-      "note": "raw/kick frames 3,4,5,6,8"
-    },
-    "run": {
-      "source": "raw/run_loop",
-      "fps": 14,
-      "loop": true,
-      "note": "raw/run_lean frames 1-8: stronger forward lean than raw/run_guard (kept for reference)"
-    },
-    "jump": {
-      "source": "raw/jump_air",
-      "fps": 10,
-      "loop": false,
-      "note": "raw/jump frames 3-7: rise, tuck, legs down (the crouch would play in mid-air)"
-    },
-    "knockdown": {
-      "source": "raw/knockdown_fall",
+    "kick": {
+      "source": "raw/v4/punch_3.png",
+      "frames": 4,
       "fps": 15,
       "loop": false,
-      "note": "raw/knockdown_target frames 2-7: falls on his back; generated with raw/targets/lying_back.png as the end frame (two takes without it fell forward: raw/knockdown, raw/knockdown_back)",
+      "align": "canvas",
+      "active": [
+        1,
+        2
+      ],
+      "note": "no kick art: kick_2 (special, dash attack) is the heavy punch"
+    },
+    "jump": {
+      "source": "raw/v4/jump.png",
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "align": "canvas"
+    },
+    "hurt": {
+      "source": "raw/v4/hurt.png",
+      "frames": 3,
+      "fps": 10,
+      "loop": false,
+      "align": "canvas"
+    },
+    "knockdown": {
+      "source": "raw/v4/knockdown.png",
+      "frames": 5,
+      "fps": 12,
+      "loop": false,
       "align": "canvas"
     },
     "down": {
-      "source": "raw/down",
+      "source": "raw/v4/down.png",
+      "frames": 1,
       "fps": 10,
       "loop": true,
-      "note": "raw/knockdown_target frame 8 (lying on his back)",
       "align": "canvas"
     },
     "getup": {
-      "source": "raw/getup_rise",
-      "fps": 20,
+      "source": "raw/v4/getup.png",
+      "frames": 6,
+      "fps": 14,
       "loop": false,
-      "note": "raw/getup frames 1-6: from the lying frame to the guard (both passed as start and end frames)",
       "align": "canvas"
-    },
-    "swing": {
-      "source": "raw/swing_slot",
-      "fps": 20,
-      "active": [
-        2,
-        3
-      ],
-      "note": "raw/swing_overhead frames 4,5,6,6,7,8: downswing lands at 0.10 s to fit bat/pipe hit windows (0.10-0.17 s)"
-    },
-    "special": {
-      "source": "raw/special_slot",
-      "fps": 18,
-      "active": [
-        5,
-        7
-      ],
-      "note": "raw/special frames 1-8: turns to face the viewer, then a full-extension strike forward"
-    },
-    "dodge": {
-      "source": "raw/dodge_slot",
-      "fps": 20,
-      "loop": false,
-      "note": "raw/dodge frames 2-5 (12 ticks; the dodge lasts 13). The game moves him back and adds afterimages"
-    },
-    "dash_attack": {
-      "source": "raw/dash_slot",
-      "fps": 20,
-      "active": [
-        2,
-        4
-      ],
-      "note": "raw/dash_attack frames 1-8: low shoulder lean, straightens up"
-    },
-    "slam": {
-      "source": "raw/slam_slot",
-      "fps": 18,
-      "active": [
-        5,
-        6
-      ],
-      "note": "raw/slam_heave frames 1,2,3,5,6,7,8: reach, crouch and grab, heave both hands over his head. Generated with raw/targets/heave_overhead.png (swing_overhead frame 3) as the end frame; the first take (raw/slam) ended in a forward punch"
-    },
-    "taunt": {
-      "source": "raw/taunt_slot",
-      "fps": 12,
-      "loop": false,
-      "note": "raw/taunt frames 1-8 (40 ticks)"
     }
-  }
+  },
+  "_timing_note": "Attack timings are pinned to the values the game was balanced with (the old Del's), not read from this art's frame counts."
 }

@@ -27,7 +27,7 @@ active_to = 0.2
 
 [sub_resource type="Resource" id="kick_1"]
 script = ExtResource("1")
-attack_name = "Low Kick"
+attack_name = "Body Shot"
 animation = &"kick_1"
 damage = 7
 reach_to = 34.0
@@ -38,7 +38,7 @@ active_to = 0.2
 
 [sub_resource type="Resource" id="punch_3"]
 script = ExtResource("1")
-attack_name = "Hook"
+attack_name = "Haymaker"
 animation = &"punch_3"
 damage = 11
 knockdown = true
