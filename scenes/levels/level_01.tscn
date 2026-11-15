@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/level.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/levels/street/signpost.png" id="2"]
@@ -15,20 +15,21 @@
 [ext_resource type="Texture2D" path="res://assets/levels/street/barrel.png" id="13"]
 [ext_resource type="Texture2D" path="res://assets/levels/street/barrel_damaged.png" id="14"]
 [ext_resource type="Texture2D" path="res://assets/items/chips.png" id="15"]
-[ext_resource type="Resource" path="res://resources/weapons/knife.tres" id="16"]
+[ext_resource type="Resource" path="res://resources/weapons/machete.tres" id="16"]
 [ext_resource type="Script" path="res://scripts/systems/pickup.gd" id="17"]
-[ext_resource type="Resource" path="res://resources/weapons/pipe.tres" id="18"]
-[ext_resource type="Resource" path="res://resources/weapons/bat.tres" id="19"]
-[ext_resource type="Script" path="res://scripts/systems/wave_manager.gd" id="20"]
-[ext_resource type="Script" path="res://scripts/systems/wave.gd" id="21"]
-[ext_resource type="PackedScene" path="res://scenes/characters/thug.tscn" id="22"]
-[ext_resource type="Script" path="res://scripts/systems/level_bound.gd" id="23"]
-[ext_resource type="PackedScene" path="res://scenes/characters/bouncer.tscn" id="24"]
-[ext_resource type="PackedScene" path="res://scenes/characters/boss_foreman.tscn" id="25"]
-[ext_resource type="Script" path="res://scripts/systems/beat_camera.gd" id="26"]
-[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="27"]
-[ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="28"]
-[ext_resource type="PackedScene" path="res://scenes/ui/level_menus.tscn" id="29"]
+[ext_resource type="Resource" path="res://resources/weapons/bottle.tres" id="18"]
+[ext_resource type="Resource" path="res://resources/weapons/pipe.tres" id="19"]
+[ext_resource type="Resource" path="res://resources/weapons/bat.tres" id="20"]
+[ext_resource type="Script" path="res://scripts/systems/wave_manager.gd" id="21"]
+[ext_resource type="Script" path="res://scripts/systems/wave.gd" id="22"]
+[ext_resource type="PackedScene" path="res://scenes/characters/thug.tscn" id="23"]
+[ext_resource type="Script" path="res://scripts/systems/level_bound.gd" id="24"]
+[ext_resource type="PackedScene" path="res://scenes/characters/bouncer.tscn" id="25"]
+[ext_resource type="PackedScene" path="res://scenes/characters/boss_foreman.tscn" id="26"]
+[ext_resource type="Script" path="res://scripts/systems/beat_camera.gd" id="27"]
+[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="28"]
+[ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="29"]
+[ext_resource type="PackedScene" path="res://scenes/ui/level_menus.tscn" id="30"]
 
 [node name="Level01" type="Node2D"]
 script = ExtResource("1")
@@ -98,114 +99,120 @@ damaged_texture = ExtResource("10")
 spawn_weapon = ExtResource("16")
 
 [node name="Pickup1" type="Node2D" parent="World"]
-position = Vector2(990, 214)
+position = Vector2(400, 226)
 script = ExtResource("17")
 kind = 1
 weapon = ExtResource("18")
 
 [node name="Pickup2" type="Node2D" parent="World"]
-position = Vector2(1560, 196)
+position = Vector2(990, 214)
 script = ExtResource("17")
 kind = 1
 weapon = ExtResource("19")
 
-[node name="WaveManager" type="Node2D" parent="World"]
-y_sort_enabled = true
-script = ExtResource("20")
+[node name="Pickup3" type="Node2D" parent="World"]
+position = Vector2(1560, 196)
+script = ExtResource("17")
+kind = 1
+weapon = ExtResource("20")
 
-[node name="Wave1" type="Node2D" parent="World/WaveManager"]
+[node name="WaveManager" type="Node2D" parent="World"]
 y_sort_enabled = true
 script = ExtResource("21")
 
-[node name="Thug1" parent="World/WaveManager/Wave1" instance=ExtResource("22")]
+[node name="Wave1" type="Node2D" parent="World/WaveManager"]
+y_sort_enabled = true
+script = ExtResource("22")
+
+[node name="Thug1" parent="World/WaveManager/Wave1" instance=ExtResource("23")]
 position = Vector2(500, 190)
 start_direction = 1
 
-[node name="Thug2" parent="World/WaveManager/Wave1" instance=ExtResource("22")]
+[node name="Thug2" parent="World/WaveManager/Wave1" instance=ExtResource("23")]
 position = Vector2(560, 228)
 start_direction = -1
 
-[node name="Thug3" parent="World/WaveManager/Wave1" instance=ExtResource("22")]
+[node name="Thug3" parent="World/WaveManager/Wave1" instance=ExtResource("23")]
 position = Vector2(760, 200)
 enable_fov = false
 
 [node name="LevelBound" type="Marker2D" parent="World/WaveManager/Wave1"]
 position = Vector2(700, 0)
-script = ExtResource("23")
+script = ExtResource("24")
 
 [node name="Wave2" type="Node2D" parent="World/WaveManager"]
 y_sort_enabled = true
-script = ExtResource("21")
+script = ExtResource("22")
 
-[node name="Thug4" parent="World/WaveManager/Wave2" instance=ExtResource("22")]
+[node name="Thug4" parent="World/WaveManager/Wave2" instance=ExtResource("23")]
 position = Vector2(1040, 186)
 start_direction = -1
 
-[node name="Thug5" parent="World/WaveManager/Wave2" instance=ExtResource("22")]
+[node name="Thug5" parent="World/WaveManager/Wave2" instance=ExtResource("23")]
 position = Vector2(1130, 230)
 start_direction = 1
 
-[node name="Thug6" parent="World/WaveManager/Wave2" instance=ExtResource("22")]
+[node name="Thug6" parent="World/WaveManager/Wave2" instance=ExtResource("23")]
 position = Vector2(1360, 200)
 enable_fov = false
 
-[node name="Thug7" parent="World/WaveManager/Wave2" instance=ExtResource("22")]
+[node name="Thug7" parent="World/WaveManager/Wave2" instance=ExtResource("23")]
 position = Vector2(1400, 222)
 enable_fov = false
 
 [node name="LevelBound" type="Marker2D" parent="World/WaveManager/Wave2"]
 position = Vector2(1300, 0)
-script = ExtResource("23")
+script = ExtResource("24")
 
 [node name="Wave3" type="Node2D" parent="World/WaveManager"]
 y_sort_enabled = true
-script = ExtResource("21")
+script = ExtResource("22")
 
-[node name="Bouncer8" parent="World/WaveManager/Wave3" instance=ExtResource("24")]
+[node name="Bouncer8" parent="World/WaveManager/Wave3" instance=ExtResource("25")]
 position = Vector2(1640, 200)
 start_direction = -1
 
-[node name="Thug9" parent="World/WaveManager/Wave3" instance=ExtResource("22")]
+[node name="Thug9" parent="World/WaveManager/Wave3" instance=ExtResource("23")]
 position = Vector2(1700, 180)
 start_direction = 1
 
-[node name="Thug10" parent="World/WaveManager/Wave3" instance=ExtResource("22")]
+[node name="Thug10" parent="World/WaveManager/Wave3" instance=ExtResource("23")]
 position = Vector2(1960, 226)
 enable_fov = false
 
-[node name="Thug11" parent="World/WaveManager/Wave3" instance=ExtResource("22")]
+[node name="Thug11" parent="World/WaveManager/Wave3" instance=ExtResource("23")]
 position = Vector2(2000, 196)
 enable_fov = false
 
 [node name="LevelBound" type="Marker2D" parent="World/WaveManager/Wave3"]
 position = Vector2(1900, 0)
-script = ExtResource("23")
+script = ExtResource("24")
 
 [node name="Wave4" type="Node2D" parent="World/WaveManager"]
 y_sort_enabled = true
-script = ExtResource("21")
+script = ExtResource("22")
 
-[node name="Foreman12" parent="World/WaveManager/Wave4" instance=ExtResource("25")]
+[node name="Foreman12" parent="World/WaveManager/Wave4" instance=ExtResource("26")]
 position = Vector2(2420, 206)
 start_direction = -1
 
-[node name="Thug13" parent="World/WaveManager/Wave4" instance=ExtResource("22")]
+[node name="Thug13" parent="World/WaveManager/Wave4" instance=ExtResource("23")]
 position = Vector2(2300, 184)
 start_direction = 1
 
-[node name="Thug14" parent="World/WaveManager/Wave4" instance=ExtResource("22")]
+[node name="Thug14" parent="World/WaveManager/Wave4" instance=ExtResource("23")]
 position = Vector2(2590, 236)
 enable_fov = false
 
 [node name="LevelBound" type="Marker2D" parent="World/WaveManager/Wave4"]
 position = Vector2(2600, 0)
-script = ExtResource("23")
+script = ExtResource("24")
 
 [node name="Foreground" type="Node2D" parent="."]
 z_index = 50
 
 [node name="BeatCamera" type="Camera2D" parent="."]
-script = ExtResource("26")
+script = ExtResource("27")
 view_area = Rect2(0, 0, 2600, 270)
 
 [node name="HUD" type="CanvasLayer" parent="."]
@@ -218,9 +225,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("27")
-
-[node name="TouchControls" type="CanvasLayer" parent="."]
 script = ExtResource("28")
 
-[node name="LevelMenus" parent="." instance=ExtResource("29")]
+[node name="TouchControls" type="CanvasLayer" parent="."]
+script = ExtResource("29")
+
+[node name="LevelMenus" parent="." instance=ExtResource("30")]

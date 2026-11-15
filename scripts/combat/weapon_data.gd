@@ -12,6 +12,10 @@ extends Resource
 @export var uses := 10
 @export var enemy_uses := 7
 @export var thrown := false
+## Blades cut: more blood, and finishers with them take the head off.
+@export var blade := false
+## When its uses run out it turns into this instead of breaking (a bottle becomes a broken bottle).
+@export var breaks_into: WeaponData
 
 @export_group("Melee")
 @export var attack: AttackData

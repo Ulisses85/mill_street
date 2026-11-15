@@ -41,6 +41,13 @@ extends Unit
 @export_group("Grab ")
 @export var can_be_grabbed := true
 
+@export_group("Finishers")
+## At or below this share of health a hit leaves it dazed: wobbling and open to a finisher
+## (any player hit kills it: skull crush, or decapitation with a blade). 0 = never. Bosses are never dazed.
+@export_range(0.0, 1.0, 0.05) var daze_at := 0.3
+@export_range(0.5, 5.0, 0.1, "suffix:s") var daze_time := 2.4
+@export var finisher_score := 300
+
 @export_group("Special Moves")
 ## Chance (0-100) to backstep out of the way when the player starts an attack in front of it.
 @export_range(0, 100) var dodge_chance := 0
@@ -94,6 +101,7 @@ var special_cd := 0
 var raged := false
 var _seen_player_attack := false
 var held_player: Unit = null
+var dazed_once := false
 
 
 func _ready() -> void:
@@ -131,6 +139,16 @@ func _tick() -> void:
 		&"idle", &"approach":
 			if not _maybe_dodge(p):
 				_state_chase(p)
+		&"dazed":
+			body.rotation = sin(t * 0.22) * 0.09
+			if t == 1:
+				Effects.float_text(get_parent(), position + Vector2(0, -body_height - 10), "FINISH!", Color("#ffd23a"))
+			if t % 20 == 0:
+				Gore.spray(position, body_height * 0.8, float(-face), 1, 0.5)
+			if t >= int(daze_time * 60.0):
+				body.rotation = 0.0
+				cooldown = 20
+				set_state(&"idle", &"idle")
 		&"evade":
 			position.x -= face * 170.0 * Game.TICK * (1.0 - float(t) / 16.0)
 			if t % 2 == 0:
@@ -296,7 +314,13 @@ func _state_chase(p: Unit) -> void:
 	var side := -1.0 if position.x < p.position.x else 1.0
 	var cur := _current_attack()
 	var reach := cur.reach_to if cur else 28.0
-	var tx := p.position.x + side * ((wait_distance + float(spacing_slot % 3) * 14.0) if hang else reach - 10.0)
+	var off := (wait_distance + float(spacing_slot % 3) * 14.0) if hang else reach - 10.0
+	var tx := p.position.x + side * off
+	# Never fight from outside the screen: if that spot is past the edge the player is pinned to, take the other side.
+	if not hang and Level.current and Level.current.camera:
+		var cx := Level.view_center_x()
+		if absf(tx - cx) > 228.0 and absf(p.position.x - side * off - cx) <= 228.0:
+			tx = p.position.x - side * off
 	var ty := p.position.y
 	if hang and Level.current:
 		ty = clampf(p.position.y + (-20.0 if spacing_slot % 2 == 1 else 20.0), Level.current.walk_area.position.y, Level.current.walk_area.end.y)
@@ -436,6 +460,9 @@ func _check_rage() -> void:
 
 # ---------- damage ----------
 func receive_hit(attacker: Node2D, a: AttackData) -> bool:
+	if state == &"dazed" and attacker is Unit and (attacker as Unit).team == Team.PLAYER and t > 6:
+		_finisher(attacker as Unit, a)
+		return true
 	var from_front := signf(attacker.position.x - position.x) == float(face)
 	if from_front and not a.knockdown and state in [&"idle", &"approach"] and randf() * 100.0 < defend_chance:
 		set_state(&"defend", &"defend")
@@ -445,7 +472,72 @@ func receive_hit(attacker: Node2D, a: AttackData) -> bool:
 		Effects.float_text(get_parent(), position + Vector2(0, -body_height - 8), "BLOCK", Color("#bfe4ff"))
 	if was_waiting and state == &"wait":
 		activate()
+	# Badly hurt and still standing: dazed, open to a finisher.
+	if ok and state == &"hurt" and not is_boss and not dazed_once and daze_at > 0.0 and is_alive() \
+			and float(health.current_hp) / maxf(health.max_hp, 1.0) <= daze_at:
+		dazed_once = true
+		_drop_held_player()
+		drop_weapon()
+		set_state(&"dazed", &"dazed" if body.has_animation(&"dazed") else &"hurt")
 	return ok
+
+
+## The killing blow on a dazed enemy. Blades take the head off; fists and clubs crush it.
+## With gore off it is a hard knockout instead.
+func _finisher(by: Unit, a: AttackData) -> void:
+	var dir := signf(position.x - by.position.x)
+	if dir == 0.0:
+		dir = float(by.face)
+	var blade: bool = by.held_weapon != null and by.held_weapon.blade and a == by.held_weapon.attack
+	body.rotation = 0.0
+	Game.request_hitstop(12)
+	Game.request_shake(9.0)
+	Game.slowmo = 36
+	Game.add_score(finisher_score)
+	if by.has_method(&"add_power"):
+		by.call(&"add_power", 20.0)
+	Sfx.play(&"ko")
+	if not Gore.on():
+		Effects.float_text(get_parent(), position + Vector2(0, -body_height - 12), "KNOCKOUT!", Color("#ffd23a"))
+		health.damage(99999, by)
+		_hit_feedback(a, dir)
+		knockdown(dir, 2.0)
+		return
+	Effects.float_text(get_parent(), position + Vector2(0, -body_height - 12), "DECAPITATED!" if blade else "SKULL CRUSHED!", Color("#ff3a2a"))
+	Effects.flash_screen(self, Color(0.8, 0.05, 0.05, 0.2), 10)
+	Effects.impact(get_parent(), position + Vector2(-dir * 4, -body_height * 0.9), dir, 20.0, true)
+	# Cut the current frame in two at the neck: the head, and the body that falls over.
+	var cell := body.region_rect.size
+	var anchor := -body.offset
+	var neck := anchor.y - body_height * 0.80
+	var head := Rect2(anchor.x - 14, anchor.y - body_height - 3, 28, neck - (anchor.y - body_height - 3))
+	var torso := Rect2(anchor.x - 36, neck, 72, anchor.y - neck)
+	head = head.intersection(Rect2(Vector2.ZERO, cell))
+	torso = torso.intersection(Rect2(Vector2.ZERO, cell))
+	var corpse := Gore.piece(self, torso, Vector3.ZERO, 0.0, dir * PI * 0.5)
+	if corpse:
+		corpse.bleed_ticks = 70
+		corpse.rest_ticks = 420
+	if blade:
+		var h := Gore.piece(self, head, Vector3(dir * Game.fx_rng.randf_range(1.6, 2.6), Game.fx_rng.randf_range(-0.2, 0.2), 4.6), dir * 0.35)
+		if h:
+			h.bleed_ticks = 50
+			h.rest_ticks = 360
+		Gore.spray(position, body_height * 0.85, dir, 30, 1.6)
+	else:
+		Gore.spray(position, body_height * 0.9, dir, 46, 2.0)
+		Gore.spray(position, body_height * 0.9, -dir, 14, 1.2)
+		for i in 9:      # skull bits and teeth
+			Effects.chunk(get_parent(), position + Vector2(0, -body_height * 0.9), Color("#f1ece2") if i % 3 else Color("#b5121b"),
+				Vector2(dir * Game.fx_rng.randf_range(0.5, 3.0), Game.fx_rng.randf_range(-4.0, -1.5)), position.y, Vector2(2, 2) if i % 3 else Vector2(3, 3))
+	Gore.splat(position + Vector2(dir * 10, 0), 8.0)
+	body.visible = false
+	var shadow := get_node_or_null("Shadow")
+	if shadow:
+		shadow.visible = false
+	health.damage(99999, by)
+	set_state(&"dead")
+	defeated.emit()
 
 
 func hurt(dir: float, push: float) -> void:
