@@ -143,7 +143,7 @@ A bot plays the level with real inputs and walks around anything that blocks it.
 Logs are uploaded as the `bot-logs` artifact.
 
 ## Roadmap
-- ~~Milestone 2: full Osarion parity~~ ✔
+- ~~Milestone 2: full parity~~ ✔
 - **Milestone 3: AI art pipeline.**
   - Part 1 ✔ New enemies from AI art: `tools/art/` (importer, enemy builder, Retro Diffusion client) and Claude Code skills `/ideate`, `/new-enemy` and `/character-art` with PixelLab MCP. Example: the Bouncer (Mill Street wave 3, Canal Wharf wave 4).
   - Part 2 ✔ AI-made hero: Del, the retired boxer, built with `tools/art/make_player.py` and `/new-hero`.
