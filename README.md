@@ -102,6 +102,8 @@ python3 tools/art/make_enemy.py art/characters/bruiser/character.json
 - Every frame also writes the weapon hand's position and angle (read from the hand bone) and a normal map, so `Light2D`s shade the sprite (`tests/normal_map_check.tscn`).
 - HD sheets are trimmed and packed (`rects` in `sheet.json`) and drawn at `scale` 0.25 with smooth filtering. The project uses `canvas_items` stretch, so HD art is drawn at window resolution while pixel art stays crisp.
 - Renders (`raw/render/`) are not committed; the packed sheet is. A paint-over pass can put repainted frames in `raw/paint/<anim>/NN.png`, which `pack_sheet.py` prefers.
+- `heavy` (level 1) is made with MPFB, the MakeHuman add-on for Blender (`"model": "mpfb"`, `tools/blender/mpfb_character.py`): a rigged human from sliders (`macros`, `targets`), clothes painted onto body regions and puffed out. MPFB's code is GPL-3; its bundled body, targets and rigs are CC0, so the characters can ship. Install the MPFB extension in Blender first.
+- Poses are applied by direction (`rig.set_pose` with a `bone_map`), so any humanoid rig works: MPFB's, Rigify's, or a `.blend` with a `"bone_map"` in the spec.
 - `bruiser` (level 1) is the sample: a puppet built from simple shapes by `tools/blender/sample_character.py`, to be replaced by AI-made models (Qwen-Image → TRELLIS.2 → Rigify).
 
 ## Procedural art pipeline (v0)

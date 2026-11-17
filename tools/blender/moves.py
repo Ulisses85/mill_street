@@ -101,7 +101,7 @@ LOOPS = {"idle": idle, "walk": walk, "run": run, "lurk": lurk, "grabbed": grabbe
 # ------------------------------------------------------------------ one-shots (key poses)
 PUNCH_WIND = _over(GUARD, chest=6, spine=0, upper_arm__R=12, forearm__R=125, upper_arm__L=70, forearm__L=70)
 PUNCH_HIT = _over(GUARD, hips=[0, 0.1, -0.05], spine=-12, chest=-18, neck=12, head=6,
-                  upper_arm__R=100, forearm__R=-2, hand__R=-4, upper_arm__L=25, forearm__L=110,
+                  upper_arm__R=118, forearm__R=-4, hand__R=-4, upper_arm__L=25, forearm__L=110,
                   thigh__L=28, shin__L=-24, thigh__R=-22, shin__R=-6)
 SWING_WIND = _over(GUARD, chest=12, spine=6, head=0, upper_arm__R=175, forearm__R=40, hand__R=10,
                    upper_arm__L=40, forearm__L=60)
