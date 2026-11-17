@@ -86,6 +86,8 @@ static func ghost(u: Unit, tint := Color(0.55, 0.8, 1.0, 0.6), frames := 14) -> 
 	g.centered = false
 	g.offset = b.offset
 	g.flip_h = b.flip_h
+	g.scale = b.scale
+	g.texture_filter = b.texture_filter
 	g.position = u.position + b.position
 	g.z_index = u.z_index
 	g.modulate = tint

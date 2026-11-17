@@ -509,9 +509,11 @@ func _finisher(by: Unit, a: AttackData) -> void:
 	# Cut the current frame in two at the neck: the head, and the body that falls over.
 	var cell := body.region_rect.size
 	var anchor := -body.offset
-	var neck := anchor.y - body_height * 0.80
-	var head := Rect2(anchor.x - 14, anchor.y - body_height - 3, 28, neck - (anchor.y - body_height - 3))
-	var torso := Rect2(anchor.x - 36, neck, 72, anchor.y - neck)
+	var k := 1.0 / body.res                 # game units -> texture pixels (HD sheets are 4x)
+	var top := anchor.y - (body_height + 3) * k
+	var neck := anchor.y - body_height * 0.80 * k
+	var head := Rect2(anchor.x - 14 * k, top, 28 * k, neck - top)
+	var torso := Rect2(anchor.x - 36 * k, neck, 72 * k, anchor.y - neck)
 	head = head.intersection(Rect2(Vector2.ZERO, cell))
 	torso = torso.intersection(Rect2(Vector2.ZERO, cell))
 	var corpse := Gore.piece(self, torso, Vector3.ZERO, 0.0, dir * PI * 0.5)
