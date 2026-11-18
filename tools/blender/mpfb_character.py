@@ -27,7 +27,7 @@ import os
 
 import bpy
 
-PKG = "bl_ext.user_default.mpfb"
+PKG = "bl_ext.user_default.mpfb"   # replaced by the real name at run time (see _ensure_mpfb)
 
 # canonical bone -> the MPFB "default" rig bones it drives (each is pointed the same way)
 BONE_MAP = {
@@ -56,10 +56,16 @@ def _svc(mod, name):
 
 
 def _ensure_mpfb():
+    """Find MPFB whichever way it was installed: from extensions.blender.org it is
+    bl_ext.blender_org.mpfb, from a zip on disk bl_ext.user_default.mpfb, as a legacy add-on mpfb."""
+    global PKG
     import addon_utils
     bpy.ops.wm.read_userpref()
-    if PKG not in {m.__name__ for m in addon_utils.modules(refresh=True)}:
+    names = [m.__name__ for m in addon_utils.modules(refresh=True)]
+    found = [n for n in names if n == "mpfb" or (n.startswith("bl_ext.") and n.endswith(".mpfb"))]
+    if not found:
         raise SystemExit("MPFB is not installed in this Blender (see tools/blender/mpfb_character.py)")
+    PKG = found[0]
     addon_utils.enable(PKG, default_set=True)
 
 
