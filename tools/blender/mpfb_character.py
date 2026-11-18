@@ -60,7 +60,14 @@ def _ensure_mpfb():
     bl_ext.blender_org.mpfb, from a zip on disk bl_ext.user_default.mpfb, as a legacy add-on mpfb."""
     global PKG
     import addon_utils
-    bpy.ops.wm.read_userpref()
+    enabled = [n for n in bpy.context.preferences.addons.keys()
+               if n == "mpfb" or (n.startswith("bl_ext.") and n.endswith(".mpfb"))]
+    if enabled:
+        # Already on, e.g. in a live Blender driven through the MCP add-on. Reloading the
+        # preferences here would re-register every add-on and drop the MCP connection.
+        PKG = enabled[0]
+        return
+    bpy.ops.wm.read_userpref()          # headless runs start from factory settings
     names = [m.__name__ for m in addon_utils.modules(refresh=True)]
     found = [n for n in names if n == "mpfb" or (n.startswith("bl_ext.") and n.endswith(".mpfb"))]
     if not found:
