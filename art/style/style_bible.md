@@ -1,7 +1,8 @@
 # Mill Street style bible
 
-The rules every art agent and every prompt starts from. Version 2.1: written after the first
-Qwen-Image tests (#33) and tuned with three style-bible tests (#54, passed); the look, numbers and prompt
+The rules every art agent and every prompt starts from. Version 2.2: written after the first
+Qwen-Image tests (#33), tuned with three style-bible tests (#54, passed) and the first agentic
+dry run (#44); the look, numbers and prompt
 templates keep being tuned as tests come in.
 Change this file, not individual prompts, when the house style changes.
 
@@ -42,6 +43,11 @@ character: square crops the legs. Wide 1664 x 928 is for side-by-side front + si
 - the build in body terms: `barrel chest, broad shoulders, thick muscular arms under the jacket
   sleeves` ("heavy-set" comes out as a big belly; "muscular arms" alone strips a sleeve off)
 - clothing that must stay on, said outright: `jacket sleeves on both arms, arms covered by the sleeves`
+- **no brands, said in the positive prompt**: `plain unbranded white trainers with no logo`,
+  `plain cap with no logo or label`. "logo" in the negative alone doesn't remove swoosh-like
+  marks, even at CFG 4 (#44), and real brand marks are a trademark risk
+- orientation described by what is seen, not by a word like "backwards": `cap turned backwards,
+  the peak pointing behind his head over the back of the neck`
 - a simple pose: `fists up in a boxing guard, lead fist held out in front of the face`. The
   look image's pose is reference only: the in-game poses come from `tools/blender/moves.py`,
   so the guard's silhouette is checked on the Blender render, not here. Qwen ignores finer pose
@@ -97,12 +103,18 @@ reload on every separate run (about a minute). The generator agent therefore:
 - unloads Ollama models before a batch and leaves ComfyUI idle afterwards (both need ~20 GB)
 - restarts ComfyUI between sessions: idle, it keeps 7-8 GB of system RAM despite `--cache-none`
   (the text encoder isn't freed, #54)
-- names outputs `art/characters/<id>/looks/<view>_<seed>.png` and keeps the prompt and seed in
-  a sidecar `.json`, so any image can be reproduced
+- names outputs `art/characters/<id>/looks/<view>_<variant>_<seed>.png` and keeps the prompt and
+  seed in a sidecar `.json`, so any image can be reproduced
+- **prompt variants are separate submissions**, with a fresh ComfyUI between them: with
+  `--cache-none` each new prompt reloads the text encoder mid-batch and system RAM dropped to
+  1.4 GB (#44). Seed-only batches of one prompt stay one submission
+- always runs `~/ai/memwatch.py`; a job it interrupts is retried once on a freshly restarted
+  ComfyUI, then the agent stops and asks
 
 ## Review checklist (art director agent)
 
-Run it on the 50-step image. Reject a look image if: any part of the body is cropped; the
+Run it on the 50-step image, **at full size first** (logos and labels vanish at sprite size),
+then shrunk. Reject a look image if: any brand mark or logo shows (trainers, caps, chests); any part of the body is cropped; the
 background isn't plain; a spelled-out feature is wrong (hair, beard, colours, the accent); the
 view isn't facing right in a near side view, as the renderer shows characters (game view); a
 sleeve or other stated clothing is missing; there is more than one figure; there is text or a logo;
