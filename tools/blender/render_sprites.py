@@ -20,7 +20,8 @@ The spec's "source" block says what to render and how it looks:
       "outline_px": 4,                     outline thickness in texture pixels
       "yaw_deg": 28, "tilt_deg": 8,        turn the body towards the camera; look down a little
       "light": [-0.5, 0.7, 0.6],           light direction in camera space (x right, y up, z towards camera)
-      "engine": "CYCLES"                   or BLENDER_EEVEE (faster with a GPU)
+      "engine": "CYCLES",                  or BLENDER_EEVEE (needs no HIP/CUDA, only the display driver)
+      "device": "auto"                     Cycles: auto (GPU if found), GPU or CPU
     },
     "animations": {"punch": {"move": "punch", "frames": 6, "fps": 20, "active": [2, 3]}, ...}
 
@@ -135,6 +136,31 @@ def normal_material(outline: bool):
 
 
 # ------------------------------------------------------------------ scene
+def use_gpu() -> str | None:
+    """Turn on Cycles GPU rendering if the machine has a supported card (HIP for AMD, OptiX/CUDA for
+    NVIDIA, ...). Factory settings start with GPU rendering off, so this runs every time. Integrated
+    GPUs listed under the same backend (they show the CPU's name) are skipped: they slow a big card down."""
+    try:
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+    except KeyError:
+        return None
+    for kind in ("OPTIX", "CUDA", "HIP", "ONEAPI", "METAL"):
+        try:
+            prefs.compute_device_type = kind
+        except TypeError:
+            continue
+        prefs.get_devices()
+        gpus = [d for d in prefs.devices if d.type == kind]
+        big = [d for d in gpus if "processor" not in d.name.lower()] or gpus
+        if not big:
+            continue
+        for d in prefs.devices:
+            d.use = d in big
+        print("cycles GPU:", kind, ", ".join(d.name for d in big))
+        return kind
+    return None
+
+
 def setup_scene(src: dict):
     sc = bpy.context.scene
     scale = float(src.get("scale", 4))
@@ -147,7 +173,8 @@ def setup_scene(src: dict):
     pixel = src.get("look", "comic") == "pixel"
     if sc.render.engine == "CYCLES":
         cy = sc.cycles
-        cy.device = "CPU"
+        want = src.get("device", "auto")         # auto: GPU when there is one, else CPU
+        cy.device = "GPU" if want != "CPU" and use_gpu() else "CPU"
         cy.samples = 1 if pixel else 8
         cy.use_adaptive_sampling = False
         cy.use_denoising = False
