@@ -1,7 +1,7 @@
 # Mill Street style bible
 
-The rules every art agent and every prompt starts from. Version 1: written after the first
-Qwen-Image tests (#33) and tuned with the style-bible test (#54); the look, numbers and prompt
+The rules every art agent and every prompt starts from. Version 2: written after the first
+Qwen-Image tests (#33) and tuned with two style-bible tests (#54); the look, numbers and prompt
 templates keep being tuned as tests come in.
 Change this file, not individual prompts, when the house style changes.
 
@@ -29,28 +29,32 @@ character: square crops the legs. Wide 1664 x 928 is for side-by-side front + si
 
 **Always in the prompt:**
 - `full body from head to toe, feet and shoes fully visible, standing, whole figure in frame`
-- the view: `strict side profile view, facing right, body and head in profile` (game view) or
-  `front view` (for the 3D model). "Side view" alone comes out three-quarter.
+- the view: `side view, facing right, body turned slightly towards the camera` (game view) or
+  `front view` (reference for building the 3D model). The game's renderer turns characters 28°
+  towards the camera (`yaw_deg: 28`), so a slight three-quarter **is** the game view; three
+  wordings asking Qwen for a strict profile all failed anyway (#54).
 - `plain flat light grey background, no floor, no shadow, no scenery, no text`
 - the style line (below)
 - every distinctive feature spelled out, never implied: `completely bald shiny head` (not
   "bald" alone: it drifts to a buzz cut), `full thick beard`, the exact clothing and colours
 - the accent **and where it shows**: `bright orange inner lining clearly visible at the collar and
   the open front` (a bare "with orange lining" mostly disappears)
-- the build in body terms: `barrel chest, broad shoulders, thick muscular arms` ("heavy-set"
-  comes out as a big belly)
+- the build in body terms: `barrel chest, broad shoulders, thick muscular arms under the jacket
+  sleeves` ("heavy-set" comes out as a big belly; "muscular arms" alone strips a sleeve off)
+- clothing that must stay on, said outright: `jacket sleeves on both arms, arms covered by the sleeves`
 - a pose that reads in silhouette: `fists up in a boxing guard, lead fist held out in front of
-  the face, clear gap between arms and body` (fists in front of the chest vanish inside the
-  outline at 250 px)
+  the face, rear fist up by the chin, clear gap between arms and body` (a fist in front of the
+  chest vanishes inside the outline at 250 px)
 
 **Style line** (paste as is):
 `comic book illustration, bold black ink outlines, flat cel shading with two tones, hard-edged shadows, no gradients, 1990s British street brawler video game character design, clean readable silhouette`
 
-Qwen still leans towards soft, painterly shading. That's acceptable for look images: the real
-cel look comes from the Blender render and the paint-over.
+Qwen still leans towards soft, painterly shading, and more prompt words don't change it (#54).
+That's acceptable for look images: the real cel look comes from the Blender render and the
+paint-over. Don't spend more prompt words on shading.
 
 **Negative prompt** (one line, paste as is; 50-step runs only, see Lightning below):
-`cropped, cut off, close-up, portrait, half body, multiple people, background scenery, text, logo, watermark, blurry, three-quarter view, front view, soft shading, airbrush, gradient, painterly, realistic`
+`cropped, cut off, close-up, portrait, half body, multiple people, background scenery, text, logo, watermark, blurry, sleeveless, bare arms, back view`
 
 **Prompt template:**
 ```
@@ -60,7 +64,7 @@ cel look comes from the Blender render and the paint-over.
 
 Example (the test character):
 ```
-comic book illustration, bold black ink outlines, flat cel shading with two tones, hard-edged shadows, no gradients, 1990s British street brawler video game character design, clean readable silhouette. Strict side profile view, facing right, body and head in profile. A street brawler with a barrel chest, broad shoulders and thick muscular arms, big fists, completely bald shiny head, full thick dark beard, open green bomber jacket with bright orange inner lining clearly visible at the collar and the open front, white T-shirt, blue jeans, brown boots. Full body from head to toe, feet and shoes fully visible, standing, whole figure in frame, plain flat light grey background, no floor, no shadow, no scenery, no text. Fists up in a boxing guard, lead fist held out in front of the face, clear gap between arms and body.
+comic book illustration, bold black ink outlines, flat cel shading with two tones, hard-edged shadows, no gradients, 1990s British street brawler video game character design, clean readable silhouette. Side view, facing right, body turned slightly towards the camera. A street brawler with a barrel chest, broad shoulders and thick muscular arms under the jacket sleeves, big fists, completely bald shiny head, full thick dark beard, open green bomber jacket with bright orange inner lining clearly visible at the collar and the open front, jacket sleeves on both arms, white T-shirt, blue jeans, brown boots. Full body from head to toe, feet and shoes fully visible, standing, whole figure in frame, plain flat light grey background, no floor, no shadow, no scenery, no text. Fists up in a boxing guard, lead fist held out in front of the face, rear fist up by the chin, clear gap between arms and body.
 ```
 
 ## Generation settings
@@ -68,7 +72,7 @@ comic book illustration, bold black ink outlines, flat cel shading with two tone
 | Use | Settings | Time on the RX 7900 XTX |
 |---|---|---|
 | Exploring looks | Lightning LoRA, 4 steps, CFG 1 | about 75 s model load per batch, then about 12.5 s per image at 928x1664 (#54) |
-| Final approved look | Template default, 50 steps, CFG 4 | about 5 min at 928x1664 (301 s, #54) |
+| Final approved look | Template default, 50 steps, CFG 4 | about 5 to 5.5 min at 928x1664 (301 s and 336 s, #54) |
 | Edits (colour change, fix a detail) | Qwen-Image-Edit-2511, Lightning 4 steps; 40 steps for finals | about 4.5 min at 40 steps (#33) |
 
 Fix the seed when comparing settings, so only the setting changes.
@@ -90,6 +94,8 @@ reload on every separate run (about a minute). The generator agent therefore:
   and one sampler, decode and save chain per seed, not `batch_size` in the latent, so each
   image keeps its own seed and can be remade alone (#54)
 - unloads Ollama models before a batch and leaves ComfyUI idle afterwards (both need ~20 GB)
+- restarts ComfyUI between sessions: idle, it keeps 7-8 GB of system RAM despite `--cache-none`
+  (the text encoder isn't freed, #54)
 - names outputs `art/characters/<id>/looks/<view>_<seed>.png` and keeps the prompt and seed in
   a sidecar `.json`, so any image can be reproduced
 
@@ -97,5 +103,6 @@ reload on every separate run (about a minute). The generator agent therefore:
 
 Run it on the 50-step image. Reject a look image if: any part of the body is cropped; the
 background isn't plain; a spelled-out feature is wrong (hair, beard, colours, the accent); the
-view isn't a side profile (game view); there is more than one figure; there is text or a logo;
+view isn't facing right in a near side view, as the renderer shows characters (game view); a
+sleeve or other stated clothing is missing; there is more than one figure; there is text or a logo;
 the silhouette doesn't read at 250 px tall (shrink it and look: the guard and the build must show).
