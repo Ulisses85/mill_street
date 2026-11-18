@@ -11,7 +11,7 @@ A 2D side-scrolling beat 'em up template plus a demo game: three levels with bos
 - `scenes/`: characters, props, levels (generated), ui. `resources/`: attacks, combos, weapons, audio library, level list.
 - `assets/`: sprite sheets, items, level art, sfx, fonts. **Generated, do not hand-edit:** `assets/characters/*/sheet.*`, `assets/levels/*` and `scenes/levels/*`.
 - `art/`: source art and specs: `art/characters/<id>/character.json` (+ `raw/`, `preview/`) and `art/levels/<id>/level.json` (look + waves).
-- `tools/`: `art/` (AI art importer and enemy builder), `levels/level_kit.py` (level art: drawn by code and/or imported AI layers via `ai_layers.py`), `sprite_pipeline/` (procedural mannequin rig), `make_levels.py`, `check_generated.py`, `sfx/`.
+- `tools/`: `blender/` (3D → 2D: rig, move library, renderer, sheet packer; specs with `"source": {"kind": "blender"}`), `art/` (AI art importer and enemy builder), `levels/level_kit.py` (level art: drawn by code and/or imported AI layers via `ai_layers.py`), `sprite_pipeline/` (procedural mannequin rig), `make_levels.py`, `check_generated.py`, `sfx/`.
 
 ## Commands
 ```
@@ -27,6 +27,8 @@ python3 tools/levels/level_kit.py             # level art from art/levels/*/leve
 python3 tools/make_levels.py                  # scenes/levels/<id>.tscn from the same specs
 python3 tools/check_generated.py assets scenes resources   # after regenerating: committed output must match (PNGs by pixels)
 python3 tools/sprite_pipeline/render.py       # regenerates the built-in mannequin art
+python3 tools/blender/render_sprites.py art/characters/<id>/character.json   # 3D character -> frames (needs bpy or blender -b -P ... --)
+python3 tools/blender/pack_sheet.py art/characters/<id>/character.json       # frames -> HD sheet (+ normal map)
 ```
 Animation feel check (walk, double-tap run, bat swings, punch and kick combos, saved as `feel_<frame>.png`): `xvfb-run godot --path . --rendering-driver opengl3 --resolution 480x270 --fixed-fps 60 res://tests/feel.tscn`.
 Screenshots for visual checks: `xvfb-run godot --path . --rendering-driver opengl3 --resolution 480x270 --fixed-fps 60 res://tests/sim.tscn -- level_01 shots=600,1200 quiet`. Files land in Godot's user data folder (`sim_<level>_<frame>.png`). Look at them before calling visual work done.
@@ -37,6 +39,7 @@ Screenshots for visual checks: `xvfb-run godot --path . --rendering-driver openg
 - Gameplay randomness uses the global RNG, seeded by the bot for reproducible runs. Cosmetic randomness (sound, debris, shake) uses `Game.fx_rng`, so it doesn't change gameplay.
 - Levels come from `art/levels/<id>/level.json`. Edit the spec and re-run the level kit and `make_levels.py`, not the `.tscn` files, unless you stop using the generator.
 - Gore is cosmetic and optional: call `Gore.spray/splat/pool/piece` (they do nothing when the option is off) and use `Game.fx_rng` there. Finishers: an enemy at or below `daze_at` health is dazed once; a player hit then kills it (blade weapon = decapitation, otherwise skull crush; a knockout with gore off). `AttackData.blood` scales the spray; `WeaponData.blade` and `breaks_into` describe weapons.
+- HD sheets (`"scale"` in `sheet.json`) are drawn at that scale: game code multiplies `body.res` into the body's scale and works in game units, never texture pixels. Moves in `tools/blender/moves.py` use side-view angles (counter-clockwise, facing right); the renderer keeps feet on the floor.
 - Every animation in `sheet.json` has `hand` + `weapon_angle` per frame (the weapon bone) and `active_frames` for attacks.
 
 ## Before committing

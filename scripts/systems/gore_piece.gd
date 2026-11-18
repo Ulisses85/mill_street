@@ -22,10 +22,12 @@ static func spawn(u: Unit, cell_rect: Rect2, v: Vector3, spin_speed: float, topp
 	g.region_enabled = true
 	g.region_rect = Rect2(b.region_rect.position + cell_rect.position, cell_rect.size)
 	g.flip_h = b.flip_h
+	g.scale = Vector2(b.res, b.res)
+	g.texture_filter = b.texture_filter
 	g.centered = true
 	# where this part sits relative to the unit's feet (the anchor is at -b.offset in the cell)
 	var anchor := -b.offset
-	var centre := cell_rect.position + cell_rect.size * 0.5 - anchor
+	var centre := (cell_rect.position + cell_rect.size * 0.5 - anchor) * b.res
 	if b.flip_h:
 		centre.x = -centre.x
 	g.floor_y = u.position.y
@@ -40,7 +42,7 @@ static func spawn(u: Unit, cell_rect: Rect2, v: Vector3, spin_speed: float, topp
 		g.offset = Vector2(-cell_rect.size.x * 0.5, -cell_rect.size.y)
 		g.position = Vector2(u.position.x + centre.x, u.position.y - u.z)
 		g.z = u.z
-		g.bleed_from = Vector2(0, -cell_rect.size.y)
+		g.bleed_from = Vector2(0, -cell_rect.size.y * b.res)
 	g.z_index = 0
 	u.get_parent().add_child(g)
 	return g

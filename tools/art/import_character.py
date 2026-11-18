@@ -406,6 +406,9 @@ def main(spec_path: Path) -> int:
     headroom = int(spec.get("headroom", 0))
     CELL = (DEFAULT_CELL[0], DEFAULT_CELL[1] + headroom)
     ANCHOR = (DEFAULT_ANCHOR[0], DEFAULT_ANCHOR[1] + headroom)
+    if spec.get("source", {}).get("kind") == "blender":
+        print(f"[{cid}] rendered from 3D - built by tools/blender/render_sprites.py + pack_sheet.py, skipped here")
+        return 0
     if spec.get("status") == "planned":
         print(f"[{cid}] planned (no art yet) - skipped; remove \"status\" once its art is in raw/")
         return 0

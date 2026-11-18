@@ -16,3 +16,6 @@ tools/art/examples/fake_enemy/import_report.json
 assets/characters/example_fake/
 scenes/characters/example_fake.tscn
 resources/attacks/example_fake_attack.tres
+
+# 3D renders are big and reproducible from the model: rebuild with tools/blender/render_sprites.py
+art/characters/*/raw/render/

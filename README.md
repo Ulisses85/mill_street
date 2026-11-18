@@ -87,6 +87,25 @@ Instance `scenes/characters/thug.tscn` under a `Wave` node:
 ## AI art pipeline
 To turn AI-generated (or hand-drawn) art into playable characters, see **[tools/art/README.md](tools/art/README.md)**. In Claude Code, run `/new-enemy`. Put your keys in the environment (`PIXELLAB_API_KEY`, `RD_API_KEY`) and copy `.mcp.json.example` to `.mcp.json` to enable the PixelLab MCP server.
 
+## 3D to 2D pipeline (Blender)
+Characters can also be modelled and animated in 3D and rendered to 2D sprite sheets, the way Dead Cells was made. The game stays 2D: Blender only draws the frames.
+
+```
+python3 tools/blender/render_sprites.py art/characters/bruiser/character.json   # needs Blender's Python module (pip install bpy) or:
+blender -b -P tools/blender/render_sprites.py -- art/characters/bruiser/character.json
+python3 tools/blender/pack_sheet.py art/characters/bruiser/character.json        # frames -> sheet.png, sheet_n.png, sheet.json
+python3 tools/art/make_enemy.py art/characters/bruiser/character.json
+```
+
+- The spec's `source` block picks the model (`sample:bruiser`, or a `.blend` with an armature named `rig`), the look (`comic`: cel bands, ink outline, smooth edges; `pixel`: flat bands, no anti-aliasing), the scale (4 = HD art for a 1920×1080 window), outline, camera tilt, body turn and light direction.
+- Each animation names a `move` from `tools/blender/moves.py` (side-view key poses on the canonical skeleton in `tools/blender/rig.py`, Rigify bone names), its frame count, fps and hit frames.
+- Every frame also writes the weapon hand's position and angle (read from the hand bone) and a normal map, so `Light2D`s shade the sprite (`tests/normal_map_check.tscn`).
+- HD sheets are trimmed and packed (`rects` in `sheet.json`) and drawn at `scale` 0.25 with smooth filtering. The project uses `canvas_items` stretch, so HD art is drawn at window resolution while pixel art stays crisp.
+- Renders (`raw/render/`) are not committed; the packed sheet is. A paint-over pass can put repainted frames in `raw/paint/<anim>/NN.png`, which `pack_sheet.py` prefers.
+- `heavy` (level 1) is made with MPFB, the MakeHuman add-on for Blender (`"model": "mpfb"`, `tools/blender/mpfb_character.py`): a rigged human from sliders (`macros`, `targets`), clothes painted onto body regions and puffed out. MPFB's code is GPL-3; its bundled body, targets and rigs are CC0, so the characters can ship. Install the MPFB extension in Blender first.
+- Poses are applied by direction (`rig.set_pose` with a `bone_map`), so any humanoid rig works: MPFB's, Rigify's, or a `.blend` with a `"bone_map"` in the spec.
+- `bruiser` (level 1) is the sample: a puppet built from simple shapes by `tools/blender/sample_character.py`, to be replaced by AI-made models (Qwen-Image → TRELLIS.2 → Rigify).
+
 ## Procedural art pipeline (v0)
 
 ```

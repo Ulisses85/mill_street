@@ -204,7 +204,7 @@ func _update_visuals() -> void:
 	body.flip_h = face < 0
 	body.position = Vector2(round(jolt), -round(z))
 	var sq := squash * 0.035
-	body.scale = Vector2(1.0 + sq, 1.0 - sq)
+	body.scale = Vector2(1.0 + sq, 1.0 - sq) * body.res
 	body.set_flash(health.flashing())
 	body.show_frame(anim, anim_t)
 	_update_held(jolt)
@@ -217,7 +217,7 @@ func _update_held(jolt: float) -> void:
 	var tossed := state == &"attack" and current_attack and held_weapon and held_weapon.thrown and t >= current_attack.ticks(current_attack.active_from)
 	_weapon_sprite.visible = held_weapon != null and not (state in [&"knockdown", &"dead", &"grabbed"]) and not tossed
 	if _weapon_sprite.visible:
-		var hand := body.hand_at(anim, anim_t) * Vector2(body.scale.x, body.scale.y)
+		var hand := body.hand_at(anim, anim_t) * body.scale / body.res
 		var ang := body.weapon_angle_at(anim, anim_t)
 		var a := current_attack
 		if procedural_weapon_swing and state == &"attack" and a and a == held_weapon.attack and not held_weapon.thrown:

@@ -1,0 +1,47 @@
+{
+  "id": "bruiser",
+  "display_name": "Bruiser",
+  "role": "enemy",
+  "preset": "thug",
+  "concept": "Sample enemy for the 3D-to-2D pipeline: bald, bearded heavy in a green bomber jacket with orange lining, white T-shirt, jeans and boots. Built from simple shapes in Blender by tools/blender/sample_character.py, so the render pipeline can be tested before AI-made models exist.",
+  "target_height": 62,
+  "attack_animation": "punch",
+  "stats": {
+    "windup_time": 0.37,
+    "attack_knockback": 2.0,
+    "attack_hitstop": 2,
+    "dodge_chance": 10
+  },
+  "source": {
+    "kind": "blender",
+    "model": "sample:bruiser",
+    "look": "comic",
+    "scale": 4,
+    "outline_px": 4,
+    "yaw_deg": 28,
+    "tilt_deg": 8,
+    "light": [
+      -0.5,
+      0.7,
+      0.6
+    ],
+    "engine": "CYCLES"
+  },
+  "animations": {
+    "idle": {"move": "idle", "frames": 8, "fps": 8},
+    "walk": {"move": "walk", "frames": 8, "fps": 12},
+    "run": {"move": "run", "frames": 8, "fps": 16},
+    "lurk": {"move": "lurk", "frames": 8, "fps": 8},
+    "windup": {"move": "windup", "frames": 3, "fps": 12},
+    "punch": {"move": "punch", "frames": 6, "fps": 20, "active": [2, 3]},
+    "windup_armed": {"move": "windup_armed", "frames": 3, "fps": 12},
+    "swing": {"move": "swing", "frames": 6, "fps": 20, "active": [1, 2]},
+    "hurt": {"move": "hurt", "frames": 4, "fps": 14},
+    "defend": {"move": "defend", "frames": 2, "fps": 10},
+    "grabbed": {"move": "grabbed", "frames": 4, "fps": 8},
+    "knockdown": {"move": "knockdown", "frames": 8, "fps": 15},
+    "down": {"move": "down", "frames": 4, "fps": 6},
+    "getup": {"move": "getup", "frames": 8, "fps": 12},
+    "pickup": {"move": "pickup", "frames": 4, "fps": 12}
+  }
+}
