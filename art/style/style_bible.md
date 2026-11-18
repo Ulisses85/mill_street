@@ -1,7 +1,7 @@
 # Mill Street style bible
 
-The rules every art agent and every prompt starts from. Version 2: written after the first
-Qwen-Image tests (#33) and tuned with two style-bible tests (#54); the look, numbers and prompt
+The rules every art agent and every prompt starts from. Version 2.1: written after the first
+Qwen-Image tests (#33) and tuned with three style-bible tests (#54, passed); the look, numbers and prompt
 templates keep being tuned as tests come in.
 Change this file, not individual prompts, when the house style changes.
 
@@ -42,9 +42,10 @@ character: square crops the legs. Wide 1664 x 928 is for side-by-side front + si
 - the build in body terms: `barrel chest, broad shoulders, thick muscular arms under the jacket
   sleeves` ("heavy-set" comes out as a big belly; "muscular arms" alone strips a sleeve off)
 - clothing that must stay on, said outright: `jacket sleeves on both arms, arms covered by the sleeves`
-- a pose that reads in silhouette: `fists up in a boxing guard, lead fist held out in front of
-  the face, rear fist up by the chin, clear gap between arms and body` (a fist in front of the
-  chest vanishes inside the outline at 250 px)
+- a simple pose: `fists up in a boxing guard, lead fist held out in front of the face`. The
+  look image's pose is reference only: the in-game poses come from `tools/blender/moves.py`,
+  so the guard's silhouette is checked on the Blender render, not here. Qwen ignores finer pose
+  words such as "rear fist up by the chin" or "gap between arms and body" (#54).
 
 **Style line** (paste as is):
 `comic book illustration, bold black ink outlines, flat cel shading with two tones, hard-edged shadows, no gradients, 1990s British street brawler video game character design, clean readable silhouette`
@@ -64,7 +65,7 @@ paint-over. Don't spend more prompt words on shading.
 
 Example (the test character):
 ```
-comic book illustration, bold black ink outlines, flat cel shading with two tones, hard-edged shadows, no gradients, 1990s British street brawler video game character design, clean readable silhouette. Side view, facing right, body turned slightly towards the camera. A street brawler with a barrel chest, broad shoulders and thick muscular arms under the jacket sleeves, big fists, completely bald shiny head, full thick dark beard, open green bomber jacket with bright orange inner lining clearly visible at the collar and the open front, jacket sleeves on both arms, white T-shirt, blue jeans, brown boots. Full body from head to toe, feet and shoes fully visible, standing, whole figure in frame, plain flat light grey background, no floor, no shadow, no scenery, no text. Fists up in a boxing guard, lead fist held out in front of the face, rear fist up by the chin, clear gap between arms and body.
+comic book illustration, bold black ink outlines, flat cel shading with two tones, hard-edged shadows, no gradients, 1990s British street brawler video game character design, clean readable silhouette. Side view, facing right, body turned slightly towards the camera. A street brawler with a barrel chest, broad shoulders and thick muscular arms under the jacket sleeves, big fists, completely bald shiny head, full thick dark beard, open green bomber jacket with bright orange inner lining clearly visible at the collar and the open front, jacket sleeves on both arms, white T-shirt, blue jeans, brown boots. Full body from head to toe, feet and shoes fully visible, standing, whole figure in frame, plain flat light grey background, no floor, no shadow, no scenery, no text. Fists up in a boxing guard, lead fist held out in front of the face.
 ```
 
 ## Generation settings
@@ -105,4 +106,5 @@ Run it on the 50-step image. Reject a look image if: any part of the body is cro
 background isn't plain; a spelled-out feature is wrong (hair, beard, colours, the accent); the
 view isn't facing right in a near side view, as the renderer shows characters (game view); a
 sleeve or other stated clothing is missing; there is more than one figure; there is text or a logo;
-the silhouette doesn't read at 250 px tall (shrink it and look: the guard and the build must show).
+the build doesn't read at 250 px tall (shrink it and look). The pose's silhouette is judged on
+the Blender render (see the 3D artist's checks), not on the look image.
